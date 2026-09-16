@@ -17,7 +17,7 @@ const normalizeSiteUrl = (raw: string): string => {
  * Set `NEXT_PUBLIC_SITE_URL` per environment — bake lúc `docker build` (GitHub `vars`).
  */
 export const resolvePublicSiteUrl = (): string => {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.VERCEL_URL?.trim();
   if (!raw) {
     if (process.env.NODE_ENV === "production") {
       console.error("[SEO] Set NEXT_PUBLIC_SITE_URL to the public HTTPS storefront origin (GitHub Environment + docker build).");

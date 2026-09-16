@@ -50,12 +50,12 @@ type ProductMetadataOptions = {
 };
 
 export const getSharedSeoImage = (host?: string | null): MetadataImage => {
-  const { productDefaultSrc, brandName } = resolveTenantBranding(host);
+  const { brandName } = resolveTenantBranding(host);
   return {
-    url: `${resolvePublicSiteUrl()}${productDefaultSrc}`,
+    url: `${resolvePublicSiteUrl()}/images/banner/grid-banner/01.png`,
     width: 1200,
-    height: 630,
-    alt: `${brandName} - Tinh te trong tung thiet ke trang suc`,
+    height: 675,
+    alt: `${brandName} - Tinh tế trong từng thiết kế trang sức`,
   };
 };
 

@@ -1,9 +1,9 @@
-export const getTenantBrandName = (): string => process.env.TENANT_BRAND_NAME?.trim() || "";
+export const getTenantBrandName = (): string => process.env.TENANT_BRAND_NAME?.trim() || "Jewelry Ecommerce";
 
 export const getTenantBrandLogo = (): string => process.env.TENANT_BRAND_LOGO?.trim() || "";
 
 /** Ảnh placeholder sản phẩm khi CMS/API không có media. */
-export const DEFAULT_PRODUCT_IMAGE_SRC = "/image/product/product-default.jpg";
+export const DEFAULT_PRODUCT_IMAGE_SRC = "/images/product/charm/charm-1.1.png";
 
 /** Chuẩn hóa mã tenant (so khớp override JSON / env). */
 export const normalizeTenantCode = (tenantCode: string) => tenantCode.trim().toUpperCase();
