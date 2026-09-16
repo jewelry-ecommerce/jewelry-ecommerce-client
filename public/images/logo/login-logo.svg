@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 218 26" fill="none">
+  <!--
+    Horizontal login logo: small marquise gem (16×24px) + bold one-line wordmark.
+    Matches Heartlock-style: [icon] BRAND NAME on one compact line.
+  -->
+
+  <!-- Gem icon: 16×24, y-centered in 26px canvas (y offset = 1) -->
+  <g transform="translate(0,1)" stroke="#1B1F22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M8,0 Q16,12 8,24 Q0,12 8,0Z"/>
+    <path d="M8,4 L11,7.5 L13,12 L11,16.5 L8,20 L5,16.5 L3,12 L5,7.5Z"/>
+    <line x1="8"  y1="0"  x2="5"  y2="7.5"/>
+    <line x1="8"  y1="0"  x2="11" y2="7.5"/>
+    <line x1="8"  y1="24" x2="5"  y2="16.5"/>
+    <line x1="8"  y1="24" x2="11" y2="16.5"/>
+    <line x1="0"  y1="12" x2="5"  y2="7.5"/>
+    <line x1="0"  y1="12" x2="5"  y2="16.5"/>
+    <line x1="16" y1="12" x2="11" y2="7.5"/>
+    <line x1="16" y1="12" x2="11" y2="16.5"/>
+  </g>
+
+  <!-- Wordmark: single line, bold, compact -->
+  <text
+    x="22" y="18"
+    font-family="'Hanken Grotesk','Inter','Helvetica Neue',Helvetica,Arial,sans-serif"
+    font-size="13" font-weight="700" letter-spacing="1.5"
+    fill="#1B1F22">JEWELRY ECOMMERCE</text>
+</svg>

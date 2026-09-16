@@ -1,0 +1,1451 @@
+{
+  "type": "atsh-brothers",
+  "meta": {
+    "collection": "Heartlock x Tinh Hà Say Hi",
+    "program": "Tinh Hà Say Hi",
+    "totalBrothers": 24,
+    "version": "1.0.0",
+    "updatedAt": "2026-06-29",
+    "scope": "images-and-content-only",
+    "notes": [
+      "Danh sách 24 anh trai theo cast chính thức Tinh Hà Say Hi (DatVietVAC).",
+      "Ảnh spiralCard: tên file và thứ tự index 1–24 khớp `ATSH_SPIRAL_CARD_FILENAMES` + `ATSH_SPIRAL_BROTHER_SLUG_ORDER` trong atsh-spiral.constants.ts.",
+      "Mapping ảnh ↔ anh trai cần xác nhận với team design/Figma nếu thứ tự file khác trên thiết kế.",
+      "Mỗi anh trai: heroBanner, fullLookImg, gallery + galleryImageCount (2 hoặc 4). Độ dài gallery[] phải khớp galleryImageCount.",
+      "gallery 2 ảnh (spiral #1–12): quang-hung-masterd, duong-domic, phap-kieu, hurrykng, song-luan, jsol, wean, captain-boy, ali-hoang-duong, bui-truong-linh, son-k, cody-nam-vo.",
+      "gallery 4 ảnh (spiral #13–24): vuong-binh, jaysonlei, dillan, congb, wren-evans, dang-hong-hai, the-thien, coolkid, xuan-dinh-ky, kim-long, hyo, ivan.",
+      "products[]: showcase trang singer — productSlug, image, imagePosition, shortDescription (tên/giá lấy từ API catalog).",
+      "fullLookProductSlug: sản phẩm Mua trọn bộ — CTA sang /san-pham/{slug}; giá full-look lấy từ API catalog/products/{slug}.",
+      "meta.sharedContent.discoverCards: section Khám phá thêm dùng chung; brother.discoverSection ghi đè nếu cần riêng.",
+      "meta.sharedContent.spiralProductsCta: nút 'Xem tất cả sản phẩm' trên hero + spiral — CMS set label + href. Fallback href=/san-pham.",
+      "meta.sharedAssets.collabLogos: logo hero collab — upload src (CDN/path), width/height CSS, thứ tự mảng = trái→phải (đổi chỗ phần tử để swap). HEARTLOCK 232×121, Anh Trai Say Hi 240×192.",
+      "--- SLUG MANAGEMENT ---",
+      "slug: URL path /atsh/singer/{slug}. CMS editor có thể đổi tuỳ ý. Phải cập nhật routes.singerPage tương ứng.",
+      "spiralKey: KHÔNG đổi — khóa ổn định map slot spiral + ảnh file, phải khớp ATSH_SPIRAL_BROTHER_SLUG_ORDER trong atsh-spiral.constants.ts.",
+      "collectionSlug: slug collection trên BE cho catalog API. Chỉ đổi khi backend đổi tên collection. Nếu không set thì dùng spiralKey.",
+      "routes.singerPage: path trang chi tiết anh trai (Landing). Giữ nguyên trong JSON dù FE đang ẩn page này (ATSH_SPIRAL_CARD_NAV_TARGET).",
+      "routes.collectionPage: path (hoặc full URL) trang BST riêng từng anh trai — CMS/editor tự nhập. Card spiral dùng field này khi ATSH_SPIRAL_CARD_NAV_TARGET=collection.",
+      "Quy trình đổi URL singer: 1) đổi slug + routes.singerPage, 2) GIỮ NGUYÊN spiralKey + collectionSlug.",
+      "Bật lại trang chi tiết: đổi ATSH_SPIRAL_CARD_NAV_TARGET thành singer trong atsh.constants.ts — không cần sửa JSON server."
+    ],
+    "_productsItemTemplate": {
+      "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+      "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+      "imagePosition": "left",
+      "shortDescription": "Vẻ đẹp của thiên nhiên được lưu giữ trong từng cánh hoa."
+    },
+    "sharedAssets": {
+      "collabLogos": [
+        {
+          "id": "heartlock",
+          "src": "/image/atsh/heartlock-logo.svg",
+          "alt": "HEARTLOCK",
+          "width": 232,
+          "height": 121
+        },
+        {
+          "id": "atsh",
+          "src": "/image/atsh/atsh-logo.png",
+          "alt": "TINH HÀ 'SAY HI'",
+          "width": 240,
+          "height": 192
+        }
+      ],
+      "heartlockLogo": "/image/atsh/heartlock-logo.svg",
+      "atshLogo": "/image/atsh/atsh-logo.png",
+      "spiralCenterLogo": "/image/atsh/spiral/spiral-center-logo.png",
+      "spiralCardFrame": "/image/atsh/spiral/spiral-card.png"
+    },
+    "sharedContent": {
+      "discoverSectionTitle": "KHÁM PHÁ THÊM",
+      "spiralProductsCta": {
+        "label": "Xem tất cả sản phẩm",
+        "href": "/san-pham/about"
+      },
+      "discoverCards": [
+        {
+          "title": "VỀ HEARTLOCK",
+          "description": "\"Trang sức không chỉ để đeo 1 — mỗi món là một chiếc chìa khoá mở ra phần sâu thẳm nhất của bạn\". Khám phá toàn bộ bộ sưu tập tại đây.",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019ed996-80c0-771f-97d8-a06d575c3c36/v-b2a904ad/original.png",
+          "href": "/"
+        },
+        {
+          "title": "COLLAB ĐỘC QUYỀN | TINH HÀ SAY HI",
+          "description": "Khi tinh tú giao nhau 1, cả tinh hà rực sáng \n24 anh trai, 24 dấu ấn — tạo nên bộ sưu tập mang năng lượng riêng biệt. Bạn thuộc về vì sao nào?",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edd81-42b7-73bf-ae39-4b529875664e/v-2ccf06b5/original.png",
+          "href": "/san-pham"
+        },
+        {
+          "title": "KHÁM PHÁ CÁC ANH TRAI KHÁC",
+          "description": "Lật thẻ, chạm vào từng vì sao 1 — mỗi anh trai là một ánh sáng riêng đang chờ bạn khám phá.",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edeaf-292b-777e-b7ff-2b1a1b92dfe0/v-367a8071/original.png",
+          "href": "/bst-collab-tinhhasayhi#24-anh-trai"
+        }
+      ]
+    }
+  },
+  "brothers": [
+    {
+      "id": 1,
+      "slug": "quang-hung-masterd",
+      "spiralKey": "quang-hung-masterd",
+      "collectionSlug": "quang-hung-masterd",
+      "displayName": "Quang Hùng MasterD",
+      "singerName": "QUANG HÙNG MASTERD",
+      "roles": ["Ca sĩ", "Nhạc sĩ", "Nhà sản xuất âm nhạc"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "quan-hung-masterd.png",
+          "path": "/image/atsh/spiral/cards/quan-hung-masterd.png",
+          "alt": "Quang Hùng MasterD — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019ed996-80c0-771f-97d8-a06d575c3c36/v-b2a904ad/original.png",
+          "tablet": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edf37-029a-75da-9db6-851ea6fdd9bd/v-fb5b68c9/original.png",
+          "desktop": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edf1c-5074-76e9-8da6-ba678d416a97/v-00daf741/original.png"
+        },
+        "fullLookImg": {
+          "mobile": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edd81-42b7-73bf-ae39-4b529875664e/v-2ccf06b5/original.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edd81-42b7-73bf-ae39-4b529875664e/v-2ccf06b5/original.png"
+        },
+        "gallery": [
+          "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edeaf-292b-777e-b7ff-2b1a1b92dfe0/v-367a8071/original.png",
+          "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019edeaf-292b-777e-b7ff-2b1a1b92dfe0/v-367a8071/original.png"
+        ],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT QUANG HÙNG MASTERD",
+        "introDescription": "Khơi nguồn cảm hứng từ sức nóng của những màn trình diễn bùng nổ, mỗi thiết kế trong bộ sưu tập là một tuyên ngôn bản lĩnh, giúp bạn chiếm trọn mọi tâm điểm và tỏa sáng rực rỡ dưới ánh đèn sân khấu như những người dẫn đầu.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI QUANG HÙNG",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Từng khoảnh khắc toả sáng trên sân khấu — Quang Hùng MasterD khoe trọn full-look Heartlock x Tinh Hà Say Hi dưới ánh đèn và bầu trời tinh hà."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/quang-hung-masterd",
+        "collectionPage": "/san-pham?collection=quang-hung-masterd",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left",
+          "shortDescription": "Mặt đĩa chuyển bạc ký niệm tinh yêu"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right",
+          "shortDescription": "Mặt đĩa chuyển bạc ký niệm tinh yêu"
+        }
+      ],
+      "status": "published"
+    },
+    {
+      "id": 2,
+      "slug": "wren-evans",
+      "spiralKey": "wren-evans",
+      "collectionSlug": "wren-evans",
+      "displayName": "Wren Evans",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "wren-evans.png",
+          "path": "/image/atsh/spiral/cards/wren-evans.png",
+          "alt": "Wren Evans — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/wren-evans.png",
+          "tablet": "/image/atsh/spiral/cards/wren-evans.png",
+          "desktop": "/image/atsh/spiral/cards/wren-evans.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/wren-evans.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/wren-evans.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/wren-evans.png",
+          "/image/atsh/spiral/cards/wren-evans.png",
+          "/image/atsh/spiral/cards/wren-evans.png",
+          "/image/atsh/spiral/cards/wren-evans.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT WREN EVANS",
+        "introDescription": "Năng lượng sáng tạo độc bản — mỗi chi tiết trang sức phản chiếu tinh thần đột phá của Wren Evans giữa tinh hà.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI WREN EVANS",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Wren Evans toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/wren-evans",
+        "collectionPage": "/san-pham?collection=wren-evans",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 3,
+      "slug": "duong-domic",
+      "spiralKey": "duong-domic",
+      "collectionSlug": "duong-domic",
+      "displayName": "Dương Domic",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "duong-domic.png",
+          "path": "/image/atsh/spiral/cards/duong-domic.png",
+          "alt": "Dương Domic — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/duong-domic.png",
+          "tablet": "/image/atsh/spiral/cards/duong-domic.png",
+          "desktop": "/image/atsh/spiral/cards/duong-domic.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/duong-domic.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/duong-domic.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/duong-domic.png", "/image/atsh/spiral/cards/duong-domic.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT DƯƠNG DOMIC",
+        "introDescription": "Giai điệu và ánh sáng hòa quyện — thiết kế Heartlock mang tinh thần mộng mơ, chỉn chu như từng sản phẩm âm nhạc của Dương Domic.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI DƯƠNG DOMIC",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Dương Domic toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/duong-domic",
+        "collectionPage": "/san-pham?collection=duong-domic",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 4,
+      "slug": "jsol",
+      "spiralKey": "jsol",
+      "collectionSlug": "jsol",
+      "displayName": "JSOL",
+      "roles": ["Ca sĩ", "Rapper"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "jsol.png",
+          "path": "/image/atsh/spiral/cards/jsol.png",
+          "alt": "JSOL — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/jsol.png",
+          "tablet": "/image/atsh/spiral/cards/jsol.png",
+          "desktop": "/image/atsh/spiral/cards/jsol.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/jsol.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/jsol.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/jsol.png", "/image/atsh/spiral/cards/jsol.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT JSOL",
+        "introDescription": "Phong cách đường phố gặp tinh hà — trang sức Heartlock thể hiện bản lĩnh và nhịp flow đặc trưng của JSOL.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI JSOL",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc JSOL toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/jsol",
+        "collectionPage": "/san-pham?collection=jsol",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 5,
+      "slug": "bui-truong-linh",
+      "spiralKey": "bui-truong-linh",
+      "collectionSlug": "bui-truong-linh",
+      "displayName": "buitruonglinh",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "bui-truong-linh.png",
+          "path": "/image/atsh/spiral/cards/bui-truong-linh.png",
+          "alt": "buitruonglinh — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/bui-truong-linh.png",
+          "tablet": "/image/atsh/spiral/cards/bui-truong-linh.png",
+          "desktop": "/image/atsh/spiral/cards/bui-truong-linh.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/bui-truong-linh.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/bui-truong-linh.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/bui-truong-linh.png", "/image/atsh/spiral/cards/bui-truong-linh.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT BÙI TRƯỜNG LINH",
+        "introDescription": "Dịu dàng nhưng kiên định — mỗi món trang sức là lời tự sự tinh tế của Bùi Trường Linh dưới bầu trời tinh hà.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI BÙI TRƯỜNG LINH",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc buitruonglinh toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/bui-truong-linh",
+        "collectionPage": "/san-pham?collection=bui-truong-linh",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 6,
+      "slug": "hurrykng",
+      "spiralKey": "hurrykng",
+      "collectionSlug": "hurrykng",
+      "displayName": "HURRYKNG",
+      "roles": ["Rapper"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "hurrykng.png",
+          "path": "/image/atsh/spiral/cards/hurrykng.png",
+          "alt": "HURRYKNG — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/hurrykng.png",
+          "tablet": "/image/atsh/spiral/cards/hurrykng.png",
+          "desktop": "/image/atsh/spiral/cards/hurrykng.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/hurrykng.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/hurrykng.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/hurrykng.png", "/image/atsh/spiral/cards/hurrykng.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT HURRYKNG",
+        "introDescription": "Năng lượng rap bùng nổ được đóng gói trong từng chi tiết — Heartlock đồng hành cùng phong thái tự tin của HURRYKNG.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI HURRYKNG",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc HURRYKNG toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/hurrykng",
+        "collectionPage": "/san-pham?collection=hurrykng",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 7,
+      "slug": "phap-kieu",
+      "spiralKey": "phap-kieu",
+      "collectionSlug": "phap-kieu",
+      "displayName": "Pháp Kiều",
+      "roles": ["Rapper", "Ca sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "phap-kieu.png",
+          "path": "/image/atsh/spiral/cards/phap-kieu.png",
+          "alt": "Pháp Kiều — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/phap-kieu.png",
+          "tablet": "/image/atsh/spiral/cards/phap-kieu.png",
+          "desktop": "/image/atsh/spiral/cards/phap-kieu.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/phap-kieu.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/phap-kieu.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/phap-kieu.png", "/image/atsh/spiral/cards/phap-kieu.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT PHÁP KIỀU",
+        "introDescription": "Tinh thần trẻ trung, táo bạo — bộ sưu tập Heartlock khắc họa dấu ấn riêng của Pháp Kiều trên hành trình Tinh Hà.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI PHÁP KIỀU",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Pháp Kiều toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/phap-kieu",
+        "collectionPage": "/san-pham?collection=phap-kieu",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 8,
+      "slug": "song-luan",
+      "spiralKey": "song-luan",
+      "collectionSlug": "song-luan",
+      "displayName": "Song Luân",
+      "roles": ["Diễn viên", "Ca sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "song-luan.png",
+          "path": "/image/atsh/spiral/cards/song-luan.png",
+          "alt": "Song Luân — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/song-luan.png",
+          "tablet": "/image/atsh/spiral/cards/song-luan.png",
+          "desktop": "/image/atsh/spiral/cards/song-luan.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/song-luan.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/song-luan.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/song-luan.png", "/image/atsh/spiral/cards/song-luan.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT SONG LUÂN",
+        "introDescription": "Charisma sân khấu và sự chín chắn — Heartlock tôn vinh vẻ đẹp nam tính, cuốn hút của Song Luân.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI SONG LUÂN",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Song Luân toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/song-luan",
+        "collectionPage": "/san-pham?collection=song-luan",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 9,
+      "slug": "congb",
+      "spiralKey": "congb",
+      "collectionSlug": "congb",
+      "displayName": "CONGB",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "congb.png",
+          "path": "/image/atsh/spiral/cards/congb.png",
+          "alt": "CONGB — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/congb.png",
+          "tablet": "/image/atsh/spiral/cards/congb.png",
+          "desktop": "/image/atsh/spiral/cards/congb.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/congb.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/congb.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/congb.png",
+          "/image/atsh/spiral/cards/congb.png",
+          "/image/atsh/spiral/cards/congb.png",
+          "/image/atsh/spiral/cards/congb.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT CONGB",
+        "introDescription": "Màu sắc âm nhạc đa chiều được chuyển hóa thành trang sức — CONGB và Heartlock cùng kể câu chuyện tinh hà.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI CONGB",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc CONGB toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/congb",
+        "collectionPage": "/san-pham?collection=congb",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 10,
+      "slug": "son-k",
+      "spiralKey": "son-k",
+      "collectionSlug": "son-k",
+      "displayName": "Sơn.K",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "sonk.png",
+          "path": "/image/atsh/spiral/cards/sonk.png",
+          "alt": "Sơn.K — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/sonk.png",
+          "tablet": "/image/atsh/spiral/cards/sonk.png",
+          "desktop": "/image/atsh/spiral/cards/sonk.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/sonk.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/sonk.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/sonk.png", "/image/atsh/spiral/cards/sonk.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT SƠN.K",
+        "introDescription": "Tinh tế và hiện đại — thiết kế Heartlock đồng điệu với chất âm nhạc sắc sảo của Sơn.K.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI SƠN.K",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Sơn.K toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/son-k",
+        "collectionPage": "/san-pham?collection=son-k",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 11,
+      "slug": "captain-boy",
+      "spiralKey": "captain-boy",
+      "collectionSlug": "captain-boy",
+      "displayName": "CAPTAIN BOY",
+      "roles": ["Ca sĩ", "Nhạc sĩ", "Rapper"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "captain-boy.png",
+          "path": "/image/atsh/spiral/cards/captain-boy.png",
+          "alt": "CAPTAIN BOY — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/captain-boy.png",
+          "tablet": "/image/atsh/spiral/cards/captain-boy.png",
+          "desktop": "/image/atsh/spiral/cards/captain-boy.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/captain-boy.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/captain-boy.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/captain-boy.png", "/image/atsh/spiral/cards/captain-boy.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT CAPTAIN BOY",
+        "introDescription": "Dẫn dắt nhịp điệu tinh hà — Captain Boy và Heartlock cùng tạo nên diện mạo sân khấu đầy lực.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI CAPTAIN BOY",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc CAPTAIN BOY toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/captain-boy",
+        "collectionPage": "/san-pham?collection=captain-boy",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 12,
+      "slug": "wean",
+      "spiralKey": "wean",
+      "collectionSlug": "wean",
+      "displayName": "WEAN",
+      "roles": ["Ca sĩ", "Rapper"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "wean.png",
+          "path": "/image/atsh/spiral/cards/wean.png",
+          "alt": "WEAN — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/wean.png",
+          "tablet": "/image/atsh/spiral/cards/wean.png",
+          "desktop": "/image/atsh/spiral/cards/wean.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/wean.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/wean.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/wean.png", "/image/atsh/spiral/cards/wean.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT WEAN",
+        "introDescription": "Tự do sáng tạo và cá tính mạnh mẽ — WEAN thể hiện tinh thần collab qua từng đường nét Heartlock.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI WEAN",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc WEAN toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/wean",
+        "collectionPage": "/san-pham?collection=wean",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 13,
+      "slug": "ali-hoang-duong",
+      "spiralKey": "ali-hoang-duong",
+      "collectionSlug": "ali-hoang-duong",
+      "displayName": "Ali Hoàng Dương",
+      "roles": ["Ca sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "ali-hoang-duong.png",
+          "path": "/image/atsh/spiral/cards/ali-hoang-duong.png",
+          "alt": "Ali Hoàng Dương — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/ali-hoang-duong.png",
+          "tablet": "/image/atsh/spiral/cards/ali-hoang-duong.png",
+          "desktop": "/image/atsh/spiral/cards/ali-hoang-duong.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/ali-hoang-duong.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/ali-hoang-duong.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/ali-hoang-duong.png", "/image/atsh/spiral/cards/ali-hoang-duong.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT ALI HOÀNG DƯƠNG",
+        "introDescription": "Giọng hát chạm tới trái tim — trang sức Heartlock lấp lánh như những ca khúc đầy cảm xúc của Ali Hoàng Dương.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI ALI HOÀNG DƯƠNG",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Ali Hoàng Dương toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/ali-hoang-duong",
+        "collectionPage": "/san-pham?collection=ali-hoang-duong",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 14,
+      "slug": "vuong-binh",
+      "spiralKey": "vuong-binh",
+      "collectionSlug": "vuong-binh",
+      "displayName": "Vương Bình",
+      "roles": ["Ca sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "vuong-binh.png",
+          "path": "/image/atsh/spiral/cards/vuong-binh.png",
+          "alt": "Vương Bình — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/vuong-binh.png",
+          "tablet": "/image/atsh/spiral/cards/vuong-binh.png",
+          "desktop": "/image/atsh/spiral/cards/vuong-binh.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/vuong-binh.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/vuong-binh.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/vuong-binh.png",
+          "/image/atsh/spiral/cards/vuong-binh.png",
+          "/image/atsh/spiral/cards/vuong-binh.png",
+          "/image/atsh/spiral/cards/vuong-binh.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT VƯƠNG BÌNH",
+        "introDescription": "Nhẹ nhàng mà sâu lắng — Heartlock đồng hành cùng hành trình âm nhạc đầy cảm xúc của Vương Bình.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI VƯƠNG BÌNH",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Vương Bình toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/vuong-binh",
+        "collectionPage": "/san-pham?collection=vuong-binh",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 15,
+      "slug": "cody-nam-vo",
+      "spiralKey": "cody-nam-vo",
+      "collectionSlug": "cody-nam-vo",
+      "displayName": "Cody Nam Võ",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "cody-nam-vo.png",
+          "path": "/image/atsh/spiral/cards/cody-nam-vo.png",
+          "alt": "Cody Nam Võ — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/cody-nam-vo.png",
+          "tablet": "/image/atsh/spiral/cards/cody-nam-vo.png",
+          "desktop": "/image/atsh/spiral/cards/cody-nam-vo.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/cody-nam-vo.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/cody-nam-vo.png"
+        },
+        "gallery": ["/image/atsh/spiral/cards/cody-nam-vo.png", "/image/atsh/spiral/cards/cody-nam-vo.png"],
+        "galleryImageCount": 2
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT CODY NAM VÕ",
+        "introDescription": "Sáng tạo không ngừng — Cody Nam Võ và Heartlock cùng kiến tạo phong cách tinh hà độc nhất.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI CODY NAM VÕ",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Cody Nam Võ toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/cody-nam-vo",
+        "collectionPage": "/san-pham?collection=cody-nam-vo",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 16,
+      "slug": "jaysonlei",
+      "spiralKey": "jaysonlei",
+      "collectionSlug": "jaysonlei",
+      "displayName": "Jaysonlei",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "jaysonlei.png",
+          "path": "/image/atsh/spiral/cards/jaysonlei.png",
+          "alt": "Jaysonlei — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/jaysonlei.png",
+          "tablet": "/image/atsh/spiral/cards/jaysonlei.png",
+          "desktop": "/image/atsh/spiral/cards/jaysonlei.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/jaysonlei.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/jaysonlei.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/jaysonlei.png",
+          "/image/atsh/spiral/cards/jaysonlei.png",
+          "/image/atsh/spiral/cards/jaysonlei.png",
+          "/image/atsh/spiral/cards/jaysonlei.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT JAYSONLEI",
+        "introDescription": "Tinh thần thế hệ mới — Jaysonlei khắc họa dấu ấn riêng qua bộ sưu tập Heartlock x Tinh Hà.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI JAYSONLEI",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Jaysonlei toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/jaysonlei",
+        "collectionPage": "/san-pham?collection=jaysonlei",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 17,
+      "slug": "dillan",
+      "spiralKey": "dillan",
+      "collectionSlug": "dillan",
+      "displayName": "DILLAN",
+      "roles": ["Ca sĩ", "Rapper"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "dillan.png",
+          "path": "/image/atsh/spiral/cards/dillan.png",
+          "alt": "DILLAN — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/dillan.png",
+          "tablet": "/image/atsh/spiral/cards/dillan.png",
+          "desktop": "/image/atsh/spiral/cards/dillan.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/dillan.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/dillan.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/dillan.png",
+          "/image/atsh/spiral/cards/dillan.png",
+          "/image/atsh/spiral/cards/dillan.png",
+          "/image/atsh/spiral/cards/dillan.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT DILLAN",
+        "introDescription": "Năng lượng trẻ trung, phá cách — DILLAN và Heartlock tạo nên tuyên ngôn phong cách trên tinh hà.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI DILLAN",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc DILLAN toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/dillan",
+        "collectionPage": "/san-pham?collection=dillan",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 18,
+      "slug": "dang-hong-hai",
+      "spiralKey": "dang-hong-hai",
+      "collectionSlug": "dang-hong-hai",
+      "displayName": "Đặng Hồng Hải",
+      "roles": ["Ca sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "dang-hong-hai.png",
+          "path": "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "alt": "Đặng Hồng Hải — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "tablet": "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "desktop": "/image/atsh/spiral/cards/dang-hong-hai.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/dang-hong-hai.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "/image/atsh/spiral/cards/dang-hong-hai.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT ĐẶNG HỒNG HẢI",
+        "introDescription": "Chất giọng đầy cảm xúc — Heartlock tôn vinh sự chân thành trong từng khoảnh khắc của Đặng Hồng Hải.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI ĐẶNG HỒNG HẢI",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Đặng Hồng Hải toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/dang-hong-hai",
+        "collectionPage": "/san-pham?collection=dang-hong-hai",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 19,
+      "slug": "ivan",
+      "spiralKey": "ivan",
+      "collectionSlug": "ivan",
+      "displayName": "IVAN",
+      "roles": ["Ca sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "ivan.png",
+          "path": "/image/atsh/spiral/cards/ivan.png",
+          "alt": "IVAN — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/ivan.png",
+          "tablet": "/image/atsh/spiral/cards/ivan.png",
+          "desktop": "/image/atsh/spiral/cards/ivan.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/ivan.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/ivan.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/ivan.png",
+          "/image/atsh/spiral/cards/ivan.png",
+          "/image/atsh/spiral/cards/ivan.png",
+          "/image/atsh/spiral/cards/ivan.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT IVAN",
+        "introDescription": "Lãng mạn và cuốn hút — IVAN cùng Heartlock kể câu chuyện tinh hà bằng ngôn ngữ trang sức.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI IVAN",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc IVAN toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/ivan",
+        "collectionPage": "/san-pham?collection=ivan",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 20,
+      "slug": "the-thien",
+      "spiralKey": "the-thien",
+      "collectionSlug": "the-thien",
+      "displayName": "Thể Thiên",
+      "roles": ["Ca sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "the-thien.png",
+          "path": "/image/atsh/spiral/cards/the-thien.png",
+          "alt": "Thể Thiên — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/the-thien.png",
+          "tablet": "/image/atsh/spiral/cards/the-thien.png",
+          "desktop": "/image/atsh/spiral/cards/the-thien.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/the-thien.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/the-thien.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/the-thien.png",
+          "/image/atsh/spiral/cards/the-thien.png",
+          "/image/atsh/spiral/cards/the-thien.png",
+          "/image/atsh/spiral/cards/the-thien.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT THỂ THIÊN",
+        "introDescription": "Khát vọng vươn xa — Thể Thiên thể hiện tinh thần không ngừng tiến hóa qua bộ sưu tập Heartlock.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI THỂ THIÊN",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc Thể Thiên toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/the-thien",
+        "collectionPage": "/san-pham?collection=the-thien",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 21,
+      "slug": "hyo",
+      "spiralKey": "hyo",
+      "collectionSlug": "hyo",
+      "displayName": "HYO",
+      "roles": ["Ca sĩ", "Vũ công"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "hyo.png",
+          "path": "/image/atsh/spiral/cards/hyo.png",
+          "alt": "HYO — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/hyo.png",
+          "tablet": "/image/atsh/spiral/cards/hyo.png",
+          "desktop": "/image/atsh/spiral/cards/hyo.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/hyo.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/hyo.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/hyo.png",
+          "/image/atsh/spiral/cards/hyo.png",
+          "/image/atsh/spiral/cards/hyo.png",
+          "/image/atsh/spiral/cards/hyo.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT HYO",
+        "introDescription": "Chuyển động và ánh sáng — HYO mang năng lượng sân khấu vào từng thiết kế Heartlock.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI HYO",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc HYO toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/hyo",
+        "collectionPage": "/san-pham?collection=hyo",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 22,
+      "slug": "coolkid",
+      "spiralKey": "coolkid",
+      "collectionSlug": "coolkid",
+      "displayName": "CoolKid",
+      "roles": ["Ca sĩ", "Rapper"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "coolkid.png",
+          "path": "/image/atsh/spiral/cards/coolkid.png",
+          "alt": "CoolKid — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/coolkid.png",
+          "tablet": "/image/atsh/spiral/cards/coolkid.png",
+          "desktop": "/image/atsh/spiral/cards/coolkid.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/coolkid.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/coolkid.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/coolkid.png",
+          "/image/atsh/spiral/cards/coolkid.png",
+          "/image/atsh/spiral/cards/coolkid.png",
+          "/image/atsh/spiral/cards/coolkid.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT COOLKID",
+        "introDescription": "Cool, tự tin và độc đáo — CoolKid khẳng định phong cách qua collab Heartlock x Tinh Hà.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI COOLKID",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc CoolKid toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/coolkid",
+        "collectionPage": "/san-pham?collection=coolkid",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 23,
+      "slug": "kim-long",
+      "spiralKey": "kim-long",
+      "collectionSlug": "kim-long",
+      "displayName": "KIMLONG",
+      "roles": ["Ca sĩ", "Rapper"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "kim-long.png",
+          "path": "/image/atsh/spiral/cards/kim-long.png",
+          "alt": "KIMLONG — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/kim-long.png",
+          "tablet": "/image/atsh/spiral/cards/kim-long.png",
+          "desktop": "/image/atsh/spiral/cards/kim-long.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/kim-long.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/kim-long.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/kim-long.png",
+          "/image/atsh/spiral/cards/kim-long.png",
+          "/image/atsh/spiral/cards/kim-long.png",
+          "/image/atsh/spiral/cards/kim-long.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT KIMLONG",
+        "introDescription": "Bản lĩnh và cá tính — KIMLONG cùng Heartlock tạo nên diện mạo tinh hà đầy cuốn hút.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI KIMLONG",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc KIMLONG toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/kim-long",
+        "collectionPage": "/san-pham?collection=kim-long",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    },
+    {
+      "id": 24,
+      "slug": "xuan-dinh-ky",
+      "spiralKey": "xuan-dinh-ky",
+      "collectionSlug": "xuan-dinh-ky",
+      "displayName": "XUÂN ĐỊNH K.Y.",
+      "roles": ["Ca sĩ", "Nhạc sĩ"],
+      "starName": null,
+      "images": {
+        "spiralCard": {
+          "filename": "xuan-dinh-ky.png",
+          "path": "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "alt": "XUÂN ĐỊNH K.Y. — Heartlock x Tinh Hà Say Hi"
+        },
+        "heroBanner": {
+          "mobile": "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "tablet": "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "desktop": "/image/atsh/spiral/cards/xuan-dinh-ky.png"
+        },
+        "fullLookImg": {
+          "mobile": "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "tablet": "/image/atsh/singer/full-look-hero-tablet.png",
+          "desktop": "/image/atsh/spiral/cards/xuan-dinh-ky.png"
+        },
+        "gallery": [
+          "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "/image/atsh/spiral/cards/xuan-dinh-ky.png"
+        ],
+        "galleryImageCount": 4
+      },
+      "content": {
+        "pageTitle": "TRANG SỨC ĐẬM CHẤT XUÂN ĐỊNH K.Y.",
+        "introDescription": "Khép lại vũ trụ 24 tinh tú — Xuân Định K.Y. và Heartlock gửi gắm thông điệp kết nối giữa các vì sao.",
+        "fullLookTitle": "FULL-LOOK ANH TRAI XUÂN ĐỊNH K.Y.",
+        "fullLookDescription": "Sở hữu trọn bộ full-look Heartlock để toả sáng trọn vẹn phong cách riêng trên sân khấu Tinh Hà.",
+        "galleryTitle": "Hình ảnh anh trai",
+        "galleryDescription": "Khoảnh khắc XUÂN ĐỊNH K.Y. toả sáng với bộ sưu tập Heartlock x Tinh Hà Say Hi."
+      },
+      "routes": {
+        "singerPage": "/atsh/singer/xuan-dinh-ky",
+        "collectionPage": "/san-pham?collection=xuan-dinh-ky",
+        "spiralSection": "/bst-collab-tinhhasayhi#24-anh-trai"
+      },
+      "products": [
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda8d-085b-7389-9c20-f832435d09de/v-219af834/original.png",
+          "imagePosition": "left"
+        },
+        {
+          "productSlug": "mat-day-chuyen-bac-ky-niem-tinh-yeu",
+          "image": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019eda9e-4dbb-723e-90c2-467f7008f379/v-666d1ad8/original.png",
+          "imagePosition": "right"
+        }
+      ],
+      "status": "draft"
+    }
+  ]
+}

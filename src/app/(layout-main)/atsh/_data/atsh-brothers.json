@@ -1,0 +1,456 @@
+{
+  "type": "atsh-brothers",
+  "meta": {
+    "seo": {
+      "title": "HEARTLOCKxTinh Hà \"Say Hi\" | BST Trang Sức Độc Quyền",
+      "keywords": "heartlock tinh hà say hi tinh hà say hi bộ sưu tập tinh hà say hi trang sức tinh hà say hi bộ sưu tập trang sức collab pre order heartlock tinh hà say hi preorder heartlock tinh hà say hi đặt hàng trước bst tinh hà say hi",
+      "descriptionPreOrder": "Khám phá bộ sưu tập trang sức collab độc quyền HEARTLOCK x Tinh Hà \"Say Hi\", với các thiết kế mang dấu ấn riêng của 24 Anh Trai. Mở bán Pre-Order từ 17.08.2026.",
+      "descriptionAfterPreOrder": "Khám phá bộ sưu tập trang sức collab độc quyền HEARTLOCK x Tinh Hà \"Say Hi\", sở hữu ngay các thiết kế mang dấu ấn riêng của 24 Anh Trai.",
+      "preOrderEndsAt": "2026-09-05T00:00:00+07:00",
+      "imageUrl": "/image/atsh/hero-bg-desktop-1.png"
+    },
+    "sharedAssets": {
+      "collabLogos": [
+        {
+          "id": "heartlock",
+          "src": "/image/atsh/heartlock-logo.svg",
+          "alt": "HEARTLOCK",
+          "width": 232,
+          "height": 121
+        },
+        {
+          "id": "atsh",
+          "src": "/image/atsh/atsh-logo.png",
+          "alt": "TINH HÀ 'SAY HI'",
+          "width": 240,
+          "height": 192
+        }
+      ]
+    },
+    "sharedContent": {
+      "spiralProductsCta": {
+        "label": "Xem tất cả sản phẩm",
+        "href": "/san-pham/mat-day-chuyen"
+      },
+      "exploreCta": {
+        "label": "Khám phá ngay",
+        "href": "#24-anh-trai"
+      },
+      "hero": {
+        "headline": "...",
+        "title": "...",
+        "description": "..."
+      }
+    }
+  },
+  "brothers": [
+    {
+      "id": 1,
+      "slug": "quang-hung-masterd",
+      "spiralKey": "quang-hung-masterd",
+      "displayName": "Quang Hùng MasterD",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26a-fb01-723b-a19e-9b20c017247d/v-9da7771f/original.gif",
+      "images": {
+        "spiralCard": {
+          "filename": "quan-hung-masterd.png",
+          "path": "/image/atsh/spiral/cards/quan-hung-masterd.png",
+          "alt": "Quang Hùng MasterD"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=quang-hung-masterd"
+      }
+    },
+    {
+      "id": 2,
+      "slug": "wren-evans",
+      "spiralKey": "wren-evans",
+      "displayName": "Wren Evans",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26b-5e4e-712c-849b-5ec16d5ededb/v-a67dc51a/original.gif",
+      "images": {
+        "spiralCard": {
+          "filename": "wren-evans.png",
+          "path": "/image/atsh/spiral/cards/wren-evans.png",
+          "alt": "Wren Evans"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=wren-evans"
+      }
+    },
+    {
+      "id": 3,
+      "slug": "duong-domic",
+      "spiralKey": "duong-domic",
+      "displayName": "Dương Domic",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26b-a67e-71af-9e35-38f910794ad5/v-f533bd68/original.gif",
+      "images": {
+        "spiralCard": {
+          "filename": "duong-domic.png",
+          "path": "/image/atsh/spiral/cards/duong-domic.png",
+          "alt": "Dương Domic"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=duong-domic"
+      }
+    },
+    {
+      "id": 4,
+      "slug": "jsol",
+      "spiralKey": "jsol",
+      "displayName": "JSOL",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26b-e757-77b8-a072-efa97e2d30ab/v-f2f62baa/original.gif",
+      "images": {
+        "spiralCard": {
+          "filename": "jsol.png",
+          "path": "/image/atsh/spiral/cards/jsol.png",
+          "alt": "JSOL"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=jsol"
+      }
+    },
+    {
+      "id": 5,
+      "slug": "bui-truong-linh",
+      "spiralKey": "bui-truong-linh",
+      "displayName": "buitruonglinh",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26c-2fea-70db-a603-881db94d2bd9/v-aa72a663/original.gif",
+      "images": {
+        "spiralCard": {
+          "filename": "bui-truong-linh.png",
+          "path": "/image/atsh/spiral/cards/bui-truong-linh.png",
+          "alt": "buitruonglinh"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=bui-truong-linh"
+      }
+    },
+    {
+      "id": 6,
+      "slug": "hurrykng",
+      "spiralKey": "hurrykng",
+      "displayName": "HURRYKNG",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26c-70e5-7569-a12f-f5086529120c/v-8379ed25/original.gif",
+      "images": {
+        "spiralCard": {
+          "filename": "hurrykng.png",
+          "path": "/image/atsh/spiral/cards/hurrykng.png",
+          "alt": "HURRYKNG"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=hurrykng"
+      }
+    },
+    {
+      "id": 7,
+      "slug": "phap-kieu",
+      "spiralKey": "phap-kieu",
+      "displayName": "Pháp Kiều",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26c-b01b-740a-8986-0b8cfe9cb432/v-1e1a17d1/original.gif",
+      "images": {
+        "spiralCard": {
+          "filename": "phap-kieu.png",
+          "path": "/image/atsh/spiral/cards/phap-kieu.png",
+          "alt": "Pháp Kiều"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=phap-kieu"
+      }
+    },
+    {
+      "id": 8,
+      "slug": "song-luan",
+      "spiralKey": "song-luan",
+      "displayName": "Song Luân",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa26d-0229-74ec-8630-3a8ce32fb3d0/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "song-luan.png",
+          "path": "/image/atsh/spiral/cards/song-luan.png",
+          "alt": "Song Luân"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=song-luan"
+      }
+    },
+    {
+      "id": 9,
+      "slug": "congb",
+      "spiralKey": "congb",
+      "displayName": "CONGB",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "congb.png",
+          "path": "/image/atsh/spiral/cards/congb.png",
+          "alt": "CONGB"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=congb"
+      }
+    },
+    {
+      "id": 10,
+      "slug": "son-k",
+      "spiralKey": "son-k",
+      "displayName": "Sơn.K",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "sonk.png",
+          "path": "/image/atsh/spiral/cards/sonk.png",
+          "alt": "Sơn.K"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=son-k"
+      }
+    },
+    {
+      "id": 11,
+      "slug": "captain-boy",
+      "spiralKey": "captain-boy",
+      "displayName": "CAPTAIN BOY",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "captain-boy.png",
+          "path": "/image/atsh/spiral/cards/captain-boy.png",
+          "alt": "CAPTAIN BOY"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=captain-boy"
+      }
+    },
+    {
+      "id": 12,
+      "slug": "wean",
+      "spiralKey": "wean",
+      "displayName": "WEAN",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "wean.png",
+          "path": "/image/atsh/spiral/cards/wean.png",
+          "alt": "WEAN"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=wean"
+      }
+    },
+    {
+      "id": 13,
+      "slug": "ali-hoang-duong",
+      "spiralKey": "ali-hoang-duong",
+      "displayName": "Ali Hoàng Dương",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "ali-hoang-duong.png",
+          "path": "/image/atsh/spiral/cards/ali-hoang-duong.png",
+          "alt": "Ali Hoàng Dương"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=ali-hoang-duong"
+      }
+    },
+    {
+      "id": 14,
+      "slug": "vuong-binh",
+      "spiralKey": "vuong-binh",
+      "displayName": "Vương Bình",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "vuong-binh.png",
+          "path": "/image/atsh/spiral/cards/vuong-binh.png",
+          "alt": "Vương Bình"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=vuong-binh"
+      }
+    },
+    {
+      "id": 15,
+      "slug": "cody-nam-vo",
+      "spiralKey": "cody-nam-vo",
+      "displayName": "Cody Nam Võ",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "cody-nam-vo.png",
+          "path": "/image/atsh/spiral/cards/cody-nam-vo.png",
+          "alt": "Cody Nam Võ"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=cody-nam-vo"
+      }
+    },
+    {
+      "id": 16,
+      "slug": "jaysonlei",
+      "spiralKey": "jaysonlei",
+      "displayName": "Jaysonlei",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "jaysonlei.png",
+          "path": "/image/atsh/spiral/cards/jaysonlei.png",
+          "alt": "Jaysonlei"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=jaysonlei"
+      }
+    },
+    {
+      "id": 17,
+      "slug": "dillan",
+      "spiralKey": "dillan",
+      "displayName": "DILLAN",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "dillan.png",
+          "path": "/image/atsh/spiral/cards/dillan.png",
+          "alt": "DILLAN"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=dillan"
+      }
+    },
+    {
+      "id": 18,
+      "slug": "dang-hong-hai",
+      "spiralKey": "dang-hong-hai",
+      "displayName": "Đặng Hồng Hải",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "dang-hong-hai.png",
+          "path": "/image/atsh/spiral/cards/dang-hong-hai.png",
+          "alt": "Đặng Hồng Hải"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=dang-hong-hai"
+      }
+    },
+    {
+      "id": 19,
+      "slug": "ivan",
+      "spiralKey": "ivan",
+      "displayName": "IVAN",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "ivan.png",
+          "path": "/image/atsh/spiral/cards/ivan.png",
+          "alt": "IVAN"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=ivan"
+      }
+    },
+    {
+      "id": 20,
+      "slug": "the-thien",
+      "spiralKey": "the-thien",
+      "displayName": "Thể Thiên",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "the-thien.png",
+          "path": "/image/atsh/spiral/cards/the-thien.png",
+          "alt": "Thể Thiên"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=the-thien"
+      }
+    },
+    {
+      "id": 21,
+      "slug": "hyo",
+      "spiralKey": "hyo",
+      "displayName": "HYO",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "hyo.png",
+          "path": "/image/atsh/spiral/cards/hyo.png",
+          "alt": "HYO"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=hyo"
+      }
+    },
+    {
+      "id": 22,
+      "slug": "coolkid",
+      "spiralKey": "coolkid",
+      "displayName": "CoolKid",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "coolkid.png",
+          "path": "/image/atsh/spiral/cards/coolkid.png",
+          "alt": "CoolKid"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=coolkid"
+      }
+    },
+    {
+      "id": 23,
+      "slug": "kim-long",
+      "spiralKey": "kim-long",
+      "displayName": "KIMLONG",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "kim-long.png",
+          "path": "/image/atsh/spiral/cards/kim-long.png",
+          "alt": "KIMLONG"
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=kim-long"
+      }
+    },
+    {
+      "id": 24,
+      "slug": "xuan-dinh-ky",
+      "spiralKey": "xuan-dinh-ky",
+      "displayName": "XUÂN ĐỊNH K.Y.",
+      "cardImage": "https://cdn-media-test.sevagoretail.jewelry/v1/img/test-external-trading/019fa259-dfb9-768b-974c-99b223078ec1/v-43f4c3f0/original.webp",
+      "images": {
+        "spiralCard": {
+          "filename": "xuan-dinh-ky.png",
+          "path": "/image/atsh/spiral/cards/xuan-dinh-ky.png",
+          "alt": "XUÂN ĐỊNH K.Y."
+        }
+      },
+      "routes": {
+        "collectionPage": "/san-pham?collection=xuan-dinh-ky"
+      }
+    }
+  ]
+}

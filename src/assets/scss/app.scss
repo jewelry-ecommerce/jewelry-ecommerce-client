@@ -1,0 +1,152 @@
+@import "aos/dist/aos.css";
+@import "react-toastify/dist/ReactToastify.css";
+
+.Toastify__toast-container--top-right {
+  top: calc(36px + 64px + 16px) !important;
+  right: 16px !important;
+}
+
+.Toastify__toast.app-toast {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 24px;
+  column-gap: 22px;
+  align-items: start;
+  width: fit-content !important;
+  max-width: min(480px, calc(100vw - 32px));
+  min-height: unset !important;
+  padding: 12px !important;
+  margin-bottom: 8px !important;
+  border-radius: 0 !important;
+  font-family: var(--font-hanken-grotesk), sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 150%;
+  color: #000 !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08) !important;
+}
+
+.Toastify__toast.app-toast .Toastify__toast-body {
+  grid-column: 1;
+  padding: 0;
+  margin: 0;
+  color: #000;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.Toastify__toast.app-toast .Toastify__close-button {
+  grid-column: 2;
+  position: static;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  color: #000;
+}
+
+.Toastify__toast.app-toast .Toastify__close-button > svg {
+  width: 24px;
+  height: 24px;
+}
+
+.Toastify__toast.app-toast.Toastify__toast--success {
+  border-left: 4px solid #4ade80 !important;
+  background: #f6fef8 !important;
+  color: #000 !important;
+}
+
+.Toastify__toast.app-toast.Toastify__toast--warning {
+  border-left: 4px solid #facc15 !important;
+  background: #fefdf0 !important;
+  color: #000 !important;
+}
+
+.Toastify__toast.app-toast.Toastify__toast--error {
+  border-left: 4px solid #f87171 !important;
+  background: #fef6f6 !important;
+  color: #000 !important;
+}
+
+.Toastify__toast.app-toast.Toastify__toast--info {
+  border-left: 4px solid #f87171 !important;
+  background: #fef6f6 !important;
+  color: #000 !important;
+}
+
+.Toastify__toast.app-toast.Toastify__toast--default {
+  border-left: 4px solid #e5e5e5 !important;
+  background: #fff !important;
+  color: #000 !important;
+}
+
+/* ── Custom scrollbar ── */
+:root {
+  --product-image-background: #f5f5f5;
+  /* set term */
+  --set-key-product-border-radius: var(--radius-md, 8px);
+  --set-key-product-border: 1px solid var(--Brand-Hearlock-300, #cdc9f7);
+  --set-key-product-background: linear-gradient(90deg, #fff 0%, var(--Brand-Hearlock-100, #ececfe) 100%);
+  --set-key-product-box-shadow: 0 0 8px 0 var(--Brand-Hearlock-100, #ececfe);
+  --set-key-product-label-color: #b3adf6;
+  --set-key-badge-color: var(--Brand-Hearlock-600, #6762bc);
+  --set-key-badge-background: var(--Brand-Hearlock-100, #ececfe);
+  --set-badge-background: linear-gradient(271deg, var(--Brand-Hearlock-600, #6762bc) -27.11%, var(--Neutral-900, #171717) 63.47%);
+  --set-badge-text-gradient: linear-gradient(90deg, #6b6aa6, #c4e8ee, #6fb7cc, #89d3e0, #ac9dff);
+  --toastify-toast-padding: 12px;
+  --sb-size: 6px;
+  --sb-track: #0b0d14;
+  --sb-thumb: #7d7d7d;
+  --sb-thumb-from: #22d3ee;
+  --sb-thumb-mid: #6366f1;
+  --sb-thumb-to: #ec4899;
+}
+
+body {
+  font-family: var(--font-hanken-grotesk), sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) var(--sb-track);
+}
+
+::-webkit-scrollbar {
+  width: var(--sb-size);
+  height: var(--sb-size);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sb-track);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(to bottom, var(--sb-thumb-from) 0%, var(--sb-thumb-mid) 50%, var(--sb-thumb-to) 100%);
+  box-shadow: 0 0 6px 1px rgba(99, 102, 241, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  box-shadow: 0 0 10px 2px rgba(99, 102, 241, 0.8);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--sb-track);
+}
+
+// reCAPTCHA badge: ẩn mặc định, chỉ hiện sau khi execute verify (data-recaptcha-v3-active)
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+body[data-recaptcha-v3-active] .grecaptcha-badge {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 9999;
+}

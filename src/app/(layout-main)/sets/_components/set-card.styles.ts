@@ -1,0 +1,93 @@
+// set term
+import { TYPOGRAPHY_STYLES } from "@/utils/constants/typography.constant";
+import { makeStyles } from "tss-react/mui";
+
+const useStyles = makeStyles({ name: "SetCard" })((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+    width: "100%",
+    height: "100%",
+    padding: 16,
+    boxSizing: "border-box",
+    borderTop: "1px solid #E0E0E0",
+    borderRight: "1px solid #E0E0E0",
+    borderBottom: "1px solid #E0E0E0",
+    [theme.breakpoints.down("md")]: { padding: 8 },
+  },
+  imageSection: {
+    position: "relative",
+    width: "100%",
+    aspectRatio: "350 / 440",
+    overflow: "hidden",
+    backgroundColor: "var(--product-image-background)",
+    [theme.breakpoints.up("lg")]: {
+      "&:hover .set-hover-image": { opacity: 1 },
+      "&:hover .set-add-to-cart": { opacity: 1, pointerEvents: "auto" },
+    },
+  },
+  image: { objectFit: "cover" },
+  hoverImage: {
+    position: "absolute",
+    inset: 0,
+    objectFit: "cover",
+    opacity: 0,
+    pointerEvents: "none",
+    transition: "opacity 0.3s ease-in-out",
+    [theme.breakpoints.down("lg")]: { display: "none" },
+  },
+  addToCartButton: {
+    position: "absolute",
+    right: 8,
+    bottom: 8,
+    zIndex: 2,
+    display: "flex",
+    gap: 8,
+    minWidth: "unset",
+    padding: 6,
+    color: "#000",
+    backgroundColor: "#fff",
+    border: 0,
+    borderRadius: 0,
+    textTransform: "uppercase",
+    whiteSpace: "nowrap",
+    ...TYPOGRAPHY_STYLES["sm"].regular,
+    "&:hover": { backgroundColor: "#F0F0F0" },
+    [theme.breakpoints.up("lg")]: {
+      left: 8,
+      opacity: 0,
+      pointerEvents: "none",
+      transition: "opacity 0.3s ease-in-out",
+      justifyContent: "center",
+    },
+  },
+  addToCartLabel: {
+    display: "none",
+    [theme.breakpoints.up("lg")]: { display: "inline" },
+  },
+  label: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+    width: 88,
+    height: "auto",
+    [theme.breakpoints.down("md")]: { top: 4, left: 4, width: 64 },
+  },
+  infoSection: { display: "flex", flexDirection: "column", gap: 4, minHeight: 58 },
+  name: {
+    height: 36,
+    overflow: "hidden",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    textTransform: "uppercase",
+    ...TYPOGRAPHY_STYLES["sm"].medium,
+  },
+  priceRow: { display: "flex", alignItems: "center", flexWrap: "wrap", gap: 4, minHeight: 21 },
+  currentPrice: { ...TYPOGRAPHY_STYLES.base.bold },
+  originalPrice: { color: theme.palette.text.secondary, textDecoration: "line-through", ...TYPOGRAPHY_STYLES["xs"].regular },
+  discount: { padding: "2px 4px", color: "#FFFFFF", backgroundColor: "#F04438", ...TYPOGRAPHY_STYLES["xs"].bold },
+}));
+
+export default useStyles;
