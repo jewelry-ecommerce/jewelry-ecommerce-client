@@ -6,6 +6,7 @@ import { createMetadata } from "@/libs/seo/metadata";
 import type { PageResponse } from "@/utils/api/cms";
 import type { IProductBySlugResponse } from "@/utils/api/product/product.interface";
 import { getApiBeUrl } from "@/utils/config/common";
+import { getMockStorefrontPage } from "@/mock-api/storefront-mock";
 import { addTenantToHeaders, getRuntimeTenantCode } from "./tenant-headers";
 import { normalizeCanonicalUrl } from "@/lib/seo/canonical-url";
 import { resolvePublicSiteUrl } from "@/lib/server/public-site-url";
@@ -149,7 +150,9 @@ export const fetchStorefrontApiJson = async <T>(path: string): Promise<T | null>
 
 export const fetchStorefrontPageBySlug = async (slug: string): Promise<PageResponse> => {
   if (!getApiBeUrl()) {
-    throw new Error("API_BE_URL must be configured for storefront pages");
+    const mockPage = getMockStorefrontPage(slug);
+    if (!mockPage) notFound();
+    return mockPage;
   }
 
   try {

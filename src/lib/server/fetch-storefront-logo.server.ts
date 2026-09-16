@@ -4,8 +4,14 @@ import { getCmsDefaultLogo } from "@/utils/api/cms/cms-default.util";
 import { resolveStorefrontLogoSrcMap } from "@/utils/api/cms/cms-logo.util";
 import { getStorefrontLogo } from "@/lib/storefront";
 import { resolveTenantBranding } from "@/lib/server/resolve-tenant-branding.server";
+import { getApiBeUrl } from "@/utils/config/common";
+import { getMockStorefrontLogos } from "@/mock-api/storefront-mock";
 
 export const fetchStorefrontLogos = async (_host?: string | null): Promise<StorefrontLogosResponse> => {
+  if (!getApiBeUrl()) {
+    return getMockStorefrontLogos();
+  }
+
   try {
     const fromCacheOrBe = await getStorefrontLogo();
     return fromCacheOrBe ?? {};

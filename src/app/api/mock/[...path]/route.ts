@@ -34,6 +34,7 @@ export async function GET(_request: NextRequest, context: RouteContext): Promise
   if (path.startsWith("cms/storefront/pages/")) return getStorefrontPage(path);
   if (path.startsWith("banner/storefront/placements/code/")) return getBannerPlacement(path);
   if (path === "catalog/products") return NextResponse.json(getMockProductCards());
+  if (path === "cart/cart") return NextResponse.json([]);
   if (path === "cms/storefront/navigation" || path === "cms/storefront/navigation/plp-rail")
     return NextResponse.json(getMockStorefrontNavigation());
   if (path === "cms/storefront/global-config") return NextResponse.json(getMockStorefrontGlobalConfig());

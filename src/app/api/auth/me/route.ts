@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authFetch, toValidHttpStatus } from "@/lib/server/api-client";
 import { clearAuthCookies, setAuthCookies } from "@/lib/server/cookies";
 import { SESSION_SENSITIVE_HEADERS } from "@/lib/server/session-response-headers";
+import { getApiBeUrl } from "@/utils/config/common";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,10 @@ const resolveMessage = (data: unknown) =>
   data && typeof data === "object" && "message" in data ? (data as { message?: unknown }).message : undefined;
 
 export async function GET() {
+  if (!getApiBeUrl()) {
+    return NextResponse.json({ success: false, isAuthenticated: false, user: null }, { status: 200, headers: SESSION_SENSITIVE_HEADERS });
+  }
+
   const { response, data, refreshedTokens, isAuthExpired } = await authFetch("iam/customer/profile");
 
   if (!response.ok) {
