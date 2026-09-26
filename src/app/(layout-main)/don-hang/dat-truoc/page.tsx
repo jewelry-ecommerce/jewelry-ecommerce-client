@@ -183,7 +183,7 @@ export default function PreOrderDetailPage() {
       return (
         <Box sx={{ display: "flex", justifyContent: "center", py: { xs: 6, md: 10 }, px: 2 }}>
           <EmptyComponent
-            url="/image/icons/Empty_Cart.svg"
+            url="/images/icons/Empty_Cart.svg"
             title={content.title}
             subtitle={content.subtitle}
             buttonText={isLogin ? "VỀ LỊCH SỬ ĐƠN HÀNG" : "TRA CỨU ĐƠN HÀNG"}
@@ -197,7 +197,7 @@ export default function PreOrderDetailPage() {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", py: { xs: 6, md: 10 }, px: 2 }}>
         <EmptyComponent
-          url="/image/icons/Empty_Cart.svg"
+          url="/images/icons/Empty_Cart.svg"
           title={isMissingEntry ? "Không tìm thấy đơn đặt trước" : "Chưa thể tải đơn đặt trước"}
           subtitle={
             isMissingEntry

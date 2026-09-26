@@ -18,8 +18,8 @@ const SIZE_GUIDE_SECTIONS = [
       "Duỗi thẳng sợi dây hoặc dải giấy và đo lại chiều dài bằng thước kẻ để có được kích thước cổ tay (đơn vị: cm).",
     ],
     images: [
-      { src: encodeURI("/image/size/lắc tay.png"), alt: "Bảng size lắc tay" },
-      { src: encodeURI("/image/size/vòng tay.png"), alt: "Bảng size vòng cứng" },
+      { src: encodeURI("/images/size/lắc tay.png"), alt: "Bảng size lắc tay" },
+      { src: encodeURI("/images/size/vòng tay.png"), alt: "Bảng size vòng cứng" },
     ],
   },
   {
@@ -30,7 +30,7 @@ const SIZE_GUIDE_SECTIONS = [
       "Đánh dấu chính xác điểm giao nhau.",
       "Duỗi thẳng sợi dây hoặc dải giấy và đo lại chiều dài bằng thước kẻ để có chu vi ngón tay (đơn vị: cm).",
     ],
-    images: [{ src: encodeURI("/image/size/nhẫn.png"), alt: "Bảng size nhẫn" }],
+    images: [{ src: encodeURI("/images/size/nhẫn.png"), alt: "Bảng size nhẫn" }],
   },
   {
     id: "necklace",
@@ -40,7 +40,7 @@ const SIZE_GUIDE_SECTIONS = [
       "Điều chỉnh đến độ dài mong muốn và đánh dấu điểm giao nhau.",
       "Duỗi thẳng sợi dây hoặc dải giấy và đo lại chiều dài bằng thước kẻ (đơn vị: cm).",
     ],
-    images: [{ src: encodeURI("/image/size/dây chuyền.png"), alt: "Bảng size dây chuyền" }],
+    images: [{ src: encodeURI("/images/size/dây chuyền.png"), alt: "Bảng size dây chuyền" }],
   },
 ];
 

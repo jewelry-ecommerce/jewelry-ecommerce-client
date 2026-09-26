@@ -21,6 +21,7 @@ import { useFetchProductBadgesBatch } from "@/hooks/use-fetch-product-badges-bat
 import { mapApiProductsToProductItems } from "@/utils/product.mapper.util";
 import useStyles from "./product-wishlist.styles";
 import type CartFlow from "@/components/fly-to-cart/cart-flow";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
 import {
   PRODUCT_LISTING_ADD_TO_CART_SELECTOR,
   PRODUCT_LISTING_CART_FLOW_IDLE_TIMEOUT_MS,
@@ -70,6 +71,7 @@ const ProductWishlistApp = () => {
   const dispatch = useAppDispatch();
   const isAuthResolved = useAppSelector(selectIsAuthResolved);
   const isLogin = useAppSelector(selectIsLogin);
+  const canUseWishlist = isLogin || IS_JEWELRY_DEMO_MODE;
   const { handleAddToCart } = useAddToCart({ openCartDrawerOnSuccess: true });
   const { handleToggleWishlist } = useProductWishlist();
   const cartFlowRef = useRef<CartFlow | null>(null);
@@ -94,12 +96,12 @@ const ProductWishlistApp = () => {
   useEffect(() => {
     if (!isAuthResolved) return;
 
-    if (!isLogin) {
+    if (!canUseWishlist) {
       router.replace(buildAuthUrl("/dang-nhap"));
     }
-  }, [isAuthResolved, isLogin, router]);
+  }, [isAuthResolved, canUseWishlist, router]);
 
-  const wishlistKey = isAuthResolved && isLogin ? "product/customer/wishlist" : null;
+  const wishlistKey = isAuthResolved && canUseWishlist ? "product/customer/wishlist" : null;
   const { data, isLoading } = useSWR<ICustomerWishlistResponse>(wishlistKey, () => ProductApi.getCustomerWishlist());
 
   const wishlistProductIdsFromApi = useMemo(() => (data?.list || []).map((item) => String(item.productId)), [data?.list]);
@@ -141,7 +143,7 @@ const ProductWishlistApp = () => {
   return (
     <Box className={classes.root}>
       <Box className={classes.container}>
-        {!isAuthResolved || !isLogin ? null : (
+        {!isAuthResolved || !canUseWishlist ? null : (
           <Box className={classes.stack}>
             <BreadcrumbComponent items={[{ label: "Trang chủ", href: "/" }, { label: "Danh sách yêu thích" }]} />
             <Typography className={classes.title}>Danh sách yêu thích</Typography>
@@ -150,7 +152,7 @@ const ProductWishlistApp = () => {
             ) : wishlistProducts.length === 0 ? (
               <Box className={classes.emptyState}>
                 <EmptyComponent
-                  url="/image/icons/icon-empty-wishlist.svg"
+                  url="/images/icons/icon-empty-wishlist.svg"
                   title="Chưa có sản phẩm yêu thích"
                   subtitle="Danh sách yêu thích đang chờ những lựa chọn mang dấu ấn riêng của bạn."
                   buttonText="Bắt Đầu Mua Sắm"

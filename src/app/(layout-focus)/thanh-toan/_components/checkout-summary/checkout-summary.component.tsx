@@ -107,7 +107,7 @@ const CheckoutSummarySection = ({
           {showPointsHeader && (
             <React.Fragment>
               <StackRowAlignCenter className={classes.pointsInfo}>
-                <Image src="/image/icons/icon-point.svg" alt="coin" width={15} height={15} className={classes.coinIcon} />
+                <Image src="/images/icons/icon-point.svg" alt="coin" width={15} height={15} className={classes.coinIcon} />
                 <Box>
                   <Typography component="span" className={classes.pointsText}>
                     {pointsAvailable} Điểm{" "}

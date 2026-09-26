@@ -3,6 +3,8 @@ import type { IProductBySlugResponse } from "@/utils/api/product/product.interfa
 import { getApiBeUrl } from "@/utils/config/common";
 import { addTenantToHeaders } from "./tenant-headers";
 import { configureDevSelfSignedTls } from "./tls";
+import { getMockProductDetail } from "@/mock-api/catalog-mock";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
 
 const buildProductApiUrl = (slug: string) => {
   const base = (getApiBeUrl() || "").replace(/\/$/, "");
@@ -12,9 +14,8 @@ const buildProductApiUrl = (slug: string) => {
 export const fetchProductBySlug = cache(async (slug: string): Promise<IProductBySlugResponse | null> => {
   configureDevSelfSignedTls();
 
-  if (!getApiBeUrl()) {
-    console.warn(`[Server] Missing API_BE_URL — cannot fetch product "${slug}".`);
-    return null;
+  if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) {
+    return getMockProductDetail(slug);
   }
 
   const headers = addTenantToHeaders({

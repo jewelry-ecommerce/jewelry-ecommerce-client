@@ -455,7 +455,7 @@ export function formatShippingQuoteErrorMessage(message: string | null | undefin
   return normalized;
 }
 
-export const PAYOO_LOADING_IMAGE_SRC = "/image/checkout/checkout-loading.svg";
+export const PAYOO_LOADING_IMAGE_SRC = "/images/checkout/checkout-loading.svg";
 
 export const PAYOO_REDIRECT_DELAY_MS = 500;
 

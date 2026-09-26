@@ -253,7 +253,7 @@ const Header = () => {
                 }}
               >
                 {isHydrated && isLogin ? (
-                  <Image src="/image/icons/icon-user-login.svg" alt="user" width={20} height={20} />
+                  <Image src="/images/icons/icon-user-login.svg" alt="user" width={20} height={20} />
                 ) : (
                   <User01 size={20} color="#333333" />
                 )}

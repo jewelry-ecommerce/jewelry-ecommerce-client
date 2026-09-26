@@ -182,7 +182,7 @@ const MyAccountHistoryOrdersList: React.FC<MyAccountHistoryOrdersListProps> = ({
   if (!data || data.length === 0) {
     return (
       <EmptyComponent
-        url="/image/icons/icon-empty-product-favorite.svg"
+        url="/images/icons/icon-empty-product-favorite.svg"
         title="Chưa có đơn hàng"
         subtitle="Khám phá những thiết kế phản ánh phong thái và bản sắc riêng của bạn"
         buttonText="Bắt Đầu Mua Sắm"

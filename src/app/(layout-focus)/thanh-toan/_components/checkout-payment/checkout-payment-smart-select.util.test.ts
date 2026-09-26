@@ -9,7 +9,7 @@ import {
 
 describe("checkout-payment-smart-select", () => {
   it("uses first listed method as guest fallback", () => {
-    expect(getFirstPaymentMethodId()).toBe(PaymentMethod.QR_CODE);
+    expect(getFirstPaymentMethodId()).toBe(PaymentMethod.COD);
   });
 
   it("skips COD and installment when both are disabled", () => {
@@ -18,10 +18,10 @@ describe("checkout-payment-smart-select", () => {
         isCodDisabled: true,
         isInstallmentDisabled: true,
       }),
-    ).toBe(PaymentMethod.QR_CODE);
+    ).toBe(PaymentMethod.COD);
   });
 
-  it("prefers last successful paid order method", () => {
+  it("keeps COD even when a previous order used an online method", () => {
     const preferred = resolvePreferredPaymentMethodFromOrders(
       [
         {
@@ -35,9 +35,9 @@ describe("checkout-payment-smart-select", () => {
           paymentMethod: PaymentMethod.ZALO_PAY,
         },
       ],
-      PaymentMethod.QR_CODE,
+      PaymentMethod.COD,
     );
-    expect(preferred).toBe(PaymentMethod.ZALO_PAY);
+    expect(preferred).toBe(PaymentMethod.COD);
   });
 
   it("falls back when there is no successful order", () => {
@@ -49,9 +49,9 @@ describe("checkout-payment-smart-select", () => {
           paymentMethod: PaymentMethod.COD,
         },
       ],
-      PaymentMethod.QR_CODE,
+      PaymentMethod.COD,
     );
-    expect(preferred).toBe(PaymentMethod.QR_CODE);
+    expect(preferred).toBe(PaymentMethod.COD);
   });
 
   it("remaps COD to first selectable method when COD is disabled by amount", () => {
@@ -60,7 +60,7 @@ describe("checkout-payment-smart-select", () => {
         isCodDisabled: true,
         isInstallmentDisabled: false,
       }),
-    ).toBe(PaymentMethod.QR_CODE);
+    ).toBe(PaymentMethod.COD);
   });
 
   it("treats non-cancelled COD as a successful preference source", () => {
@@ -72,7 +72,7 @@ describe("checkout-payment-smart-select", () => {
           paymentMethod: PaymentMethod.COD,
         },
       ],
-      PaymentMethod.QR_CODE,
+      PaymentMethod.COD,
     );
     expect(preferred).toBe(PaymentMethod.COD);
   });

@@ -1,8 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { authFetch, toValidHttpStatus } from "@/lib/server/api-client";
 import { clearAuthCookies, setAuthCookies } from "@/lib/server/cookies";
 import { SESSION_SENSITIVE_HEADERS } from "@/lib/server/session-response-headers";
 import { getApiBeUrl } from "@/utils/config/common";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
+import { DEMO_AUTH_COOKIE_NAME, DEMO_CUSTOMER, isDemoSession } from "@/mock-api/demo-account";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +15,15 @@ const logProfileFailure = (detail: Record<string, unknown>) => {
 const resolveMessage = (data: unknown) =>
   data && typeof data === "object" && "message" in data ? (data as { message?: unknown }).message : undefined;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (IS_JEWELRY_DEMO_MODE) {
+    const authenticated = isDemoSession(request.cookies.get(DEMO_AUTH_COOKIE_NAME)?.value);
+    return NextResponse.json(
+      authenticated ? { success: true, user: DEMO_CUSTOMER } : { success: false, isAuthenticated: false, user: null },
+      { headers: SESSION_SENSITIVE_HEADERS },
+    );
+  }
+
   if (!getApiBeUrl()) {
     return NextResponse.json({ success: false, isAuthenticated: false, user: null }, { status: 200, headers: SESSION_SENSITIVE_HEADERS });
   }

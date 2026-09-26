@@ -118,7 +118,7 @@ const PendingStatus = ({
           <StackAlignCenter className={classes.content}>
             <StackAlignCenter className={classes.header}>
               <Box className={classes.illustration}>
-                <Image src="/image/checkout/payment-pending.svg" alt="Pending" width={300} height={169} />
+                <Image src="/images/checkout/payment-pending.svg" alt="Pending" width={300} height={169} />
               </Box>
 
               <Typography className={classes.title}>ĐƠN HÀNG ĐANG CHỜ THANH TOÁN</Typography>

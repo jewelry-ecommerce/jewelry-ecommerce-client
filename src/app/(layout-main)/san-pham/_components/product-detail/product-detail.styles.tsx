@@ -35,7 +35,7 @@ const useStyles = makeStyles({ name: "ProductDetail" })((theme) => ({
     width: "100%",
     position: "relative",
     backgroundColor: "var(--product-image-background)",
-    cursor: "url('/image/icons/icon-zoom.svg'), zoom-in",
+    cursor: "url('/images/icons/icon-zoom.svg'), zoom-in",
     "&:hover .zoom-icon-overlay": {
       opacity: 1,
     },
@@ -521,7 +521,7 @@ const useStyles = makeStyles({ name: "ProductDetail" })((theme) => ({
     marginBottom: "16px",
   },
   flashSaleHeader: {
-    backgroundImage: "url('/image/logo/banner-1.png')",
+    backgroundImage: "url('/images/logo/banner-1.png')",
     backgroundSize: "cover",
     backgroundPosition: "center",
     padding: "8px 10px",
@@ -609,7 +609,7 @@ const useStyles = makeStyles({ name: "ProductDetail" })((theme) => ({
     flexWrap: "wrap",
   },
   tagItem: {
-    borderImageSource: "url('/image/icons/icon-discount-code.svg')",
+    borderImageSource: "url('/images/icons/icon-discount-code.svg')",
     borderImageSlice: "14 22 fill",
     borderImageWidth: "auto",
     borderStyle: "solid",

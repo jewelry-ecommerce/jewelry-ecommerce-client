@@ -13,5 +13,5 @@ export const SendOtpRecaptchaAction = {
 
 export type SendOtpRecaptchaActionName = (typeof SendOtpRecaptchaAction)[keyof typeof SendOtpRecaptchaAction];
 
-export const RECAPTCHA_CLIENT_FAILURE_MESSAGE = "";
-export const getRecaptchaTokenForSendOtp = async (_action: SendOtpRecaptchaActionName): Promise<string | null> => null;
+export const RECAPTCHA_CLIENT_FAILURE_MESSAGE = "Không thể xác minh phiên demo.";
+export const getRecaptchaTokenForSendOtp = async (_action: SendOtpRecaptchaActionName): Promise<string | null> => "demo-recaptcha-token";

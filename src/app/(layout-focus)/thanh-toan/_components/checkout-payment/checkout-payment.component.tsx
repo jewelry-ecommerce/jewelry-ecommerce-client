@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
@@ -53,17 +53,19 @@ function CheckoutPaymentSection({
   const smartSelectAppliedRef = useRef(false);
 
   const selectedId = useWatch({ control, name: "paymentMethod" });
-  const isAllowCheck = useWatch({ control, name: "isAllowCheck" });
   const isPaymentMethodDirty = Boolean(dirtyFields.paymentMethod);
   const isDeferredPayment = Boolean(deferredPaymentNotice);
 
   const isCodDisabledByAmount = orderPayableAmountVnd >= COD_MAX_ORDER_AMOUNT_VND;
-  const isCodDisabled = isCodDisabledByAmount || Boolean(isAllowCheck);
+  const isCodDisabled = isCodDisabledByAmount;
   const isInstallmentDisabledByAmount = orderPayableAmountVnd < INSTALLMENT_MIN_ORDER_AMOUNT_VND;
-  const amountLockOptions = {
-    isCodDisabled,
-    isInstallmentDisabled: isInstallmentDisabledByAmount,
-  };
+  const amountLockOptions = useMemo(
+    () => ({
+      isCodDisabled,
+      isInstallmentDisabled: isInstallmentDisabledByAmount,
+    }),
+    [isCodDisabled, isInstallmentDisabledByAmount],
+  );
   const fallbackPaymentMethodId = getFirstSelectablePaymentMethodId(amountLockOptions);
 
   const { data: memberPreferredPaymentMethod, isLoading: isLoadingMemberPreferred } = useSWR(
@@ -109,6 +111,7 @@ function CheckoutPaymentSection({
     }
     smartSelectAppliedRef.current = true;
   }, [
+    amountLockOptions,
     fallbackPaymentMethodId,
     isCodDisabled,
     isDeferredPayment,

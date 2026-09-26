@@ -7,6 +7,8 @@ import type { PageResponse } from "@/utils/api/cms";
 import type { IProductBySlugResponse } from "@/utils/api/product/product.interface";
 import { getApiBeUrl } from "@/utils/config/common";
 import { getMockStorefrontPage } from "@/mock-api/storefront-mock";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
+import { getMockProductDetail } from "@/mock-api/catalog-mock";
 import { addTenantToHeaders, getRuntimeTenantCode } from "./tenant-headers";
 import { normalizeCanonicalUrl } from "@/lib/seo/canonical-url";
 import { resolvePublicSiteUrl } from "@/lib/server/public-site-url";
@@ -117,6 +119,9 @@ const logStorefrontFetchWarning = (path: string, status?: number, error?: unknow
 };
 
 export const fetchStorefrontApiJson = async <T>(path: string): Promise<T | null> => {
+  if (IS_JEWELRY_DEMO_MODE && path.startsWith("cms/storefront/pages/")) {
+    return getMockStorefrontPage(path.replace("cms/storefront/pages/", "")) as T | null;
+  }
   configureDevSelfSignedTls();
 
   if (!getApiBeUrl()) {
@@ -149,7 +154,7 @@ export const fetchStorefrontApiJson = async <T>(path: string): Promise<T | null>
 };
 
 export const fetchStorefrontPageBySlug = async (slug: string): Promise<PageResponse> => {
-  if (!getApiBeUrl()) {
+  if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) {
     const mockPage = getMockStorefrontPage(slug);
     if (!mockPage) notFound();
     return mockPage;
@@ -164,6 +169,9 @@ export const fetchStorefrontPageBySlug = async (slug: string): Promise<PageRespo
 };
 
 export const fetchApiJson = async <T>(path: string): Promise<T | null> => {
+  if (IS_JEWELRY_DEMO_MODE && path.startsWith("catalog/products/")) {
+    return getMockProductDetail(path.replace("catalog/products/", "")) as T | null;
+  }
   if (isStorefrontApiPath(path)) {
     return fetchStorefrontApiJson<T>(path);
   }

@@ -36,7 +36,7 @@ export interface CheckoutFormValues {
 export const CART_USER_ID = "b1c2d3e4-f5a6-7890-1234-56789abcdef0";
 export const POINTS_TO_VND_RATE = 10_000_000 / 9_000;
 
-export const VALID_PAYMENT_METHODS = Object.values(PaymentMethod);
+export const VALID_PAYMENT_METHODS = [PaymentMethod.COD];
 
 export const getCheckoutInitialValues = (
   session?: CheckoutSession | null,
@@ -49,7 +49,7 @@ export const getCheckoutInitialValues = (
     taxCode: session?.vatInvoice?.taxCode || "",
     vatEmail: session?.vatInvoice?.email || "",
     note: session?.note || "",
-    paymentMethod: isPreOrderReserveCheckout(session) ? "" : session?.paymentMethod || PaymentMethod.QR_CODE,
+    paymentMethod: isPreOrderReserveCheckout(session) ? "" : PaymentMethod.COD,
     consent: isLoggedIn ? true : session?.consentThirdPartySharing || false,
     isAllowCheck: false,
     consentCollabPartnerSharing: session?.consentCollabPartnerSharing || false,
@@ -135,7 +135,7 @@ export const getCheckoutValidationSchema = (
       : Yup.string().notRequired().default(""),
     // Pre-order lần 1: không bắt paymentMethod
     paymentMethod: paymentRequired
-      ? Yup.string().oneOf(VALID_PAYMENT_METHODS, VALIDATION_MESSAGES.required).default(PaymentMethod.QR_CODE)
+      ? Yup.string().oneOf(VALID_PAYMENT_METHODS, VALIDATION_MESSAGES.required).default(PaymentMethod.COD)
       : Yup.string().notRequired().default(""),
     showVat: Yup.boolean().default(false),
     showNote: Yup.boolean().default(false),

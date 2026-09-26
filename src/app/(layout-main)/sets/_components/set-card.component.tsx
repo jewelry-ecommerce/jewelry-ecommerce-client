@@ -98,7 +98,7 @@ const SetCard = ({ item, priority = false }: SetCardProps) => {
               />
             ) : null}
           </AppLink>
-          <Image src="/image/logo/logo-set.svg" alt="Stella Set" width={88} height={26} className={classes.label} />
+          <Image src="/images/logo/logo-set.svg" alt="Stella Set" width={88} height={26} className={classes.label} />
           <Button className={`${classes.addToCartButton} set-add-to-cart`} onClick={handleAddToCart}>
             <Plus size={16} color="#333" />
             <Box component="span" className={classes.addToCartLabel}>

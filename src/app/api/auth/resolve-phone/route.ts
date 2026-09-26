@@ -3,6 +3,8 @@ import { getApiBeUrl } from "@/utils/config/common";
 import { configureDevSelfSignedTls } from "@/lib/server/tls";
 import { SESSION_SENSITIVE_HEADERS } from "@/lib/server/session-response-headers";
 import { AuthApi } from "@/utils/api";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
+import { DEMO_ACCOUNT_PHONE } from "@/mock-api/demo-account";
 
 export const dynamic = "force-dynamic";
 
@@ -70,6 +72,15 @@ export async function POST(request: NextRequest) {
   }
   if (!recaptchaToken) {
     return NextResponse.json({ message: "Thiếu mã xác thực bảo mật (reCAPTCHA)" }, { status: 400, headers: SESSION_SENSITIVE_HEADERS });
+  }
+
+  if (IS_JEWELRY_DEMO_MODE) {
+    return phone === DEMO_ACCOUNT_PHONE
+      ? NextResponse.json({ flow: "PASSWORD" as const }, { headers: SESSION_SENSITIVE_HEADERS })
+      : NextResponse.json(
+          { error: true, message: "Số điện thoại chưa có tài khoản demo." },
+          { status: 404, headers: SESSION_SENSITIVE_HEADERS },
+        );
   }
 
   if (!getApiBeUrl()) {

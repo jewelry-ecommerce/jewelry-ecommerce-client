@@ -69,7 +69,7 @@ const OrderExchangeSummary: React.FC<OrderExchangeSummaryProps> = ({
           <StackRowAlignCenterJustBetween gap="8px">
             <Typography className={classes.label}>Điểm loyalty hoàn lại</Typography>
             <Stack direction="row" alignItems="center" gap={0.75}>
-              <Image src="/image/icons/icon-point.svg" alt="" width={16} height={16} />
+              <Image src="/images/icons/icon-point.svg" alt="" width={16} height={16} />
               <Typography className={classes.value}>{fmtPoints(refundedLoyaltyPoints)}</Typography>
             </Stack>
           </StackRowAlignCenterJustBetween>

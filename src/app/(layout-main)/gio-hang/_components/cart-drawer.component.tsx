@@ -192,7 +192,7 @@ const CartDrawerComponent = ({ open, onClose, title = "Giỏ hàng", onCheckout,
     <React.Fragment>
       {/* <Box className={classes.promoWrap}>
         <Box className={classes.promoRow}>
-          <Box component="img" src="/image/icons/icon-gift-cart.svg" alt="gift" width={16} height={16} />
+          <Box component="img" src="/images/icons/icon-gift-cart.svg" alt="gift" width={16} height={16} />
           <Typography className={classes.promoText}>Mua sắm để nhận quà tặng hấp dẫn.</Typography>
         </Box>
         <Box className={giftItems.length > 3 ? classes.giftTabsScrollWrapper : undefined}>

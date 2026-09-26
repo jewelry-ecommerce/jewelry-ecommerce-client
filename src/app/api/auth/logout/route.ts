@@ -4,10 +4,18 @@ import { clearAuthCookies, getTokens } from "@/lib/server/cookies";
 import { configureDevSelfSignedTls } from "@/lib/server/tls";
 import { SESSION_SENSITIVE_HEADERS } from "@/lib/server/session-response-headers";
 import { AuthApi } from "@/utils/api";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
+import { DEMO_AUTH_COOKIE_NAME } from "@/mock-api/demo-account";
 
 export const dynamic = "force-dynamic";
 
 export async function POST() {
+  if (IS_JEWELRY_DEMO_MODE) {
+    const response = NextResponse.json({ success: true }, { headers: SESSION_SENSITIVE_HEADERS });
+    response.cookies.delete(DEMO_AUTH_COOKIE_NAME);
+    return response;
+  }
+
   configureDevSelfSignedTls();
 
   const { accessToken } = await getTokens();

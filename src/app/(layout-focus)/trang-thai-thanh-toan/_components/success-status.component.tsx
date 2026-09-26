@@ -103,7 +103,7 @@ const SuccessStatus = ({ orderCode, orderPhone, guestOrderAccessToken, isPreOrde
       <StackAlignCenter className={classes.successContent}>
         <StackAlignCenter className={classes.successHeader}>
           <Box className={classes.successIllustration}>
-            <Image src="/image/checkout/payment-success.svg" alt="Success" width={300} height={169} priority />
+            <Image src="/images/checkout/payment-success.svg" alt="Success" width={300} height={169} priority />
           </Box>
 
           <Typography className={classes.title}>{title}</Typography>

@@ -165,7 +165,7 @@ const FailedStatus = ({ orderCode, isTimeout, isPaymentTimeout, orderExpiresAt, 
         <StackAlignCenter className={classes.header}>
           <Box className={classes.illustration}>
             <Image
-              src={isTimeout ? "/image/checkout/payment-failed.svg" : "/image/checkout/payment-pending.svg"}
+              src={isTimeout ? "/images/checkout/payment-failed.svg" : "/images/checkout/payment-pending.svg"}
               alt="Status Icon"
               width={300}
               height={169}

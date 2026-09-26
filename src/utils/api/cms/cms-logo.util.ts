@@ -1,7 +1,7 @@
 import type { LogoType, StorefrontLogoResponse, StorefrontLogoSrcMap } from "./cms.interface";
 
 export const DEFAULT_FAVICON_SRC = "/logo-seo.png";
-export const DEFAULT_STOREFRONT_LOGO_SRC = "/image/logo/logo.svg";
+export const DEFAULT_STOREFRONT_LOGO_SRC = "/images/logo/header-logo.svg";
 
 export function resolveStorefrontLogoUrl(logoUrl: string | null | undefined, fallback: string = DEFAULT_STOREFRONT_LOGO_SRC): string {
   const normalized = logoUrl?.trim();

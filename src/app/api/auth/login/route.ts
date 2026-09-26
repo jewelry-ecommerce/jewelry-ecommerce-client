@@ -6,6 +6,8 @@ import { configureDevSelfSignedTls } from "@/lib/server/tls";
 import { getApiBeUrl } from "@/utils/config/common";
 import { SESSION_SENSITIVE_HEADERS } from "@/lib/server/session-response-headers";
 import { AuthApi } from "@/utils/api";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
+import { DEMO_AUTH_COOKIE_NAME, DEMO_AUTH_COOKIE_VALUE, DEMO_CUSTOMER, isDemoCredential } from "@/mock-api/demo-account";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +23,23 @@ export async function POST(request: NextRequest) {
 
   if (!body.phone || !body.password) {
     return NextResponse.json({ message: "Thiếu thông tin đăng nhập." }, { status: 400, headers: SESSION_SENSITIVE_HEADERS });
+  }
+
+  if (IS_JEWELRY_DEMO_MODE) {
+    if (!isDemoCredential(body.phone, body.password)) {
+      return NextResponse.json(
+        { message: "Tài khoản hoặc mật khẩu demo không đúng." },
+        { status: 401, headers: SESSION_SENSITIVE_HEADERS },
+      );
+    }
+    const response = NextResponse.json({ success: true, user: DEMO_CUSTOMER }, { headers: SESSION_SENSITIVE_HEADERS });
+    response.cookies.set(DEMO_AUTH_COOKIE_NAME, DEMO_AUTH_COOKIE_VALUE, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+    return response;
   }
 
   if (!getApiBeUrl()) {

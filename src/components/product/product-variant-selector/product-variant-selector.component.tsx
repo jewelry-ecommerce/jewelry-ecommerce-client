@@ -46,7 +46,7 @@ const ProductVariantSelector = ({
               </StackRowAlignCenter>
               {showSizeGuide && (
                 <StackRowAlignCenter sx={{ cursor: "pointer" }} gap={1} onClick={onOpenSizeGuide}>
-                  <Image src="/image/icons/icon-guide-size.svg" alt="size guide" width={16} height={16} />
+                  <Image src="/images/icons/icon-guide-size.svg" alt="size guide" width={16} height={16} />
                   <Typography className={classes.guideLink}>Hướng dẫn chọn size</Typography>
                 </StackRowAlignCenter>
               )}

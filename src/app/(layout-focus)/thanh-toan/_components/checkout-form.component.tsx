@@ -46,8 +46,6 @@ import {
   buildPromotionVoucherCheckoutContext,
   getCheckoutApiError,
   isAcceptPriceChangeAction,
-  preloadPayooLoadingImage,
-  redirectToPayooPayment,
   filterCheckoutDisplayItems,
   enrichCheckoutSessionItemsWithVariantFallbacks,
   resolveCheckoutPriceChangeDetails,
@@ -141,14 +139,10 @@ const CheckoutFormInner = ({
   /** Bật ngay khi bấm Hoàn tất (trước reCAPTCHA + place-order); `syncStatus.order` chỉ loading sau khi gọi API. */
   const [isPlaceOrderSubmitting, setIsPlaceOrderSubmitting] = useState(false);
 
-  useEffect(() => {
-    preloadPayooLoadingImage();
-  }, []);
-
   const activeIsAddressSaved = isLoggedIn && !isManualEntry && userAddresses.length > 0;
   const isPreOrderReserve = isPreOrderReserveCheckout(session);
   const preOrderDeferredPaymentNotice = isPreOrderReserve ? buildPreOrderReservePaymentNotice(brandName) : null;
-  const submitButtonLabel = isPreOrderReserve ? "Xác Nhận Đặt Trước" : "Hoàn Tất Thanh Toán";
+  const submitButtonLabel = isPreOrderReserve ? "Xác Nhận Đặt Trước" : "Đặt Hàng COD";
 
   const validationSchema = useMemo(
     () => getCheckoutValidationSchema(isLoggedIn, activeIsAddressSaved, !isPreOrderReserve, isPreOrderReserve),
@@ -551,12 +545,6 @@ const CheckoutFormInner = ({
         sessionId,
         paymentMethod: values.paymentMethod,
       });
-
-      if (redirect.type === "payoo_payment") {
-        setStatusModal({ open: true, type: "payoo_loading" });
-        redirectToPayooPayment(redirect.paymentUrl);
-        return;
-      }
 
       if (redirect.type === "error") {
         isSubmissionLock.current = false;

@@ -210,7 +210,7 @@ export const buildAttachedPackagingItem = (option: CartPackagingOption, lineQuan
     id: option.relationId,
     badge: option.isRequired ? "Bao bì/ hộp đựng" : "Bao bì/ hộp đựng (tùy chọn)",
     image: {
-      src: packagingImage || "/image/product/product-default.jpg",
+      src: packagingImage || "/images/product/product-default.jpg",
       alt: packagingName,
     },
     name: packagingName,

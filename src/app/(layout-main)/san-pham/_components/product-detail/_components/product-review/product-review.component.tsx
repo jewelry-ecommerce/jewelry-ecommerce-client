@@ -107,24 +107,6 @@ const ReviewItemComponent = ({ review, productName }: { review: Review; productN
 
         {review.reply && (
           <Stack gap={1}>
-            {/* <StackRowAlignCenter 
-              onClick={() => setIsReplyOpen(!isReplyOpen)} 
-              sx={{ cursor: 'pointer', width: 'fit-content' }}
-              gap={1}
-            >
-              <Typography sx={{ ...TYPOGRAPHY_STYLES.base.regular, color: '#000' }}>
-                Phản hồi (1)
-              </Typography>
-              <Box sx={{ 
-                display: 'flex', 
-                alignItems: 'center',
-                transition: 'transform 0.2s',
-                transform: isReplyOpen ? 'none' : 'rotate(180deg)'
-              }}>
-                <Image src="/image/icons/icon-arrow-up.svg" alt="arrow" width={20} height={20} />
-              </Box>
-            </StackRowAlignCenter> */}
-
             <Stack sx={{ gap: 1, borderLeft: "1px solid #737373", paddingLeft: 3 }}>
               <Typography sx={{ ...TYPOGRAPHY_STYLES.md.bold, color: "#171717" }}>{review.reply.author}</Typography>
               <Typography sx={{ ...TYPOGRAPHY_STYLES.base.regular, color: "#737373" }}>{review.reply.time}</Typography>

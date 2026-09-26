@@ -73,7 +73,7 @@ const MyAccountPromotion = ({ isLoading = false }: MyAccountPromotionProps) => {
         </Stack>
       ) : !(MOCK_ACTIVE_VOUCHERS.length > 0 || MOCK_EXPIRED_VOUCHERS.length > 0) ? (
         <EmptyComponent
-          url="/image/icons/icon-empty-promotion.svg"
+          url="/images/icons/icon-empty-promotion.svg"
           title="Chưa có mã ưu đãi"
           subtitle="Hiện chưa có voucher khả dụng, nhưng vẫn còn nhiều thiết kế dành cho phong cách của bạn."
           buttonText="Bắt Đầu Mua Sắm"

@@ -13,6 +13,8 @@ import { getMediaType } from "@/utils/helpers/common/common.helpers";
 import { resolveCdnImageUrl } from "@/utils/cdn";
 import { getApiBeUrl } from "@/utils/config/common";
 import type { BannerPlacement, BaseBannerItem } from "@/utils/api/banner/banner.interface";
+import { getMockBannerPlacement } from "@/mock-api/banner-mock";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
 
 export type HomeInitialData = {
   page: PageResponse;
@@ -27,7 +29,7 @@ export type HomeImagePreload = {
 type BannerEntry = readonly [string, BannerPlacement];
 
 const fetchBannerPlacement = async (code: string) => {
-  if (!getApiBeUrl()) return null;
+  if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) return getMockBannerPlacement(code);
 
   try {
     return await getCachedBannerPlacement(code);

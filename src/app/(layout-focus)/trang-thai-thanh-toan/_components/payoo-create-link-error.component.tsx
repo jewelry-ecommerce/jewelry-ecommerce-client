@@ -22,7 +22,7 @@ const PayooCreateLinkError = ({ orderCode }: PayooCreateLinkErrorProps) => {
       <StackAlignCenter className={classes.card}>
         <StackAlignCenter className={classes.content}>
           <Box className={classes.illustration}>
-            <Image src="/image/checkout/payment-pending.svg" alt="Pending" width={300} height={169} />
+            <Image src="/images/checkout/payment-pending.svg" alt="Pending" width={300} height={169} />
           </Box>
 
           <Typography className={classes.title}>KHÔNG THỂ KHỞI TẠO LIÊN KẾT THANH TOÁN</Typography>

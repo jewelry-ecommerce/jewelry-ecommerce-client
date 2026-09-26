@@ -98,7 +98,7 @@ export default function GuestOrderDetailPage() {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", py: { xs: 6, md: 10 }, px: 2 }}>
         <EmptyComponent
-          url="/image/icons/Empty_Cart.svg"
+          url="/images/icons/Empty_Cart.svg"
           title={content.title}
           subtitle={content.subtitle}
           buttonText="TRA CỨU ĐƠN HÀNG"

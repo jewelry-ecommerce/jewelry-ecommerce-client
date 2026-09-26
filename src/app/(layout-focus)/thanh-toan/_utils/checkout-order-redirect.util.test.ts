@@ -28,7 +28,7 @@ describe("resolveOrderRedirect", () => {
     });
   });
 
-  it("handles online payment (non-COD) with Payoo paymentUrl", () => {
+  it("rejects online payment in the COD-only demo", () => {
     const session: CheckoutSession = {
       consentThirdPartySharing: false,
       totalAmount: 500000,
@@ -46,13 +46,10 @@ describe("resolveOrderRedirect", () => {
       paymentMethod: "PAYOO",
     });
 
-    expect(redirect).toEqual({
-      type: "payoo_payment",
-      paymentUrl: "https://payoo.vn/pay/123",
-    });
+    expect(redirect).toEqual({ type: "error", message: "Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng." });
   });
 
-  it("handles online payment (non-COD) with missing paymentUrl error", () => {
+  it("rejects online payment without a payment URL too", () => {
     const session: CheckoutSession = {
       consentThirdPartySharing: false,
       totalAmount: 500000,
@@ -69,10 +66,7 @@ describe("resolveOrderRedirect", () => {
       paymentMethod: "PAYOO",
     });
 
-    expect(redirect).toEqual({
-      type: "redirect",
-      url: "/trang-thai-thanh-toan?status=payoo-create-link-error",
-    });
+    expect(redirect).toEqual({ type: "error", message: "Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng." });
   });
 
   it("handles COD payment successfully", () => {

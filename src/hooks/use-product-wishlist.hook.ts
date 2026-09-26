@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import useSWR, { useSWRConfig } from "swr";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
 
 const normalizeProductIds = (productIds: string[]) => Array.from(new Set(productIds.map(String)));
 
@@ -26,14 +27,17 @@ const useProductWishlist = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const isLogin = useAppSelector(selectIsLogin);
+  const canUseWishlist = isLogin || IS_JEWELRY_DEMO_MODE;
   const wishlistProductIds = useAppSelector(selectWishlistProductIds);
   const { mutate } = useSWRConfig();
-  const { data: wishlistData } = useSWR(isLogin ? "customer-wishlist-product-ids" : null, () => ProductApi.getCustomerWishlistProductIds());
+  const { data: wishlistData } = useSWR(canUseWishlist ? "customer-wishlist-product-ids" : null, () =>
+    ProductApi.getCustomerWishlistProductIds(),
+  );
 
   const wishlistProductIdSet = useMemo(() => new Set(wishlistProductIds.map(String)), [wishlistProductIds]);
 
   useEffect(() => {
-    if (!isLogin) {
+    if (!canUseWishlist) {
       if (wishlistProductIds.length > 0) {
         dispatch(clearWishlistProductIds());
       }
@@ -45,7 +49,7 @@ const useProductWishlist = () => {
     }
 
     dispatch(setWishlistProductIds(normalizeProductIds(wishlistData.productIds || [])));
-  }, [dispatch, isLogin, wishlistData, wishlistProductIds.length]);
+  }, [dispatch, canUseWishlist, wishlistData, wishlistProductIds.length]);
 
   const handleToggleWishlist = useCallback(
     async (productIds: string[]) => {
@@ -55,7 +59,7 @@ const useProductWishlist = () => {
         return;
       }
 
-      if (!isLogin) {
+      if (!canUseWishlist) {
         router.push(buildAuthUrl("/dang-nhap"));
         return;
       }
@@ -107,7 +111,7 @@ const useProductWishlist = () => {
         toast.error(getErrorMessage(error) || "Không thể cập nhật danh sách yêu thích. Vui lòng thử lại.");
       }
     },
-    [dispatch, isLogin, mutate, router, wishlistProductIdSet, wishlistProductIds],
+    [dispatch, canUseWishlist, mutate, router, wishlistProductIdSet, wishlistProductIds],
   );
 
   const mapWishlistProducts = useCallback(

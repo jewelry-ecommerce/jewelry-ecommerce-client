@@ -102,7 +102,7 @@ const CartSummaryComponent = ({
             <Box className={classes.summaryTotalReward}>
               <Typography className={classes.summaryTotalLabel}>Điểm thưởng</Typography>
               <StackRowAlignCenter gap={0.5}>
-                <Image src="/image/icons/icon-point.svg" alt="coin" width={15} height={15} className={classes.summaryRewardIcon} />
+                <Image src="/images/icons/icon-point.svg" alt="coin" width={15} height={15} className={classes.summaryRewardIcon} />
                 <Typography className={classes.summaryReward}> +{summaryValues.rewardPoints}</Typography>
               </StackRowAlignCenter>
             </Box>
@@ -127,7 +127,7 @@ const CartSummaryComponent = ({
             <Box className={classes.summaryTotalReward}>
               <Typography className={classes.summaryTotalLabel}>Điểm thưởng</Typography>
               <StackRowAlignCenter gap={0.5}>
-                <Image src="/image/icons/icon-point.svg" alt="coin" width={15} height={15} className={classes.summaryRewardIcon} />
+                <Image src="/images/icons/icon-point.svg" alt="coin" width={15} height={15} className={classes.summaryRewardIcon} />
                 <Typography className={classes.summaryReward}> +{summaryValues.rewardPoints}</Typography>
               </StackRowAlignCenter>
             </Box>

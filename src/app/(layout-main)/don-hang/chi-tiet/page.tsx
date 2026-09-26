@@ -98,7 +98,7 @@ const OrderDetailPage = () => {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", py: { xs: 6, md: 10 }, px: 2 }}>
         <EmptyComponent
-          url="/image/icons/Empty_Cart.svg"
+          url="/images/icons/Empty_Cart.svg"
           title="Không tìm thấy đơn hàng"
           subtitle="Đơn hàng không tồn tại hoặc bạn không có quyền xem đơn hàng này."
           buttonText="Bắt Đầu Mua Sắm"

@@ -144,14 +144,14 @@ export const getCmsDefaults = (brandNameOverride?: string) => {
       },
     },
     logo: {
-      logoUrl: "/image/logo/logo.svg",
+      logoUrl: "/images/logo/header-logo.svg",
       logoTargetUrl: "/",
       bySegment: {
         b1: {
-          logoUrl: "/image/logo/logo.svg",
+          logoUrl: "/images/logo/header-logo.svg",
         },
         b2: {
-          logoUrl: "/image/logo/logo-b2.svg",
+          logoUrl: "/images/logo/header-logo.svg",
         },
       },
     },

@@ -47,27 +47,27 @@ const HeaderUserAccount = ({ user, anchorElUser, setAnchorElUser, isUserDrawerOp
       {
         key: "thong-tin-tai-khoan",
         label: "Thông tin tài khoản",
-        icon: "/image/icons/icon-user.svg",
+        icon: "/images/icons/icon-user.svg",
         href: "/tai-khoan?tab=thong-tin-tai-khoan",
       },
       {
         key: "lich-su-don-hang",
         label: "Lịch sử đơn hàng",
-        icon: "/image/icons/icon-file-check.svg",
+        icon: "/images/icons/icon-file-check.svg",
         href: "/tai-khoan?tab=lich-su-don-hang",
         badge: formattedOrderCount,
       },
       {
         key: "uu-dai-cua-ban",
         label: "Ưu đãi của bạn",
-        icon: "/image/icons/icon-ticket.svg",
+        icon: "/images/icons/icon-ticket.svg",
         href: "/tai-khoan?tab=uu-dai-cua-ban",
         badge: formattedVoucherCount,
       },
       {
         key: "so-dia-chi",
         label: "Sổ địa chỉ",
-        icon: "/image/icons/icon-marker-pin.svg",
+        icon: "/images/icons/icon-marker-pin.svg",
         href: "/tai-khoan?tab=so-dia-chi",
       },
     ],
@@ -149,7 +149,7 @@ const HeaderUserAccount = ({ user, anchorElUser, setAnchorElUser, isUserDrawerOp
                 {/* <Box className={classes.userDrawerBadge}>Silver</Box> */}
               </StackRowAlignCenter>
               {/* <Box className={classes.userDrawerPoints}>
-                <Image src="/image/icons/icon-point.svg" alt="coin" width={20} height={20} />
+                <Image src="/images/icons/icon-point.svg" alt="coin" width={20} height={20} />
                 <Typography className={classes.userDrawerPointsText}>1999 điểm</Typography>
               </Box> */}
             </Box>

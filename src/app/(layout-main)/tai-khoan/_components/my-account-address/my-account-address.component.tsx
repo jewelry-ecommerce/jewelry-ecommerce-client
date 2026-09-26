@@ -122,7 +122,7 @@ const MyAccountAddress = forwardRef<MyAccountAddressHandle, MyAccountAddressProp
         <SectionSkeleton />
       ) : !hasAddresses ? (
         <EmptyComponent
-          url="/image/icons/icon-empty-address.svg"
+          url="/images/icons/icon-empty-address.svg"
           title="Chưa có địa chỉ"
           subtitle="Thêm địa chỉ của bạn để mua sắm nhanh chóng và tiện lợi hơn."
           titleSx={{ ...TYPOGRAPHY_STYLES["2xl"].bold, textTransform: "uppercase" }}

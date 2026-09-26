@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import useStyles from "./product-empty-state.styles";
 
-const EMPTY_PRODUCT_ILLUSTRATION_SRC = "/image/icons/empty-item.svg";
+const EMPTY_PRODUCT_ILLUSTRATION_SRC = "/images/icons/empty-item.svg";
 const EMPTY_PRODUCT_MESSAGE = "Không có kết quả hiển thị";
 const EMPTY_PRODUCT_DESCRIPTION = "Hiện không có kết quả hiển thị phù hợp với yêu cầu của bạn.";
 

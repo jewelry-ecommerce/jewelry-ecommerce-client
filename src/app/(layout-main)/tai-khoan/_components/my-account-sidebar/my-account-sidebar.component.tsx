@@ -47,12 +47,12 @@ const MyAccountSidebar = ({ activeId, onItemClick, onLogoutStart }: MyAccountSid
   };
 
   const menuItems: SidebarItem[] = [
-    { id: "thong-tin-tai-khoan", label: "Thông tin tài khoản", icon: "/image/icons/icon-user.svg" },
-    { id: "lich-su-don-hang", label: "Lịch sử đơn hàng", icon: "/image/icons/icon-file-check.svg" },
-    { id: "uu-dai-cua-ban", label: "Ưu đãi của bạn", icon: "/image/icons/icon-ticket.svg" },
-    { id: "so-dia-chi", label: "Sổ địa chỉ", icon: "/image/icons/icon-marker-pin.svg" },
-    { id: "gioi-thieu-ban-be", label: "Giới thiệu bạn bè", icon: "/image/icons/icon-user-plus.svg" },
-    { id: "logout", label: "Đăng xuất", icon: "/image/icons/icon-logout.svg", action: handleLogout },
+    { id: "thong-tin-tai-khoan", label: "Thông tin tài khoản", icon: "/images/icons/icon-user.svg" },
+    { id: "lich-su-don-hang", label: "Lịch sử đơn hàng", icon: "/images/icons/icon-file-check.svg" },
+    { id: "uu-dai-cua-ban", label: "Ưu đãi của bạn", icon: "/images/icons/icon-ticket.svg" },
+    { id: "so-dia-chi", label: "Sổ địa chỉ", icon: "/images/icons/icon-marker-pin.svg" },
+    { id: "gioi-thieu-ban-be", label: "Giới thiệu bạn bè", icon: "/images/icons/icon-user-plus.svg" },
+    { id: "logout", label: "Đăng xuất", icon: "/images/icons/icon-logout.svg", action: handleLogout },
   ];
 
   return (

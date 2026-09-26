@@ -27,6 +27,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, type KeyboardEvent } from "react";
 import { toast } from "react-toastify";
 import { useLogoSrc, useTenantBrandName } from "@/components/providers.component";
+import type { AuthUser } from "@/utils/api/auth/auth.interface";
+import { DEMO_ACCOUNT_PASSWORD, DEMO_ACCOUNT_PHONE } from "@/mock-api/demo-account";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
 import useLoginStyles from "./login.styles";
 
 const LOGIN_REMEMBER_KEY = "remember_login_info";
@@ -150,48 +153,37 @@ const LoginFlow = () => {
     }
   };
 
-  const handleLogin = async () => {
-    setPasswordError("");
-    if (password.length < 8) {
-      setPasswordError("Mật khẩu không đúng");
-      return;
-    }
+  const completeLogin = (user: AuthUser, loginPhone: string, loginPassword: string, shouldRemember: boolean) => {
+    clearCheckoutSessionId();
+    dispatch(setCredentials({ accessToken: null, refreshToken: null, user }));
+    if (shouldRemember) localStorage.setItem(LOGIN_REMEMBER_KEY, JSON.stringify({ phone: loginPhone, password: loginPassword }));
+    else localStorage.removeItem(LOGIN_REMEMBER_KEY);
+    toast.success(`Chào bạn! Cùng ${brandName} tỏa sáng theo cách riêng.`);
+  };
 
+  const submitLogin = async (loginPhone: string, loginPassword: string, shouldRemember: boolean) => {
     setIsSubmitting(true);
     try {
-      const result = await AuthApi.loginViaRoute({
-        phone: normalizedPhone,
-        password,
-      });
-
-      if (!result.user) {
-        throw new Error(result.message || "Login failed");
-      }
-
-      if (typeof window !== "undefined") {
-        clearCheckoutSessionId();
-        dispatch(
-          setCredentials({
-            accessToken: null,
-            refreshToken: null,
-            user: result.user,
-          }),
-        );
-
-        if (rememberMe) {
-          localStorage.setItem(LOGIN_REMEMBER_KEY, JSON.stringify({ phone: normalizedPhone, password }));
-        } else {
-          localStorage.removeItem(LOGIN_REMEMBER_KEY);
-        }
-      }
-
-      // Điều hướng do effect theo dõi state auth đảm nhiệm, tránh chuyển trang hai lần.
-      toast.success(`Chào bạn! Cùng ${brandName} tỏa sáng theo cách riêng.`);
+      const result = await AuthApi.loginViaRoute({ phone: loginPhone, password: loginPassword });
+      if (!result.user) throw new Error(result.message || "Login failed");
+      completeLogin(result.user, loginPhone, loginPassword, shouldRemember);
     } catch {
       setPasswordError("Mật khẩu không đúng");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const canSubmitPassword =
+    password.length >= (IS_JEWELRY_DEMO_MODE && normalizedPhone === DEMO_ACCOUNT_PHONE ? DEMO_ACCOUNT_PASSWORD.length : 8);
+
+  const handleLogin = async () => {
+    setPasswordError("");
+    if (!canSubmitPassword) {
+      setPasswordError("Mật khẩu không đúng");
+      return;
+    }
+    await submitLogin(normalizedPhone, password, rememberMe);
   };
 
   const onPhoneKeyDown = (e: KeyboardEvent) => {
@@ -207,10 +199,10 @@ const LoginFlow = () => {
     if (!(t instanceof HTMLInputElement)) return;
     if (t.type !== "password" && t.type !== "text") return;
     e.preventDefault();
-    if (password.length >= 8 && !isSubmitting) void handleLogin();
+    if (canSubmitPassword && !isSubmitting) void handleLogin();
   };
 
-  const canLogin = password.length >= 8 && !isSubmitting;
+  const canLogin = canSubmitPassword && !isSubmitting;
   const forgotHref = (() => {
     const q = new URLSearchParams();
     if (callbackUrl) q.set("callbackUrl", callbackUrl);

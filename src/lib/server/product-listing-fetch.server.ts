@@ -20,6 +20,9 @@ import type { BannerPlacement, ProductListBannerStorefrontResponse } from "@/uti
 import type { PageResponse, StorefrontNavigationResponse } from "@/utils/api/cms/cms.interface";
 import type { IParamsGetProducts, IProductFiltersResponse, IProductSkuCardResponse } from "@/utils/api/product/product.interface";
 import { PAGE_TAKE_DEFAULT, resolveProductListTakeFromSearchParams } from "@/utils/constants/page-take.constant";
+import { getMockProductCards } from "@/mock-api/catalog-mock";
+import { getApiBeUrl } from "@/utils/config/common";
+import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
 
 type SearchParamsRecord = Record<string, string | string[] | undefined>;
 type ApiQueryValue = string | number | boolean | undefined;
@@ -88,6 +91,7 @@ const buildProductApiPath = (params: IParamsGetProducts): string =>
   ]);
 
 const fetchProducts = async (params: IParamsGetProducts): Promise<IProductSkuCardResponse | null> => {
+  if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) return getMockProductCards();
   // Render phía server không set được cookie: nếu để refresh ở đây, BE rotate refresh token
   // mà token mới bị bỏ đi → refresh token trong browser thành vô hiệu.
   const { response, data } = await authFetch<IProductSkuCardResponse>(buildProductApiPath(params), {
@@ -100,6 +104,7 @@ const fetchProducts = async (params: IParamsGetProducts): Promise<IProductSkuCar
 };
 
 const fetchProductFilters = (categorySlugFromUrl?: string | null) => {
+  if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) return Promise.resolve([]);
   const filterParams = resolveProductFilterCategoryParams(categorySlugFromUrl);
   return fetchApiJson<IProductFiltersResponse>(buildApiPath("catalog/products/filters", [["categorySlug", filterParams.categorySlug]]));
 };

@@ -12,8 +12,8 @@ const fmt = (n: number) => `${n.toLocaleString("vi-VN")}đ`;
 const fmtPoints = (n: number) => n.toLocaleString("vi-VN");
 
 const PAYMENT_METHOD_ICON: Partial<Record<PaymentMethod, string>> = {
-  [PaymentMethod.MOMO_WALLET]: "/image/checkout/icon-momo.svg",
-  [PaymentMethod.ZALO_PAY]: "/image/checkout/icon-zalo-pay.svg",
+  [PaymentMethod.MOMO_WALLET]: "/images/checkout/icon-momo.svg",
+  [PaymentMethod.ZALO_PAY]: "/images/checkout/icon-zalo-pay.svg",
 };
 
 export interface OrderRefundSummaryProps {
@@ -65,7 +65,7 @@ const OrderRefundSummary: React.FC<OrderRefundSummaryProps> = ({
           <StackRowAlignCenterJustBetween gap="8px">
             <Typography className={classes.label}>Điểm loyalty hoàn lại</Typography>
             <Stack direction="row" alignItems="center" gap={0.75}>
-              <Image src="/image/icons/icon-point.svg" alt="" width={16} height={16} />
+              <Image src="/images/icons/icon-point.svg" alt="" width={16} height={16} />
               <Typography className={classes.value}>{fmtPoints(refundedLoyaltyPoints)}</Typography>
             </Stack>
           </StackRowAlignCenterJustBetween>

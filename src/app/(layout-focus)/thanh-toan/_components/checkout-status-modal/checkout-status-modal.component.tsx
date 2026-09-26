@@ -131,7 +131,7 @@ function CheckoutStatusModal({
   };
 
   const content = getModalContent();
-  const imageSrc = content?.image || "/image/checkout/out-stock.svg";
+  const imageSrc = content?.image || "/images/checkout/out-stock.svg";
   const isPayooLoading = type === "payoo_loading";
   const imageSize = isPayooLoading ? { width: 240, height: 155 } : { width: 240, height: 174 };
   const priceChangeActions = type === "price_change" ? resolveCheckoutPriceChangeActions(priceChangeDetails) : [];

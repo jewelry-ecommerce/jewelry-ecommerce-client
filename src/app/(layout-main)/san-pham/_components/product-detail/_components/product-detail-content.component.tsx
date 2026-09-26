@@ -100,7 +100,7 @@ const GalleryMediaItem = ({
       className={className}
       onClick={onClick}
       sx={{
-        cursor: onClick ? "url('/image/icons/icon-zoom.svg'), zoom-in" : "default",
+        cursor: onClick ? "url('/images/icons/icon-zoom.svg'), zoom-in" : "default",
       }}
     >
       <CdnImage
@@ -440,12 +440,12 @@ const ProductDetailContent = ({
               <Box className={classes.flashSaleContainer}>
                 <Box className={classes.flashSaleHeader}>
                   <StackRowAlignCenter gap={0.5} sx={{ flex: 1, minWidth: 0 }}>
-                    <Image src="/image/logo/banner-icon.png" alt="Flash Sale" width={22} height={21} />
+                    <Image src="/images/logo/banner-icon.png" alt="Flash Sale" width={22} height={21} />
                     <Typography className={classes.flashSaleTitle}>{promotionsData.flashSale.label}</Typography>
                   </StackRowAlignCenter>
                   <StackRowAlignCenter className={classes.soldLabel}>
                     <Box sx={{ position: "relative", top: "-2px" }}>
-                      <Image src="/image/icons/icon-fire.svg" alt="Hot" width={18} height={22} />
+                      <Image src="/images/icons/icon-fire.svg" alt="Hot" width={18} height={22} />
                     </Box>
                     <Typography className={classes.soldText}>
                       Đã bán {promotionsData.flashSale.soldCount}/{promotionsData.flashSale.soldTotalCount} suất
@@ -461,7 +461,7 @@ const ProductDetailContent = ({
                     <Typography className={classes.labelSmall}>Giảm ngay</Typography>
                     <StackRowAlignCenter gap={0.5}>
                       <Typography className={classes.priceMd}>{formatPrice(Number(promotionsData.flashSale.soldValue))}</Typography>
-                      <Image src="/image/icons/icon-flash-sale.svg" alt="Discount" width={14} height={14} />
+                      <Image src="/images/icons/icon-flash-sale.svg" alt="Discount" width={14} height={14} />
                     </StackRowAlignCenter>
                   </Box>
                   <Box sx={{ textAlign: "right" }}>
