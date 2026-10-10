@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getStorefrontPageMetadata, sharedSeoImage } from "@/lib/server/storefront-metadata";
 import { siteConfig } from "@/utils/config/site";
 import HomeView from "../trang-chu/_components/home.app";
+import { fetchHomeInitialData } from "@/lib/server/home-fetch.server";
 
 export const revalidate = 60; // ISR: CMS slug page revalidate mỗi 60 giây
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: CmsSlugPageProps): Promise<Me
 
 const CmsSlugPage = async ({ params }: CmsSlugPageProps) => {
   const { slug } = await params;
-  return <HomeView slug={slug} />;
+  return <HomeView slug={slug} initialData={await fetchHomeInitialData(slug)} />;
 };
 
 export default CmsSlugPage;

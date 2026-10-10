@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { MOCK_PRODUCTS } from "./catalog-mock";
+import { resolveCustomerDisplayPrice } from "@/utils/customer-display-price.util";
 import { CheckoutRequestLineType } from "@/utils/api/checkout/checkout.interface";
 import { PaymentMethod } from "@/utils/api/order/order.enum";
 import {
@@ -13,6 +15,32 @@ import {
 } from "./commerce-mock";
 
 const emptyState: MockState = { cart: [], orders: [], wishlist: [] };
+// Test fixture only: the application catalog starts empty until products are authored.
+beforeEach(() => {
+  MOCK_PRODUCTS.push({
+    productId: "jewelry-product-1",
+    name: "Test product",
+    slug: "test-product",
+    status: "ACTIVE",
+    isPurchasable: true,
+    brandName: "Test",
+    addToCart: { mode: "DIRECT" },
+    visualSwitch: null,
+    updatedAt: "2026-01-01T00:00:00.000Z",
+    pricePresentation: { showDiscountPercent: true },
+    selectedSku: {
+      id: "jewelry-sku-1",
+      skuCode: "TEST-001",
+      image: "",
+      imageHover: "",
+      stockStatus: "IN_STOCK",
+      customerDisplayPrice: resolveCustomerDisplayPrice({ sellingPriceAfterTaxMinor: 100000, compareAtPriceAfterTaxMinor: null }),
+    },
+  });
+});
+afterEach(() => {
+  MOCK_PRODUCTS.splice(0, MOCK_PRODUCTS.length);
+});
 
 describe("jewelry demo commerce flow", () => {
   it("adds a catalog SKU and persists its quantity", () => {

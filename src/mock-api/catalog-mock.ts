@@ -8,48 +8,7 @@ import { resolveCustomerDisplayPrice } from "@/utils/customer-display-price.util
 
 type ProductSeed = { name: string; image: string; imageHover: string };
 
-const PRODUCT_SEEDS: ProductSeed[] = [
-  { name: "Charm Lavender Lock", image: "/images/product/charm/charm-1.1.png", imageHover: "/images/product/charm/charm-1.2.png" },
-  { name: "Charm Celestial Heart", image: "/images/product/charm/charm-2.1.png", imageHover: "/images/product/charm/charm-2.2.png" },
-  { name: "Charm Starlight Key", image: "/images/product/charm/charm-3.1.png", imageHover: "/images/product/charm/charm-3.2.png" },
-  {
-    name: "Dây chuyền Celeste",
-    image: "/images/product/day-chuyen/day-chuyen-1.1.png",
-    imageHover: "/images/product/day-chuyen/day-chuyen-1.2.png",
-  },
-  {
-    name: "Dây chuyền Moonlight Pearl",
-    image: "/images/product/day-chuyen/day-chuyen-2.1.png",
-    imageHover: "/images/product/day-chuyen/day-chuyen-2.2.png",
-  },
-  {
-    name: "Dây chuyền Aurora Bloom",
-    image: "/images/product/day-chuyen/day-chuyen-3.1.png",
-    imageHover: "/images/product/day-chuyen/day-chuyen-3.2.png",
-  },
-  { name: "Hoa tai Étoile", image: "/images/product/hoa-tai/hoa-tai-1.1.png", imageHover: "/images/product/hoa-tai/hoa-tai-1.2.png" },
-  { name: "Hoa tai Pink Sakura", image: "/images/product/hoa-tai/hoa-tai-2.1.png", imageHover: "/images/product/hoa-tai/hoa-tai-2.2.png" },
-  {
-    name: "Hoa tai Crystal Wings",
-    image: "/images/product/hoa-tai/hoa-tai-3.1.png",
-    imageHover: "/images/product/hoa-tai/hoa-tai-3.2.png",
-  },
-  {
-    name: "Mặt dây Lumière",
-    image: "/images/product/mat-day-chuyen/mat-day-chuyen-1.1.png",
-    imageHover: "/images/product/mat-day-chuyen/mat-day-chuyen-1.2.png",
-  },
-  {
-    name: "Mặt dây Mystic Garden",
-    image: "/images/product/mat-day-chuyen/mat-day-chuyen-2.1.png",
-    imageHover: "/images/product/mat-day-chuyen/mat-day-chuyen-2.2.png",
-  },
-  {
-    name: "Mặt dây Noxara Star",
-    image: "/images/product/mat-day-chuyen/mat-day-chuyen-3.1.png",
-    imageHover: "/images/product/mat-day-chuyen/mat-day-chuyen-3.2.png",
-  },
-];
+const PRODUCT_SEEDS: ProductSeed[] = [];
 
 const createProduct = (index: number): IProductSkuCardItem => {
   const sellingPrice = 2_490_000 + index * 420_000;

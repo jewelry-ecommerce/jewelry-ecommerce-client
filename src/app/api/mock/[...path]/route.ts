@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { findCmsDemoPage, toStorefrontPage } from "@/mock-api/cms-demo/cms-demo.service";
 import {
   getMockStorefrontGlobalConfig,
   getMockStorefrontLogos,
@@ -232,8 +233,6 @@ const getCommerce = (path: string, state: MockState, request: NextRequest): Mock
 
 const getContent = (path: string): MockResult | null => {
   if (path.startsWith("cms/storefront/pages/")) return { data: getMockStorefrontPage(path.replace("cms/storefront/pages/", "")) };
-  if (path.startsWith("banner/storefront/placements/code/"))
-    return { data: getMockBannerPlacement(path.replace("banner/storefront/placements/code/", "").replace("/render", "")) };
   if (path === "cms/storefront/navigation" || path === "cms/storefront/navigation/plp-rail") return { data: getMockStorefrontNavigation() };
   if (path === "cms/storefront/global-config") return { data: getMockStorefrontGlobalConfig() };
   if (path === "cms/storefront/logo/v2") return { data: getMockStorefrontLogos() };
@@ -381,6 +380,25 @@ const respond = (result: MockResult): NextResponse => {
 
 async function dispatch(request: NextRequest, context: RouteContext, method: Method): Promise<NextResponse> {
   const path = (await context.params).path.join("/");
+  if (method === "GET" && path.startsWith("banner/storefront/placements/code/")) {
+    try {
+      const code = path.replace("banner/storefront/placements/code/", "").replace("/render", "");
+      const banner = await getMockBannerPlacement(code);
+      return NextResponse.json(banner, { headers: { "Cache-Control": "no-store" } });
+    } catch {
+      return NextResponse.json({ code: "BANNER_STORE_FAILED", message: "Không thể đọc banner mock." }, { status: 500 });
+    }
+  }
+  if (method === "GET" && process.env.NODE_ENV === "development" && path.startsWith("cms/storefront/pages/")) {
+    const page = await findCmsDemoPage(path.replace("cms/storefront/pages/", ""));
+    if (page) {
+      const data = toStorefrontPage(page);
+      return NextResponse.json(data ?? { code: "CMS_NOT_PUBLISHED", message: "Trang chưa được xuất bản" }, {
+        status: data ? 200 : 404,
+        headers: { "Cache-Control": "no-store" },
+      });
+    }
+  }
   const state = getState(request);
   if (method === "GET") return respond(handleGet(request, path, state));
   const body: unknown = await request.json().catch(() => ({}));

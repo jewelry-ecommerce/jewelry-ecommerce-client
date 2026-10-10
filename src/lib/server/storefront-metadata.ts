@@ -7,6 +7,7 @@ import type { PageResponse } from "@/utils/api/cms";
 import type { IProductBySlugResponse } from "@/utils/api/product/product.interface";
 import { getApiBeUrl } from "@/utils/config/common";
 import { getMockStorefrontPage } from "@/mock-api/storefront-mock";
+import { findCmsDemoPage, toStorefrontPage } from "@/mock-api/cms-demo/cms-demo.service";
 import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
 import { getMockProductDetail } from "@/mock-api/catalog-mock";
 import { addTenantToHeaders, getRuntimeTenantCode } from "./tenant-headers";
@@ -154,6 +155,14 @@ export const fetchStorefrontApiJson = async <T>(path: string): Promise<T | null>
 };
 
 export const fetchStorefrontPageBySlug = async (slug: string): Promise<PageResponse> => {
+  if (process.env.NODE_ENV === "development") {
+    const demoPage = await findCmsDemoPage(slug);
+    if (demoPage) {
+      const published = toStorefrontPage(demoPage);
+      if (!published) notFound();
+      return published;
+    }
+  }
   if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) {
     const mockPage = getMockStorefrontPage(slug);
     if (!mockPage) notFound();
@@ -217,7 +226,8 @@ export async function getStorefrontPageMetadata({
   defaults,
 }: StorefrontMetadataOptions): Promise<Metadata> {
   try {
-    const data = await fetchApiJson<PageResponse>(`cms/storefront/pages/${slug}`);
+    const demoPage = process.env.NODE_ENV === "development" ? await findCmsDemoPage(slug) : undefined;
+    const data = demoPage ? toStorefrontPage(demoPage) : await fetchApiJson<PageResponse>(`cms/storefront/pages/${slug}`);
     if (!data) {
       return createFallbackMetadata({ path, canonicalUrl, defaults });
     }
