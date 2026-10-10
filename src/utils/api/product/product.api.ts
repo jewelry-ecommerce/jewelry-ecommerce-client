@@ -28,6 +28,9 @@ import type {
 } from "./product.interface";
 import { buildRecentlyViewedRequestOptions } from "./recently-viewed-request.util";
 import { authAxios, commonAxios } from "@/utils/axios";
+import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
+import { getContentProducts } from "../content-backend/content-products.api";
+import { getContentProductDetail, getContentProductVariations } from "../content-backend/content-product-detail.api";
 
 export const getFiltersByProduct = async (params: IParamsGetProductFilters): Promise<IProductFiltersResponse> =>
   (await commonAxios.get("catalog/products/filters", { params })).data;
@@ -35,8 +38,10 @@ export const getFiltersByProduct = async (params: IParamsGetProductFilters): Pro
 export const getProducts = async (params: IParamsGetProducts): Promise<IProductsResponse> =>
   (await authAxios.get("catalog/products", { params })).data;
 
-export const getProductsSkuCardV2 = async (params: IParamsGetProducts): Promise<IProductSkuCardResponse> =>
-  (await authAxios.get("catalog/products", { params: { ...params, contract: "sku-card-v2" } })).data;
+export const getProductsSkuCardV2 = async (params: IParamsGetProducts): Promise<IProductSkuCardResponse> => {
+  if(getContentApiBaseUrl()) return getContentProducts(params);
+  return (await authAxios.get("catalog/products", { params: { ...params, contract: "sku-card-v2" } })).data;
+};
 
 export const recordRecentlyViewedProduct = async (payload: { productSlug: string }): Promise<void> => {
   await authAxios.post("catalog/products/recently-viewed", payload, buildRecentlyViewedRequestOptions());
@@ -57,8 +62,10 @@ export const getRelatedProductsByProductSlug = async (productSlug: string): Prom
     })
   ).data;
 
-export const getProductBySlug = async (slug: string): Promise<IProductBySlugResponse> =>
-  (await commonAxios.get(`catalog/products/${slug}`)).data;
+export const getProductBySlug = async (slug: string): Promise<IProductBySlugResponse> => {
+  if (getContentApiBaseUrl()) return getContentProductDetail(slug);
+  return (await commonAxios.get(`catalog/products/${slug}`)).data;
+};
 
 export const getProductInfo = async (productId: string): Promise<IProductInfoItem[]> =>
   (await commonAxios.get(`catalog/product-info/${productId}`)).data;
@@ -78,8 +85,10 @@ export const getProductRelatedBySlug = async (slug: string): Promise<IProductRel
 export const getProductMixMatchBySlug = async (slug: string): Promise<IProductRelatedResponse> =>
   (await commonAxios.get(`catalog/products/${slug}/mix-match`)).data;
 
-export const getProductVariationsBySlug = async (slug: string): Promise<IProductVariationsResponse> =>
-  (await commonAxios.get(`catalog/products/${slug}/variations`)).data;
+export const getProductVariationsBySlug = async (slug: string): Promise<IProductVariationsResponse> => {
+  if (getContentApiBaseUrl()) return getContentProductVariations(slug);
+  return (await commonAxios.get(`catalog/products/${slug}/variations`)).data;
+};
 
 export const getCustomerWishlist = async (): Promise<ICustomerWishlistResponse> => (await authAxios.get(`product/customer/wishlist`)).data;
 

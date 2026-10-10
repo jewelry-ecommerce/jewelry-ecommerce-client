@@ -15,6 +15,8 @@ import { getApiBeUrl } from "@/utils/config/common";
 import type { BannerPlacement, BaseBannerItem } from "@/utils/api/banner/banner.interface";
 import { getMockBannerPlacement } from "@/mock-api/banner-mock";
 import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
+import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
+import { getContentBanner } from "@/utils/api/content-backend/content-backend.api";
 
 export type HomeInitialData = {
   page: PageResponse;
@@ -29,10 +31,10 @@ export type HomeImagePreload = {
 type BannerEntry = readonly [string, BannerPlacement];
 
 const fetchBannerPlacement = async (code: string) => {
-  if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) return getMockBannerPlacement(code);
+  if (!getContentApiBaseUrl() && (IS_JEWELRY_DEMO_MODE || !getApiBeUrl())) return getMockBannerPlacement(code);
 
   try {
-    return await getCachedBannerPlacement(code);
+    return getContentApiBaseUrl() ? await getContentBanner(code) : await getCachedBannerPlacement(code);
   } catch (error) {
     console.error(`[Storefront] Fetch banner placement "${code}" failed:`, error);
     return null;

@@ -1,4 +1,6 @@
 import { commonAxios } from "@/utils/axios";
+import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
+import { getContentPage } from "../content-backend/content-backend.api";
 import { STOREFRONT_NAVIGATION_ITEMS } from "@/utils/config/storefront-navigation.config";
 import {
   PageResponse,
@@ -25,7 +27,7 @@ const compactQueryParams = (params: StorefrontNavigationPlpRailParams) =>
   Object.fromEntries(Object.entries(params).filter(([, value]) => typeof value === "string" && value.trim()));
 
 export const getStorefrontPageBySlug = async (slug: string): Promise<PageResponse> =>
-  (await commonAxios.get<PageResponse>(`cms/storefront/pages/${slug}`)).data;
+  getContentApiBaseUrl() ? getContentPage(slug) : (await commonAxios.get<PageResponse>(`cms/storefront/pages/${slug}`)).data;
 
 export const getStorefrontSitemapPages = async (locale = "vi-VN"): Promise<StorefrontSitemapResponse> =>
   (await commonAxios.get<StorefrontSitemapResponse>("cms/storefront/pages", { params: { locale } })).data;

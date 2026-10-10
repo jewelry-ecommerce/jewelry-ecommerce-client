@@ -15,6 +15,8 @@ import { normalizeCanonicalUrl } from "@/lib/seo/canonical-url";
 import { resolvePublicSiteUrl } from "@/lib/server/public-site-url";
 import { resolveTenantBranding } from "@/lib/server/resolve-tenant-branding.server";
 import { configureDevSelfSignedTls } from "./tls";
+import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
+import { ContentHttpError, getContentPage } from "@/utils/api/content-backend/content-backend.api";
 
 type MetadataImage = {
   url: string;
@@ -155,6 +157,13 @@ export const fetchStorefrontApiJson = async <T>(path: string): Promise<T | null>
 };
 
 export const fetchStorefrontPageBySlug = async (slug: string): Promise<PageResponse> => {
+  if (getContentApiBaseUrl()) {
+    try { return await getContentPage(slug); }
+    catch (error) {
+      if(error instanceof ContentHttpError && error.status===404) notFound();
+      throw error;
+    }
+  }
   if (process.env.NODE_ENV === "development") {
     const demoPage = await findCmsDemoPage(slug);
     if (demoPage) {
@@ -226,8 +235,8 @@ export async function getStorefrontPageMetadata({
   defaults,
 }: StorefrontMetadataOptions): Promise<Metadata> {
   try {
-    const demoPage = process.env.NODE_ENV === "development" ? await findCmsDemoPage(slug) : undefined;
-    const data = demoPage ? toStorefrontPage(demoPage) : await fetchApiJson<PageResponse>(`cms/storefront/pages/${slug}`);
+    const demoPage = !getContentApiBaseUrl() && process.env.NODE_ENV === "development" ? await findCmsDemoPage(slug) : undefined;
+    const data = getContentApiBaseUrl() ? await getContentPage(slug) : demoPage ? toStorefrontPage(demoPage) : await fetchApiJson<PageResponse>(`cms/storefront/pages/${slug}`);
     if (!data) {
       return createFallbackMetadata({ path, canonicalUrl, defaults });
     }

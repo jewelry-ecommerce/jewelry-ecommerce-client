@@ -5,6 +5,7 @@ import { useProductWishlist } from "@/hooks";
 import ProductZoomComponent from "@/components/product/product-zoom/product-zoom.component";
 import useSWR from "swr";
 import { ProductApi } from "@/utils/api";
+import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
 import ProductDrawerComponent from "@/components/product/product-drawer/product-drawer.component";
 import { MediaType } from "@/utils/api/banner";
 import type { IProductBySlugResponse, IProductVariation } from "@/utils/api/product/product.interface";
@@ -63,6 +64,8 @@ const createCartFlow = async (): Promise<CartFlow | null> => {
 
 const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
   const productDefaultImage = useProductDefaultImage();
+  const usesContentBackend = Boolean(getContentApiBaseUrl());
+  const legacyExtrasSlug = usesContentBackend ? null : slug;
 
   // state
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -106,26 +109,26 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
     },
   });
 
-  const { data: relatedData } = useSWR(slug ? `catalog/products/${slug}/mix-match` : null, () => ProductApi.getProductMixMatchBySlug(slug));
+  const { data: relatedData } = useSWR(legacyExtrasSlug ? `catalog/products/${slug}/mix-match` : null, () => ProductApi.getProductMixMatchBySlug(slug));
 
-  const { data: giftsData } = useSWR(slug ? `catalog/products/${slug}/gifts` : null, () => ProductApi.getProductGiftsBySlug(slug));
+  const { data: giftsData } = useSWR(legacyExtrasSlug ? `catalog/products/${slug}/gifts` : null, () => ProductApi.getProductGiftsBySlug(slug));
 
-  const { data: promotionsData } = useSWR(slug ? `catalog/products/${slug}/promotions` : null, () =>
+  const { data: promotionsData } = useSWR(legacyExtrasSlug ? `catalog/products/${slug}/promotions` : null, () =>
     ProductApi.getProductPromotionsBySlug(slug),
   );
 
-  const { data: reviewSummaryData } = useSWR(slug ? `catalog/products/${slug}/reviews-summary` : null, () =>
+  const { data: reviewSummaryData } = useSWR(legacyExtrasSlug ? `catalog/products/${slug}/reviews-summary` : null, () =>
     ProductApi.getProductReviewSummaryBySlug(slug),
   );
 
   const productId = productData?.id;
-  const { data: productInfosData } = useSWR(productId ? `catalog/product-info/${productId}` : null, () => {
+  const { data: productInfosData } = useSWR(!usesContentBackend && productId ? `catalog/product-info/${productId}` : null, () => {
     return ProductApi.getProductInfo(productId);
   });
 
   const productSlug = productData?.slug;
 
-  const relatedProductsKey = productSlug ? (["pdp-related-products", productSlug] as const) : null;
+  const relatedProductsKey = !usesContentBackend && productSlug ? (["pdp-related-products", productSlug] as const) : null;
 
   const { data: relatedProductsData } = useSWR(
     relatedProductsKey,
@@ -135,7 +138,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
 
   const relatedSkuCardItems = relatedProductsData?.list ?? [];
 
-  const recentlyViewedKey = productSlug ? (["pdp-recently-viewed-products", productSlug] as const) : null;
+  const recentlyViewedKey = !usesContentBackend && productSlug ? (["pdp-recently-viewed-products", productSlug] as const) : null;
 
   const { data: recentlyViewedData } = useSWR(
     recentlyViewedKey,
@@ -155,7 +158,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
   }, [slug]);
 
   useEffect(() => {
-    if (!productData?.slug || recentlyViewedRecordedSlugRef.current === productData.slug) {
+    if (usesContentBackend || !productData?.slug || recentlyViewedRecordedSlugRef.current === productData.slug) {
       return;
     }
 
@@ -163,7 +166,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
     void ProductApi.recordRecentlyViewedProduct({
       productSlug: productData.slug,
     }).catch(() => {});
-  }, [productData?.slug]);
+  }, [productData?.slug, usesContentBackend]);
 
   useEffect(() => {
     if (!productData || viewItemTrackedSlugRef.current === slug) {
@@ -312,7 +315,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
       <BreadcrumbComponent items={breadcrumbItems} />
       <ProductDetailContent
         productData={productData}
-        productInfos={productInfosData}
+        productInfos={usesContentBackend ? productData.productInfos.map(info => ({ title: info.title, description: info.content })) : productInfosData}
         productMediaItems={productMediaItems}
         selectedVariation={selectedVariation!}
         currentSelectedAttributes={currentSelectedAttributes}

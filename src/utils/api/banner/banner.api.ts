@@ -1,8 +1,10 @@
 import { commonAxios } from "@/utils/axios";
+import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
+import { getContentBanner } from "../content-backend/content-backend.api";
 import { BannerPlacement, ProductListBannerStorefrontResponse } from "./banner.interface";
 
 export const getPlacementByCodeApi = async (code: string): Promise<BannerPlacement> =>
-  (await commonAxios.get<BannerPlacement>(`banner/storefront/placements/code/${code}/render`)).data;
+  getContentApiBaseUrl() ? getContentBanner(code) : (await commonAxios.get<BannerPlacement>(`banner/storefront/placements/code/${code}/render`)).data;
 
 export const getProductListBannersApi = async (
   contextSlug?: string | null,

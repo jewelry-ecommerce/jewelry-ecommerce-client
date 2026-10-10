@@ -5,6 +5,9 @@ import { addTenantToHeaders } from "./tenant-headers";
 import { configureDevSelfSignedTls } from "./tls";
 import { getMockProductDetail } from "@/mock-api/catalog-mock";
 import { IS_JEWELRY_DEMO_MODE } from "@/mock-api/demo-mode";
+import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
+import { getContentProductDetail } from "@/utils/api/content-backend/content-product-detail.api";
+import { ContentHttpError } from "@/utils/api/content-backend/content-backend.api";
 
 const buildProductApiUrl = (slug: string) => {
   const base = (getApiBeUrl() || "").replace(/\/$/, "");
@@ -13,6 +16,14 @@ const buildProductApiUrl = (slug: string) => {
 
 export const fetchProductBySlug = cache(async (slug: string): Promise<IProductBySlugResponse | null> => {
   configureDevSelfSignedTls();
+
+  if (getContentApiBaseUrl()) {
+    try { return await getContentProductDetail(slug); }
+    catch (error) {
+      if (error instanceof ContentHttpError && error.status === 404) return null;
+      throw error;
+    }
+  }
 
   if (IS_JEWELRY_DEMO_MODE || !getApiBeUrl()) {
     return getMockProductDetail(slug);
