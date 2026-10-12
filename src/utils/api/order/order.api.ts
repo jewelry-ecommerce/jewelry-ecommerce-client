@@ -1,5 +1,7 @@
 import type { PlaceOrderResponse } from "@/utils/api/checkout/checkout.interface";
 import { authAxios, commonAxios } from "@/utils/axios";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
+import { javaOrders, javaOrderDetail, javaGuestOrder, javaOrderPaymentStatus } from "../java/java-order.api";
 import { readStoredGuestOrderAccessToken } from "@/utils/order/guest-order-access.util";
 import type {
   CancelOrderRequest,
@@ -20,19 +22,24 @@ import type {
   OrderStatusByOrderCodeResponse,
 } from "./order.interface";
 
+async function javaLookup(payload: OrderLookupRequest): Promise<OrderDetailResponse> {
+  if (!payload.orderCode) throw new Error("Nhập mã đơn hàng và số điện thoại để tra cứu.");
+  return javaGuestOrder(payload.orderCode, payload.phone);
+}
+
 const ORDER_RETURNS_CLIENT_PATH = "order/order-returns/client";
 
 export const getOrdersMe = async (params?: GetOrdersMeParams): Promise<OrderListResponse> =>
-  (await authAxios.get("order/orders/me", { params })).data;
+  isJavaBackend() ? javaOrders(params) : (await authAxios.get("order/orders/me", { params })).data;
 
 export const getOrderMeByOrderCode = async (orderCode: string, params?: GetOrderDetailParams): Promise<OrderDetailResponse> =>
-  (await authAxios.get(`order/orders/me/${orderCode}`, { params })).data;
+  isJavaBackend() ? javaOrderDetail(orderCode) : (await authAxios.get(`order/orders/me/${orderCode}`, { params })).data;
 
 export const postOrderLookup = async (
   payload: OrderLookupRequest,
   accessToken?: string,
 ): Promise<OrderDetailResponse | OrderListResponse> =>
-  (
+  isJavaBackend() ? javaLookup(payload) : (
     await authAxios.post("order/orders/lookup", payload, {
       headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
     })
@@ -44,7 +51,7 @@ export const postOrderLookupByOrderCode = async (
   accessToken?: string,
   params?: GetOrderDetailParams,
 ): Promise<OrderDetailResponse> =>
-  (
+  isJavaBackend() ? javaGuestOrder(orderCode, phone) : (
     await authAxios.post(
       "order/orders/lookup",
       { orderCode, phone, ...(params?.includePackaging ? { includePackaging: true } : {}) },
@@ -59,7 +66,7 @@ export const resolveGuestOrderAccess = async (token: string): Promise<GuestOrder
   (await commonAxios.post("order/orders/guest-access", { token })).data;
 
 export const getOrderStatusByOrderCode = async (orderCode: string): Promise<OrderStatusByOrderCodeResponse> =>
-  (await authAxios.get(`order/orders/${orderCode}/payment-status`)).data;
+  isJavaBackend() ? javaOrderPaymentStatus(orderCode) : (await authAxios.get(`order/orders/${orderCode}/payment-status`)).data;
 
 export const retryPayment = async (
   orderCode: string,
@@ -83,6 +90,7 @@ export const getOrderShippingServicesWithLeadtime = async (
   (await commonAxios.post("order/orders/services/with-leadtime", payload, { signal: config?.signal })).data;
 
 export const cancelOrder = async (orderCode: string, payload: CancelOrderRequest): Promise<void> => {
+  if (isJavaBackend()) { await authAxios.post(`storefront/order/${orderCode}/cancel`, payload); return; }
   const guestOrderAccessToken = readStoredGuestOrderAccessToken();
   const config = guestOrderAccessToken ? { headers: { "x-guest-order-access-token": guestOrderAccessToken } } : undefined;
   await commonAxios.post(`order/orders/client/${orderCode}/cancel`, payload, config);

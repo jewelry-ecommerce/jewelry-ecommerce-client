@@ -1,6 +1,7 @@
 import { useEffect, useRef, useMemo } from "react";
 import type { UseFormTrigger } from "react-hook-form";
 import useDebounce from "@/hooks/use-debounce";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { CheckoutSession, Address, ShippingAddress } from "@/utils/api/checkout/checkout.interface";
 import type { CheckoutFormValues } from "@/app/(layout-focus)/thanh-toan/_components/checkout.constant";
 
@@ -85,12 +86,13 @@ export const useCheckoutSync = ({
 
     const { firstName, provinceCode, wardCode, addressLine, receiverPhone } = debouncedAddress;
 
-    if (!firstName || !provinceCode || !wardCode || !addressLine || !receiverPhone) return;
+    const hasLocation = isJavaBackend() ? Boolean(debouncedAddress.provinceName && debouncedAddress.wardName) : Boolean(provinceCode && wardCode);
+    if (!firstName || !hasLocation || !addressLine || !receiverPhone) return;
 
     const currentStr = JSON.stringify(debouncedAddress);
     if (currentStr !== lastSyncedValues.current) {
       if (trigger) {
-        trigger(["firstName", "provinceCode", "wardCode", "addressLine", "receiverPhone"]).then((isValid) => {
+        trigger(isJavaBackend() ? ["firstName", "provinceName", "wardName", "addressLine", "receiverPhone"] : ["firstName", "provinceCode", "wardCode", "addressLine", "receiverPhone"]).then((isValid) => {
           if (isValid) {
             void syncAddress(debouncedAddress).catch((error) => {
               onSyncError?.(error);

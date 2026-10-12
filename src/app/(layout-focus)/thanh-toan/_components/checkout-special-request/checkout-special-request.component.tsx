@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { Box, Stack, TextField } from "@mui/material";
 import { useFormContext, Controller, useFormState } from "react-hook-form";
 import CheckboxComponent from "@/components/checkbox/checkbox.component";
@@ -42,7 +43,7 @@ const CheckoutSpecialRequestSection: React.FC<CheckoutSpecialRequestSectionProps
     <Box className={classes.root}>
       <CheckoutSectionHeaderComponent title="YÊU CẦU ĐẶC BIỆT" />
       <Stack className={classes.sectionWrapper}>
-        <Stack className={classes.sectionWrapper}>
+        {(!isJavaBackend() || readOnly) && <Stack className={classes.sectionWrapper}>
           <CheckboxComponent
             title="Thông tin xuất hoá đơn VAT"
             checked={showVatSection}
@@ -118,7 +119,7 @@ const CheckoutSpecialRequestSection: React.FC<CheckoutSpecialRequestSectionProps
               />
             </Stack>
           )}
-        </Stack>
+        </Stack>}
 
         <Stack spacing={2}>
           <CheckboxComponent

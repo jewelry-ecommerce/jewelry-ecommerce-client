@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
+import { JavaAddressFields } from "@/components/java-address-fields";
 import { Dialog, DialogTitle, DialogContent, IconButton, Box, Button, useMediaQuery } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useForm, Controller, Resolver } from "react-hook-form";
@@ -142,7 +144,8 @@ const CheckoutAddressFormModal: React.FC<CheckoutAddressFormModalProps> = ({ ope
           />
 
           <Box className={classes.gridTwoColumns}>
-            <Controller
+            {isJavaBackend() ? <JavaAddressFields control={control} /> : <>
+<Controller
               name="provinceCode"
               control={control}
               render={({ field }) => {
@@ -215,6 +218,7 @@ const CheckoutAddressFormModal: React.FC<CheckoutAddressFormModalProps> = ({ ope
                 );
               }}
             />
+</>}
           </Box>
 
           <Controller

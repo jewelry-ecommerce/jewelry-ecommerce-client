@@ -1,4 +1,5 @@
 import { authAxios, commonAxios } from "@/utils/axios";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { getAuthRouteHeaders } from "@/utils/api/auth/auth-route-headers";
 import {
   AuthUser,
@@ -134,8 +135,14 @@ export const getCustomerProfile = async (): Promise<AuthUser> => (await authAxio
 export const postCustomerRefresh = async (payload: RefreshTokenRequest): Promise<RefreshTokenResponse> =>
   (await commonAxios.post("iam/customer/refresh", payload)).data;
 
-export const patchCustomerProfile = async (payload: AuthUserRequest): Promise<void> =>
-  (await authAxios.patch("iam/customer/profile", payload)).data;
+export const patchCustomerProfile = async (payload: AuthUserRequest): Promise<void> => {
+  if (isJavaBackend()) {
+    if (payload.gender || payload.birthday) throw new Error("Java hiện chỉ cập nhật tên và email, chưa lưu giới tính/ngày sinh.");
+    await authAxios.put("iam/customer/profile", { fullName: payload.firstName, email: payload.email });
+    return;
+  }
+  return (await authAxios.patch("iam/customer/profile", payload)).data;
+};
 
 export const postCustomerChangePassword = async (payload: AuthUserChangePasswordRequest): Promise<void> =>
   (await authAxios.post("iam/customer/change-password", payload)).data;
@@ -146,11 +153,25 @@ export const postCustomerChangePhone = async (payload: { newPhone: string }): Pr
 export const postCustomerVerifyChangePhone = async (payload: AuthUserVerifyChangePhoneRequest): Promise<void> =>
   (await authAxios.post("iam/customer/verify-change-phone", payload)).data;
 
-export const verifyOtpRegisterPrecheck = async (payload: VerifyOtpRegisterPrecheckRequest): Promise<VerifyOtpRegisterPrecheckResponse> =>
-  (await commonAxios.post("iam/customer/verify-otp-login", payload)).data;
+export const verifyOtpRegisterPrecheck = async (payload: VerifyOtpRegisterPrecheckRequest): Promise<VerifyOtpRegisterPrecheckResponse> => {
+  if (!isJavaBackend()) return (await commonAxios.post("iam/customer/verify-otp-login", payload)).data;
+  if (typeof window === "undefined") {
+    const result = (await commonAxios.post<{ registrationToken: string }>("storefront/auth/register/verify-otp", payload)).data;
+    if (!result.registrationToken) throw new Error("Java không trả token hoàn tất đăng ký.");
+    return { success: true, profileSetupToken: result.registrationToken };
+  }
+  const response = await fetch("/api/auth/register/verify-otp", {
+    method: "POST", headers: getAuthRouteHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(payload),
+  });
+  const result: VerifyOtpRegisterPrecheckResponse = await response.json();
+  if (!response.ok) throw new Error(result.message || "Xác thực OTP thất bại.");
+  return result;
+};
 
 export const completeOtpLoginProfile = async (payload: CompleteOtpLoginProfileRequest): Promise<CompleteOtpLoginProfileResponse> =>
-  (await commonAxios.post("iam/customer/complete-otp-login-profile", payload)).data;
+  (await commonAxios.post("iam/customer/complete-otp-login-profile", isJavaBackend() ? {
+    registrationToken: payload.profileSetupToken, fullName: payload.firstName, email: payload.email, password: payload.password,
+  } : payload)).data;
 
 export const completeOtpLoginProfileViaRoute = async (
   payload: CompleteOtpLoginProfileRequest,

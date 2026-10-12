@@ -1,3 +1,4 @@
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import type { CheckoutSession, UpdatePricingContextPayload } from "@/utils/api/checkout/checkout.interface";
@@ -80,7 +81,7 @@ export function useCheckoutPricingContextAutoSync({
       resolvedPricingShippingCarrier,
       resolvedPricingCarrierServiceId,
     );
-    void syncPricingContext(pricingPayload).catch((error) => {
+    void syncPricingContext({ ...pricingPayload, ...(isJavaBackend() ? { couponCodes: session.couponCodes ?? [] } : {}) }).catch((error) => {
       lastPricingContextSyncKey.current = null;
       if (openCheckoutErrorModal(error, { kind: "pricing", payload: pricingPayload })) return;
       toast.error(getErrorMessage(error) || "Không thể cập nhật giá checkout. Vui lòng thử lại.");

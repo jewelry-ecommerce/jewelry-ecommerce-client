@@ -5,6 +5,7 @@ import { FieldValues, Path, PathValue, UseFormSetValue } from "react-hook-form";
 import { LocationApi } from "@/utils/api";
 import { VALIDATION_MESSAGES, PHONE_REGEX } from "@/utils/constants/common.constant";
 import useDebounce from "../use-debounce";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 
 export interface AddressFormValues {
   lastName: string;
@@ -21,13 +22,13 @@ export interface AddressFormValues {
 export const validationSchema = Yup.object().shape({
   lastName: Yup.string().notRequired(),
   firstName: Yup.string().required("Vui lòng nhập đầy đủ Họ và tên"),
-  provinceCode: Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.required),
-  wardCode: Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.required),
+  provinceCode: isJavaBackend() ? Yup.number().default(0) : Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.required),
+  wardCode: isJavaBackend() ? Yup.number().default(0) : Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.required),
   addressLine: Yup.string().required(VALIDATION_MESSAGES.required),
   receiverPhone: Yup.string().matches(PHONE_REGEX, VALIDATION_MESSAGES.phone).required(VALIDATION_MESSAGES.required),
   isDefault: Yup.boolean().notRequired(),
-  provinceName: Yup.string().notRequired(),
-  wardName: Yup.string().notRequired(),
+  provinceName: isJavaBackend() ? Yup.string().required(VALIDATION_MESSAGES.required) : Yup.string().notRequired(),
+  wardName: isJavaBackend() ? Yup.string().required(VALIDATION_MESSAGES.required) : Yup.string().notRequired(),
 });
 
 export type AddressSelectFieldRef = {
@@ -65,12 +66,12 @@ export const useAddressForm = (provinceCode?: number, enabled = true) => {
     setWardSearch(val);
   }, []);
 
-  const { data: provinceRes, isLoading: isProvincesLoading } = useSWR(enabled ? ["provinces", debouncedProvinceSearch] : null, () =>
+  const { data: provinceRes, isLoading: isProvincesLoading } = useSWR(enabled && !isJavaBackend() ? ["provinces", debouncedProvinceSearch] : null, () =>
     LocationApi.getProvinces(debouncedProvinceSearch),
   );
 
   const { data: wardRes, isLoading: isWardsLoading } = useSWR(
-    enabled && provinceCode ? [`wards/${provinceCode}`, debouncedWardSearch] : null,
+    enabled && !isJavaBackend() && provinceCode ? [`wards/${provinceCode}`, debouncedWardSearch] : null,
     () => LocationApi.getWards(provinceCode as number, debouncedWardSearch),
   );
 

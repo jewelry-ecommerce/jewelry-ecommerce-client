@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
+import { JavaCheckoutVoucher } from "./java-checkout-voucher.component";
 import {
   Dialog,
   DialogTitle,
@@ -33,6 +35,8 @@ import type { SelectedCheckoutVoucher } from "./checkout-voucher.mapper";
 export type { SelectedCheckoutVoucher };
 
 interface CheckoutVoucherSectionProps {
+  javaCode?: string;
+  onApplyJavaCode?: (code: string) => Promise<void>;
   title?: string;
   placeholder?: string;
   selectedVouchers: SelectedCheckoutVoucher[];
@@ -49,6 +53,8 @@ interface CheckoutVoucherSectionProps {
 }
 
 const CheckoutVoucherSection = ({
+  javaCode = "",
+  onApplyJavaCode,
   title = "Mã voucher / Thẻ quà tặng",
   placeholder = "Chọn mã voucher",
   selectedVouchers,
@@ -72,7 +78,7 @@ const CheckoutVoucherSection = ({
     title: "",
   });
 
-  const { sections, isLoading, isRefreshing, error } = useCheckoutVoucherDiscover(isOpen, checkoutContext, {
+  const { sections, isLoading, isRefreshing, error } = useCheckoutVoucherDiscover(!isJavaBackend() && isOpen, checkoutContext, {
     isPricingContextReady,
   });
   const displayItems = getCheckoutDisplayVoucherItems(sections);
@@ -121,6 +127,7 @@ const CheckoutVoucherSection = ({
     setConditionDialog({ open: true, summary, title: item?.title ?? "" });
   };
 
+  if (isJavaBackend() && onApplyJavaCode) return <JavaCheckoutVoucher code={javaCode} onApply={onApplyJavaCode} showTitle={showTitle} readOnly={readOnly} />;
   return (
     <React.Fragment>
       <Stack className={classes.root}>

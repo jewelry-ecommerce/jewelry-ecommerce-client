@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
+import { JavaAddressFields } from "@/components/java-address-fields";
 import { Box, Typography, Stack, Link } from "@mui/material";
 import { useFormContext, Controller, useWatch } from "react-hook-form";
 import CheckboxComponent from "@/components/checkbox/checkbox.component";
@@ -140,7 +142,8 @@ const CheckoutAddressSection = ({
           />
 
           <Box className={classes.gridWrapper}>
-            <Controller
+            {isJavaBackend() ? <JavaAddressFields control={control} disabled={readOnly} /> : <>
+<Controller
               name="provinceCode"
               control={control}
               render={({ field, fieldState }) => (
@@ -200,6 +203,7 @@ const CheckoutAddressSection = ({
                 />
               )}
             />
+</>}
           </Box>
 
           <Controller
@@ -261,7 +265,8 @@ const CheckoutAddressSection = ({
             />
           ) : null}
 
-          {!isSaved && isLoggedIn && !readOnly && (
+          {isJavaBackend() && !isSaved && isLoggedIn && !readOnly && <Typography variant="body2">Địa chỉ này sẽ được lưu vào sổ địa chỉ khi đặt hàng.</Typography>}
+          {!isJavaBackend() && !isSaved && isLoggedIn && !readOnly && (
             <Controller
               name="saveAddress"
               control={control}

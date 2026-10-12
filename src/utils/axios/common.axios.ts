@@ -1,9 +1,10 @@
 import axios from "axios";
+import { isJavaBackend, javaApiPath, unwrapJavaResponse } from "../config/java-backend.config";
 import { shouldRedirectStorefront404To404Page } from "@/utils/api/storefront-api.util";
 import { getApiBeUrl, getTenantCode } from "../config/common";
 import { isAuthStatusCode } from "./auth-error.util";
 
-const resolveBaseUrl = () => (typeof window === "undefined" ? getApiBeUrl() || "http://127.0.0.1:3100/api/mock" : "/api/mock");
+const resolveBaseUrl = () => (typeof window === "undefined" ? getApiBeUrl() || "http://127.0.0.1:3100/api/mock" : isJavaBackend() ? "/api/java" : "/api/mock");
 
 const commonAxios = axios.create({
   baseURL: resolveBaseUrl(),
@@ -12,6 +13,7 @@ const commonAxios = axios.create({
 
 commonAxios.interceptors.request.use(
   (req) => {
+    if (isJavaBackend() && typeof window === "undefined" && req.url) req.url = javaApiPath(req.url);
     req.headers = req.headers ?? {};
 
     if (!(req.headers as Record<string, string>).Language) {
@@ -43,7 +45,7 @@ commonAxios.interceptors.request.use(
 );
 
 commonAxios.interceptors.response.use(
-  (res) => res,
+  (res) => { if (isJavaBackend()) res.data = unwrapJavaResponse(res.data); return res; },
   (err) => {
     const { status, data } = err.response || {};
     const requestUrl = String(err.config?.url ?? "");

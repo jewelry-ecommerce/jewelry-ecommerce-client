@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { isJavaBackend, javaApiPath, unwrapJavaResponse } from "@/utils/config/java-backend.config";
 import { getApiBeUrl } from "@/utils/config/common";
 import { getRuntimeTenantCode } from "./tenant-headers";
 import { getAuthTokens, type RequiredAuthCookieTokens } from "./cookies";
@@ -73,13 +74,14 @@ export function toValidHttpStatus(status: number): number {
 
 const buildUrl = (path: string) => {
   const normalizedBaseUrl = (getApiBeUrl() || "").replace(/\/$/, "");
-  const normalizedPath = path.replace(/^\//, "");
+  const normalizedPath = isJavaBackend() ? javaApiPath(path) : path.replace(/^\//, "");
   return `${normalizedBaseUrl}/${normalizedPath}`;
 };
 
 const parseJson = async (response: Response) => {
   try {
-    return await response.json();
+    const payload: unknown = await response.json();
+    return isJavaBackend() ? unwrapJavaResponse(payload) : payload;
   } catch {
     return null;
   }

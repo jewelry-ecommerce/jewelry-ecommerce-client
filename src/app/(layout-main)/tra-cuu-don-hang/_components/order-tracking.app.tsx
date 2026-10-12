@@ -32,6 +32,7 @@ import {
   SendOtpRecaptchaAction,
 } from "@/utils/recaptcha/recaptcha-v3.helper";
 import { buildOrderDetailNavigation } from "@/utils/order/order-detail-context.util";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 
 const orderTrackingSchema = z
   .object({
@@ -166,6 +167,7 @@ const OrderTrackingView = () => {
       }
     }
 
+    if (isJavaBackend()) { toast.error("Nhập cả mã đơn và số điện thoại để tra cứu đơn khách vãng lai. Đơn của tài khoản xem trong lịch sử sau khi đăng nhập."); return; }
     otp.setSubmittedPhone(normalizedPhone);
     otp.setOtpMethod(OtpMethod.ZNS);
 
@@ -315,7 +317,7 @@ const OrderTrackingView = () => {
                 name="orderCode"
                 control={control}
                 render={({ field }) => (
-                  <TextFieldComponent label="Mã đơn hàng" value={field.value} onValueChange={field.onChange} onBlur={field.onBlur} />
+                  <TextFieldComponent required={isJavaBackend()} label="Mã đơn hàng" value={field.value} onValueChange={field.onChange} onBlur={field.onBlur} />
                 )}
               />
 

@@ -1,4 +1,5 @@
 
+import { isJavaBackend, unwrapJavaResponse } from '../../config/java-backend.config';
 import type { Block, Page, PageResponse } from '../cms/cms.interface';
 import type { BannerItem, BannerPlacement, BannerSlot, LayoutMetadata } from '../banner/banner.interface';
 import { getContentApiBaseUrl } from '../../config/content-backend.config';
@@ -18,7 +19,8 @@ export async function requestContentBackend<T>(path:string):Promise<T> {
     const error:{message?:string}=await response.json();
     throw new ContentHttpError(response.status,error.message??'Không thể đọc nội dung.');
   }
-  return response.json();
+  const payload = await response.json();
+  return (isJavaBackend() ? unwrapJavaResponse(payload) : payload) as T;
 }
 export function mapContentPage(input:WirePage):PageResponse {
   return {...input,page:{...input.page,id:String(input.page.id)},

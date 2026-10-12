@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
+import { JavaAddressFields } from "@/components/java-address-fields";
 import { CircularProgress, Stack, Box, Button } from "@mui/material";
 import { useForm, Controller, Resolver } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -101,7 +103,8 @@ const MyAccountAddressUpdateDialog: React.FC<MyAccountAddressUpdateDialogProps> 
           )}
         />
         <Box className={classes.gridTwoColumns}>
-          <Controller
+          {isJavaBackend() ? <JavaAddressFields control={control} /> : <>
+<Controller
             name="provinceCode"
             control={control}
             render={({ field }) => (
@@ -126,6 +129,7 @@ const MyAccountAddressUpdateDialog: React.FC<MyAccountAddressUpdateDialogProps> 
               />
             )}
           />
+</>}
         </Box>
 
         <Controller

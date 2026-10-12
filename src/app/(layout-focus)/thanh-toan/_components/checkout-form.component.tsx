@@ -1,4 +1,5 @@
 "use client";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import React, { useRef, useMemo, useCallback, useState, useEffect } from "react";
 import { Box, useMediaQuery, type Theme, Stack, Portal, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -235,12 +236,13 @@ const CheckoutFormInner = ({
   );
   const normalizedSessionCouponCodes = useMemo(() => normalizeVoucherCodes(session?.couponCodes), [session?.couponCodes]);
   const normalizedSelectedCouponCodes = useMemo(
-    () => normalizeVoucherCodes(selectedVouchers.map((voucher) => voucher.code)),
-    [selectedVouchers],
+    () => isJavaBackend() ? normalizedSessionCouponCodes : normalizeVoucherCodes(selectedVouchers.map((voucher) => voucher.code)),
+    [selectedVouchers, normalizedSessionCouponCodes],
   );
   const sessionCouponCodesKey = normalizedSessionCouponCodes.join("|");
   const selectedCouponCodesKey = normalizedSelectedCouponCodes.join("|");
   const resolvedPricingShippingFee = useMemo(() => {
+    if (isJavaBackend()) return canonicalSessionShippingFee;
     if (!items.length) return canonicalSessionShippingFee;
     if (isPreOrderReserve) {
       // Pre-order: chờ with-leadtime lấy service xong mới cho pricing chạy
@@ -269,6 +271,7 @@ const CheckoutFormInner = ({
   );
   const resolvedPricingCarrierServiceId = shippingServiceId;
   const shippingQuoteBlocked = useMemo(() => {
+    if (isJavaBackend()) return !isShippingQuoteAddressFilled(shippingAddressForApi) || syncStatus.pricing === "loading";
     if (items.length === 0) return false;
     const pricingShippingFee = Number(session?.pricing?.shippingFee || 0);
     if (isPreOrderReserve) return syncStatus.pricing === "loading" || pricingShippingFee <= 0;
@@ -415,7 +418,7 @@ const CheckoutFormInner = ({
   );
 
   const saveAddressIfNeeded = async (values: CheckoutFormValues) => {
-    if (!isLoggedIn || !values.saveAddress) return;
+    if (isJavaBackend() || !isLoggedIn || !values.saveAddress) return;
 
     try {
       await LocationApi.addUserAddress(buildAddressBookPayload(values));
@@ -430,7 +433,7 @@ const CheckoutFormInner = ({
     setIsPlaceOrderSubmitting(true);
     try {
       const requiresShippingQuote = items.length > 0 && isShippingQuoteAddressFilled(shippingAddressForApi);
-      if (requiresShippingQuote && !isPreOrderReserve) {
+      if (requiresShippingQuote && !isPreOrderReserve && !isJavaBackend()) {
         if (isShippingLoading) {
           toast.info("Đang tính phí vận chuyển, vui lòng đợi giây lát.");
           isSubmissionLock.current = false;
@@ -455,7 +458,7 @@ const CheckoutFormInner = ({
         }
       }
 
-      if (Number(session?.pricing?.shippingFee || 0) <= 0) {
+      if (!isJavaBackend() && Number(session?.pricing?.shippingFee || 0) <= 0) {
         toast.error("Địa chỉ này không hỗ trợ giao hàng. Vui lòng thử địa chỉ khác.");
         isSubmissionLock.current = false;
         setIsPlaceOrderSubmitting(false);
@@ -486,6 +489,7 @@ const CheckoutFormInner = ({
       try {
         syncedPricingSession = await syncPricingContext({
           ...pricingPayload,
+          ...(isJavaBackend() ? { couponCodes: session.couponCodes ?? [] } : {}),
           ...(acceptPriceChanges ? { acceptPriceChanges: true } : {}),
         });
       } catch (error) {
@@ -498,7 +502,7 @@ const CheckoutFormInner = ({
       }
 
       let recaptchaToken: string | null = null;
-      if (!isLoggedIn) {
+      if (!isLoggedIn && !isJavaBackend()) {
         recaptchaToken = await getRecaptchaTokenForSendOtp(SendOtpRecaptchaAction.PLACE_ORDER);
         if (!recaptchaToken) {
           toast.error(RECAPTCHA_CLIENT_FAILURE_MESSAGE);
@@ -748,6 +752,8 @@ const CheckoutFormInner = ({
           {!isDesktop && (
             <React.Fragment>
               <CheckoutVoucherSection
+                javaCode={session.couponCodes?.[0] ?? ""}
+                onApplyJavaCode={async code => { await syncPricingContext({ couponCodes: code ? [code] : [] }); }}
                 selectedVouchers={selectedVouchers}
                 onToggleVoucher={handleVoucherToggle}
                 onApplyValidatedVoucher={handleVoucherApply}
@@ -805,6 +811,8 @@ const CheckoutFormInner = ({
                 fulfillmentSummary={session?.fulfillmentSummary}
               />
               <CheckoutVoucherSection
+                javaCode={session.couponCodes?.[0] ?? ""}
+                onApplyJavaCode={async code => { await syncPricingContext({ couponCodes: code ? [code] : [] }); }}
                 selectedVouchers={selectedVouchers}
                 onToggleVoucher={handleVoucherToggle}
                 onApplyValidatedVoucher={handleVoucherApply}

@@ -1,4 +1,5 @@
 import { authAxios } from "@/utils/axios";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import {
   CartApiResponse,
   CartApiResponsePost,
@@ -62,7 +63,24 @@ export const getCart = async (options?: CartRequestOptions): Promise<CartApiResp
 
 type PostCartOptions = CartRequestOptions;
 
+async function javaSetCart(params: ParamPostCartItem, options?: CartRequestOptions): Promise<CartApiResponsePost> {
+  if (params.items.some(line => !line.variationId || line.setId || line.setComponents?.length || line.selectedPackagingRelationIds?.length))
+    throw new Error("Java chưa hỗ trợ bộ sản phẩm hoặc bao bì trong giỏ hàng.");
+  let result: CartApiResponsePost;
+  if (params.clearAll) {
+    result = (await authAxios.post("cart/cart", { clearAll: true, items: [] }, withFreshGuestCartHeader(options ?? {}))).data;
+    persistGuestCartIdFromResponse(result);
+  }
+  for (const line of params.items) {
+    result = (await authAxios.put("cart/cart", { variationId: line.variationId, quantity: line.quantity },
+      withFreshGuestCartHeader(options ?? {}))).data;
+    persistGuestCartIdFromResponse(result);
+  }
+  return (await authAxios.get("cart/cart", withFreshGuestCartHeader(options ?? {}))).data;
+}
+
 export const postCart = async (paramPostCartItem: ParamPostCartItem, options?: PostCartOptions): Promise<CartApiResponsePost> => {
+  if (isJavaBackend()) return retryWhenGuestCartForbidden(resolved => javaSetCart(paramPostCartItem, resolved), options);
   const data = await retryWhenGuestCartForbidden(async (resolvedOptions) => {
     const result = await authAxios.post("cart/cart", paramPostCartItem, withFreshGuestCartHeader(resolvedOptions ?? {}));
     persistGuestCartIdFromResponse(result.data);

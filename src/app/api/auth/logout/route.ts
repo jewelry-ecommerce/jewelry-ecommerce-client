@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { authFetch } from "@/lib/server/api-client";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { getApiBeUrl } from "@/utils/config/common";
 import { clearAuthCookies, getTokens } from "@/lib/server/cookies";
 import { configureDevSelfSignedTls } from "@/lib/server/tls";
@@ -18,7 +20,17 @@ export async function POST() {
 
   configureDevSelfSignedTls();
 
-  const { accessToken } = await getTokens();
+  const { accessToken, refreshToken } = await getTokens();
+  if (isJavaBackend()) {
+    if (refreshToken) {
+      const result = await authFetch("auth/logout", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }), skipRefresh: true });
+      if (!result.response.ok) console.warn("[auth/logout] Java logout failed", { status: result.response.status });
+    }
+    const response = NextResponse.json({ success: true }, { headers: SESSION_SENSITIVE_HEADERS });
+    clearAuthCookies(response.cookies);
+    return response;
+  }
 
   // Best effort backend logout; cookie clear still proceeds even if backend call fails.
   if (getApiBeUrl() && accessToken) {

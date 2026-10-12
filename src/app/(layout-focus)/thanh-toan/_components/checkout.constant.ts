@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { EMAIL_REGEX, TAX_CODE_REGEX, VALIDATION_MESSAGES, PHONE_REGEX } from "@/utils/constants/common.constant";
 import { CheckoutSession } from "@/utils/api/checkout/checkout.interface";
 import { PaymentMethod } from "@/utils/api/order/order.enum";
@@ -120,10 +121,10 @@ export const getCheckoutValidationSchema = (
     // Address validation
     lastName: Yup.string().notRequired(),
     firstName: activeIsAddressSaved ? Yup.string().notRequired() : Yup.string().required("Vui lòng nhập đầy đủ Họ và tên"),
-    provinceCode: activeIsAddressSaved
+    provinceCode: (activeIsAddressSaved || isJavaBackend())
       ? Yup.number().notRequired()
       : Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.required),
-    wardCode: activeIsAddressSaved
+    wardCode: (activeIsAddressSaved || isJavaBackend())
       ? Yup.number().notRequired()
       : Yup.number().required(VALIDATION_MESSAGES.required).min(1, VALIDATION_MESSAGES.required),
     addressLine: activeIsAddressSaved ? Yup.string().notRequired() : Yup.string().required(VALIDATION_MESSAGES.required),
@@ -139,7 +140,7 @@ export const getCheckoutValidationSchema = (
       : Yup.string().notRequired().default(""),
     showVat: Yup.boolean().default(false),
     showNote: Yup.boolean().default(false),
-    provinceName: Yup.string().default(""),
-    wardName: Yup.string().default(""),
+    provinceName: isJavaBackend() ? Yup.string().required(VALIDATION_MESSAGES.required).default("") : Yup.string().default(""),
+    wardName: isJavaBackend() ? Yup.string().required(VALIDATION_MESSAGES.required).default("") : Yup.string().default(""),
     saveAddress: Yup.boolean().notRequired(),
   });

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { isJavaBackend, javaApiPath, unwrapJavaResponse } from "../config/java-backend.config";
 import { clearUserScopedSwrCache } from "@/lib/swr/clear-user-scoped-cache.util";
 import { getApiBeUrl, getTenantCode } from "../config/common";
 import { clearAuthTokens } from "../auth/access-token.util";
@@ -15,7 +16,7 @@ export type AuthRequestConfig = AxiosRequestConfig & {
   skipAuthLogout?: boolean;
 };
 
-const resolveBaseUrl = () => (typeof window === "undefined" ? getApiBeUrl() || "http://127.0.0.1:3100/api/mock" : "/api/mock");
+const resolveBaseUrl = () => (typeof window === "undefined" ? getApiBeUrl() || "http://127.0.0.1:3100/api/mock" : isJavaBackend() ? "/api/java" : "/api/mock");
 
 const authAxios = axios.create({
   baseURL: resolveBaseUrl(),
@@ -25,6 +26,7 @@ const authAxios = axios.create({
 
 authAxios.interceptors.request.use(
   (req) => {
+    if (isJavaBackend() && typeof window === "undefined" && req.url) req.url = javaApiPath(req.url);
     req.headers = req.headers ?? {};
     if (!(req.headers as Record<string, string>).Language) {
       (req.headers as Record<string, string>).Language = "en_US";
@@ -83,7 +85,7 @@ const handleSessionExpired = async (config: AuthRequestConfig) => {
 };
 
 authAxios.interceptors.response.use(
-  (res) => res,
+  (res) => { if (isJavaBackend()) res.data = unwrapJavaResponse(res.data); return res; },
   async (err) => {
     const { status, data } = err.response || {};
     const config = (err.config || {}) as AuthRequestConfig;

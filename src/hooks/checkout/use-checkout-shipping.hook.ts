@@ -1,3 +1,4 @@
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import useDebounce from "@/hooks/use-debounce";
@@ -142,6 +143,7 @@ export interface UseCheckoutShippingProps {
 /** Province / ward / street — inputs that affect warehouse & shipping fee APIs. */
 export const isShippingQuoteAddressFilled = (address?: Partial<ShippingAddress> | null): boolean => {
   if (!address) return false;
+  if (isJavaBackend()) return Boolean(address.provinceName?.trim() && address.wardName?.trim() && address.addressLine?.trim());
   return Boolean(
     address.provinceCode &&
     Number(address.provinceCode) > 0 &&
@@ -244,6 +246,10 @@ export const useCheckoutShipping = ({
 
   useEffect(() => {
     const currentItems = itemsRef.current;
+    if (isJavaBackend()) {
+      setState({ warehouse: null, service: null, shippingFee: 0, isLoading: false, error: null });
+      return;
+    }
     if (!isShippingQuoteAddressFilled(debouncedQuoteAddress) || currentItems.length === 0) {
       setState({ warehouse: null, service: null, shippingFee: 0, isLoading: false, error: null });
       return;
