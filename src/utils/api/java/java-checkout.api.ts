@@ -79,6 +79,8 @@ async function placeDraft(id: string, body: PlaceOrderPayload): Promise<NonNulla
   draft.uncertain = true; saveJavaDraft(draft);
   try {
     const order = await createJavaOrder(draft);
+    if (!order || !/^[1-9][0-9]*$/.test(String(order.id)) || !order.code?.trim())
+      throw new Error("Chưa nhận được mã đơn hợp lệ. Kiểm tra đơn hàng trước khi đặt lại.");
     draft.placed = { orderId: String(order.id), orderCode: order.code, status: order.status, paymentMethod: order.paymentMethod };
     draft.uncertain = false; draft.session.status = "PLACED"; draft.session.orderCode = order.code;
     saveJavaDraft(draft); return draft.placed;

@@ -5,7 +5,7 @@ export interface JavaSkuBadges {
   badges: Array<{
     id: string | number; code: string; name: string; type: string; defaultPosition: string | null;
     displayText: string | null; styleConfig?: Record<string, unknown>; icon?: string | null;
-    image?: string | null; defaultPriorityWeight: number;
+    image?: string | null; iconMobile?:string|null;imageMobile?:string|null; defaultPriorityWeight: number;
   }>;
 }
 
@@ -17,7 +17,7 @@ export function javaBadgeRow(row: JavaSkuBadges, request: BatchResolveBadgesRequ
     badgeTemplateId: String(badge.id), code: badge.code, name: badge.name, type: badge.type,
     position: Object.values(BadgePosition).find(position => position === badge.defaultPosition) ?? null,
     displayText: badge.displayText, dynamicText: null, styleConfig: badge.styleConfig,
-    icon: badge.icon, image: badge.image, priorityWeight: badge.defaultPriorityWeight
+    icon: badge.icon, image: badge.image, iconMobile:badge.iconMobile,imageMobile:badge.imageMobile,priorityWeight: badge.defaultPriorityWeight
   }));
   return { productId: product.productId, productVariantId: String(row.skuId), skuCode: variant.skuCode ?? null, badges };
 }

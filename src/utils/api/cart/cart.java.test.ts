@@ -12,7 +12,7 @@ vi.mock("./cart.util", () => ({
     ...options, headers: { ...options.headers, "x-guest-id": transport.guestId }
   })
 }));
-import { postCart } from "./cart.api";
+import { postCart, getCart } from "./cart.api";
 
 beforeEach(() => {
   vi.stubEnv("NEXT_PUBLIC_BACKEND_PROVIDER", "JAVA");
@@ -20,6 +20,13 @@ beforeEach(() => {
   transport.get.mockResolvedValue({ data: { guestId: "guest-1", items: [] } });
 });
 afterEach(() => { vi.clearAllMocks(); vi.unstubAllEnvs(); });
+
+test("Java cart row ID never becomes a SKU ID for totals, checkout or quantity changes",async()=>{
+  transport.get.mockResolvedValue({data:{guestId:"guest-1",items:[{
+    id:"804",variationId:"12",productId:"3",quantity:1,found:true,
+  }]}});
+  expect(await getCart()).toEqual([expect.objectContaining({id:"12",variationId:"12"})]);
+});
 
 test("Java uses absolute quantities and carries the newly issued guest ID to the next mutation", async () => {
   transport.put.mockResolvedValue({ data: { guestId: "guest-1", items: [] } });

@@ -655,6 +655,7 @@ const useStyles = makeStyles({ name: "ProductDetail" })((theme) => ({
     overflow: "hidden",
     backgroundColor: "var(--product-image-background)",
     alignSelf: "stretch",
+    border: "1px solid #F8F8F8",
     [theme.breakpoints.down("md")]: {
       width: "100px",
       height: "auto",

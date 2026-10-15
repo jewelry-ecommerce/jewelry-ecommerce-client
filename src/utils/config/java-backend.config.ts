@@ -1,5 +1,10 @@
 
 export const isJavaBackend = (): boolean => process.env.NEXT_PUBLIC_BACKEND_PROVIDER?.toUpperCase() === 'JAVA';
+export function getJavaHttpStatus(payload: unknown, httpStatus: number): number {
+  if (!payload || typeof payload !== 'object' || !('status' in payload)) return httpStatus;
+  return typeof payload.status === 'number' && payload.status >= 400 && payload.status <= 599
+    ? payload.status : httpStatus;
+}
 export function javaApiPath(path: string): string {
   const normalized = path.replace(/^\//, '');
   const aliases: Record<string, string> = {

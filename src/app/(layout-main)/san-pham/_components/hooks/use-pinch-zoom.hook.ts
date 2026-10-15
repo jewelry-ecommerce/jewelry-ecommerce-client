@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, useMemo, type Dispatch, type SetStateAction } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo, type Dispatch, type SetStateAction } from "react";
 import { PRODUCT_ZOOM_CONFIG } from "./pinch-zoom.constants";
 
 export interface ZoomPoint {
@@ -31,6 +31,7 @@ function getTouchMidpoint(firstTouch: Touch, secondTouch: Touch): ZoomPoint {
 
 function preventZoomGesture(event: TouchEvent): void {
   if (event.cancelable) event.preventDefault();
+  event.stopPropagation();
 }
 
 export interface PinchZoomResult {
@@ -102,6 +103,7 @@ function startSingleTouch(event: TouchEvent, context: ZoomGestureContext): void 
   }
   gesture.lastTapTime = now;
   if (gesture.scale <= PRODUCT_ZOOM_CONFIG.minScale) return;
+  event.stopPropagation();
   gesture.initialMidpoint = getProductZoomPoint(event.touches[0]);
   gesture.initialPan = gesture.pan;
   gesture.isPanning = true;
@@ -167,9 +169,46 @@ function useTouchListeners(container: HTMLElement | null, handlers: TouchHandler
   }, [container, handlers]);
 }
 
+export function clampProductZoomPan(container: HTMLElement | null, pan: ZoomPoint, scale: number): ZoomPoint {
+  const image = container?.querySelector("img");
+  if (!container || !image || scale <= PRODUCT_ZOOM_CONFIG.minScale) return { x: 0, y: 0 };
+  const horizontalLimit = Math.max(0, (image.offsetWidth * scale - container.clientWidth) / 2);
+  const verticalLimit = Math.max(0, (image.offsetHeight * scale - container.clientHeight) / 2);
+  return {
+    x: Math.min(Math.max(pan.x, -horizontalLimit), horizontalLimit),
+    y: Math.min(Math.max(pan.y, -verticalLimit), verticalLimit),
+  };
+}
+
+function usePanBounds(container: HTMLElement | null, scale: number, pan: ZoomPoint, setPan: PinchZoomResult["setPan"]): void {
+  const updateBounds = useCallback(() => {
+    setPan((currentPan) => {
+      const boundedPan = clampProductZoomPan(container, currentPan, scale);
+      return boundedPan.x === currentPan.x && boundedPan.y === currentPan.y ? currentPan : boundedPan;
+    });
+  }, [container, scale, setPan]);
+  // Clamp before paint for touch, mouse, and scale changes through the existing setters.
+  useLayoutEffect(updateBounds, [updateBounds, pan]);
+  useEffect(() => {
+    if (!container) return;
+    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(updateBounds);
+    observer?.observe(container);
+    const image = container.querySelector("img");
+    if (image) observer?.observe(image);
+    container.addEventListener("load", updateBounds, true);
+    window.addEventListener("resize", updateBounds);
+    return () => {
+      observer?.disconnect();
+      container.removeEventListener("load", updateBounds, true);
+      window.removeEventListener("resize", updateBounds);
+    };
+  }, [container, updateBounds]);
+}
+
 export function usePinchZoom(container: HTMLElement | null): PinchZoomResult {
   const [scale, setScale] = useState<number>(PRODUCT_ZOOM_CONFIG.minScale);
   const [pan, setPan] = useState<ZoomPoint>({ x: 0, y: 0 });
+  usePanBounds(container, scale, pan, setPan);
   const state = useRef<ZoomGestureState>(createGestureState());
   useEffect(() => {
     state.current.scale = scale;

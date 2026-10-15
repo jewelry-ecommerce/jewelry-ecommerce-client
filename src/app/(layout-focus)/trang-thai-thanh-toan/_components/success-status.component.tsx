@@ -23,6 +23,7 @@ import {
   preparePreOrderMemberDetailNavigation,
 } from "@/utils/api/pre-order/pre-order-detail.util";
 import { buildOrderDetailNavigation } from "@/utils/order/order-detail-context.util";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 
 interface SuccessStatusProps {
   orderCode?: string;
@@ -121,7 +122,11 @@ const SuccessStatus = ({ orderCode, orderPhone, guestOrderAccessToken, isPreOrde
               bạn hoàn tất thanh toán đơn hàng. Bạn vui lòng chú ý điện thoại để không bỏ lỡ thông báo nhé!
             </Typography>
           ) : IS_LOYALTY_UI_ENABLED ? null : (
-            <Typography className={classes.messageContent}>Vui lòng kiểm tra ZNS xác nhận để theo dõi trạng thái đơn hàng.</Typography>
+            <Typography className={classes.messageContent}>
+              {isJavaBackend()
+                ? "Đơn hàng đã được ghi nhận. Bạn có thể tra cứu bằng mã đơn và số điện thoại đặt hàng."
+                : "Vui lòng kiểm tra ZNS xác nhận để theo dõi trạng thái đơn hàng."}
+            </Typography>
           )}
         </StackAlignCenter>
       </StackAlignCenter>

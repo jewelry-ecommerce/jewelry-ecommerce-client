@@ -7,6 +7,7 @@ export interface ProductZoomProps {
   images: string[];
   productName?: string;
   initialIndex: number;
+  initialScale?: number;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -84,8 +85,11 @@ function useImageNavigation(props: ProductZoomProps, resetZoom: PinchZoomResult[
     if (!props.isOpen) return;
     setCurrentIndex(props.initialIndex);
     // Continue the zoom the user was already viewing outside the overlay.
-    resetZoom(window.visualViewport?.scale || PRODUCT_ZOOM_CONFIG.minScale);
-  }, [props.isOpen, props.initialIndex, resetZoom]);
+    resetZoom(Math.max(
+      props.initialScale ?? PRODUCT_ZOOM_CONFIG.minScale,
+      window.visualViewport?.scale ?? PRODUCT_ZOOM_CONFIG.minScale,
+    ));
+  }, [props.isOpen, props.initialIndex, props.initialScale, resetZoom]);
   const changeImage = (direction: number, event: MouseEvent) => {
     event.stopPropagation();
     if (props.images.length === 0) return;

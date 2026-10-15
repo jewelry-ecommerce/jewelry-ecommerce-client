@@ -1,5 +1,6 @@
 import type { IProductBySlugResponse, IProductVariation, IVariantSelector, IProductVariationsResponse } from '../product/product.interface';
 import { requestContentBackend } from './content-backend.api';
+import { isJavaBackend } from '@/utils/config/java-backend.config';
 
 type WireAttribute = Omit<IVariantSelector['attribute'], 'id'> & { id: number };
 type WireValue = Omit<IProductVariation['attributeValues'][number], 'id' | 'attribute'> & {
@@ -16,7 +17,7 @@ export type WireProductDetail = Omit<IProductBySlugResponse,
   id: number; category: Omit<IProductBySlugResponse['category'], 'id'> & { id: number };
   defaultVariant?: WireVariant; defaultVariantId?: number; variants: WireVariant[];
   variantSelectors: WireSelector[];
-  productInfos: Array<Omit<IProductBySlugResponse['productInfos'][number], 'id'> & { id: number }>;
+  productInfos: Array<Omit<IProductBySlugResponse['productInfos'][number], 'id'|'content'> & { id: number|string; content?:string; description?:string }>;
 };
 
 function variantView(variant: WireVariant): IProductVariation {
@@ -35,7 +36,8 @@ export function mapContentProductDetail(product: WireProductDetail): IProductByS
     defaultVariantId: product.defaultVariantId === undefined ? undefined : String(product.defaultVariantId),
     defaultVariant: product.defaultVariant ? variantView(product.defaultVariant) : undefined,
     variants: product.variants.map(variantView), variantSelectors: product.variantSelectors.map(selectorView),
-    productInfos: product.productInfos.map(info => ({ ...info, id: String(info.id) })) };
+    productInfos: product.productInfos.map(info => ({ ...info, id: String(info.id),
+      content:isJavaBackend()?info.description??info.content??'':info.content??'' })) };
 }
 export async function getContentProductDetail(slug: string): Promise<IProductBySlugResponse> {
   return mapContentProductDetail(await requestContentBackend<WireProductDetail>('storefront/product/' + encodeURIComponent(slug)));

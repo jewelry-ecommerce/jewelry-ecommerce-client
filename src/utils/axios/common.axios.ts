@@ -1,5 +1,6 @@
 import axios from "axios";
-import { isJavaBackend, javaApiPath, unwrapJavaResponse } from "../config/java-backend.config";
+import { isJavaBackend, javaApiPath } from "../config/java-backend.config";
+import { normalizeJavaAxiosResponse } from "./java-response.util";
 import { shouldRedirectStorefront404To404Page } from "@/utils/api/storefront-api.util";
 import { getApiBeUrl, getTenantCode } from "../config/common";
 import { isAuthStatusCode } from "./auth-error.util";
@@ -45,7 +46,7 @@ commonAxios.interceptors.request.use(
 );
 
 commonAxios.interceptors.response.use(
-  (res) => { if (isJavaBackend()) res.data = unwrapJavaResponse(res.data); return res; },
+  normalizeJavaAxiosResponse,
   (err) => {
     const { status, data } = err.response || {};
     const requestUrl = String(err.config?.url ?? "");

@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { isJavaBackend, javaApiPath, unwrapJavaResponse } from "../config/java-backend.config";
+import { isJavaBackend, javaApiPath } from "../config/java-backend.config";
+import { normalizeJavaAxiosResponse } from "./java-response.util";
 import { clearUserScopedSwrCache } from "@/lib/swr/clear-user-scoped-cache.util";
 import { getApiBeUrl, getTenantCode } from "../config/common";
 import { clearAuthTokens } from "../auth/access-token.util";
@@ -85,7 +86,7 @@ const handleSessionExpired = async (config: AuthRequestConfig) => {
 };
 
 authAxios.interceptors.response.use(
-  (res) => { if (isJavaBackend()) res.data = unwrapJavaResponse(res.data); return res; },
+  normalizeJavaAxiosResponse,
   async (err) => {
     const { status, data } = err.response || {};
     const config = (err.config || {}) as AuthRequestConfig;

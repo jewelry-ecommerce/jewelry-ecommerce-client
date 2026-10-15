@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { authFetch, toValidHttpStatus } from "@/lib/server/api-client";
 import { clearAuthCookies, setAuthCookies } from "@/lib/server/cookies";
 import { SESSION_SENSITIVE_HEADERS } from "@/lib/server/session-response-headers";
+import { isSameOriginRequest } from "@/lib/server/same-origin.util";
 import { isJavaBackend, javaApiPath } from "@/utils/config/java-backend.config";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +28,7 @@ function invalidRequest(request: NextRequest, path: string | null): NextResponse
   if (!path) return NextResponse.json({ code: "UNSUPPORTED_API", message: "API chưa được nối với Java." }, { status: 404 });
   if (request.method === "GET") return null;
   const origin = request.headers.get("origin");
-  if (origin !== request.nextUrl.origin)
+  if (!isSameOriginRequest(origin, request.headers.get("host"), request.nextUrl.protocol))
     return NextResponse.json({ code: "INVALID_ORIGIN", message: "Request origin is not allowed." }, { status: 403 });
   return null;
 }

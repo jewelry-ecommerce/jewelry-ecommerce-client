@@ -2,6 +2,11 @@ import React from "react";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import ProductZoomComponent from "./product-zoom.component";
+import { MobileGalleryMediaItem } from "@/app/(layout-main)/san-pham/_components/product-detail/_components/product-detail-content.component";
+
+vi.mock("@/components/cdn-image", () => ({
+  CdnImage: ({ alt, src }: { alt: string; src: string }) => React.createElement("img", { alt, src }),
+}));
 import { getProductZoomViewportStyle } from "./use-product-zoom-viewport.hook";
 
 class TestVisualViewport extends EventTarget {
@@ -15,11 +20,12 @@ class TestVisualViewport extends EventTarget {
 const images = ["/first-product.jpg", "/second-product.jpg"];
 let viewport: TestVisualViewport;
 
-function dispatchTouch(element: HTMLElement, type: string, points: Array<{ clientX: number; clientY: number }>): void {
+function dispatchTouch(element: HTMLElement, type: string, points: Array<{ clientX: number; clientY: number }>): Event {
   const event = new Event(type, { bubbles: true, cancelable: true });
   Object.defineProperty(event, "touches", { value: points });
   Object.defineProperty(event, "changedTouches", { value: points });
   fireEvent(element, event);
+  return event;
 }
 
 function pinchImage(element: HTMLElement): void {
@@ -43,6 +49,11 @@ function getZoomElements() {
 beforeEach(() => {
   viewport = new TestVisualViewport();
   vi.stubGlobal("visualViewport", viewport);
+  // happy-dom has no layout engine; give images and their containers realistic base dimensions.
+  vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(400);
+  vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockReturnValue(700);
+  vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(400);
+  vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockReturnValue(700);
 });
 
 afterEach(() => {
@@ -191,4 +202,160 @@ it("preserves browser zoom above the usual image limit and allows pinch to reduc
   expect(image.style.transform).toContain("scale(5)");
   dispatchTouch(container, "touchmove", [{ clientX: 125, clientY: 100 }, { clientX: 175, clientY: 100 }]);
   expect(image.style.transform).toContain("scale(2.5)");
+});
+
+it("opens at the zoom level passed from the managed product gallery", () => {
+  const view = render(<ProductZoomComponent images={images} initialIndex={0} initialScale={2.5} isOpen onClose={vi.fn()} />);
+  expect(getZoomElements().image.style.transform).toContain("scale(2.5)");
+  view.rerender(<ProductZoomComponent images={images} initialIndex={0} initialScale={2.5} isOpen={false} onClose={vi.fn()} />);
+  view.rerender(<ProductZoomComponent images={images} initialIndex={0} initialScale={1} isOpen onClose={vi.fn()} />);
+  expect(getZoomElements().image.style.transform).toContain("scale(1)");
+});
+
+function GalleryZoomJourney() {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [initialScale, setInitialScale] = React.useState(1);
+  return (
+    <>
+      <MobileGalleryMediaItem item={{ url: images[0] }} alt="Outside product image" className="gallery"
+        fallbackImage={images[0]} onOpenZoom={(scale) => { setInitialScale(scale); setIsOpen(true); }} />
+      <ProductZoomComponent images={images} initialIndex={0} initialScale={initialScale}
+        isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </>
+  );
+}
+
+it("pinches the outside image, transfers its scale and returns to an unzoomed detail image on X close", () => {
+  render(<GalleryZoomJourney />);
+  const outsideImage = screen.getByAltText("Outside product image");
+  const transformContainer = outsideImage.parentElement?.parentElement;
+  const touchContainer = transformContainer?.parentElement;
+  if (!transformContainer || !touchContainer) throw new Error("Outside gallery is not mounted");
+  pinchImage(touchContainer);
+  expect(transformContainer.style.transform).toBe("translate(0px, 0px) scale(2)");
+  expect(viewport.scale).toBe(1);
+  fireEvent.click(outsideImage);
+  expect(getZoomElements().image.style.transform).toContain("scale(2)");
+  fireEvent.click(screen.getByRole("button", { name: "Close product zoom" }));
+  expect(screen.queryByAltText("Product image")).toBeNull();
+  expect(transformContainer.style.transform).toBe("translate(0px, 0px) scale(1)");
+  expect(viewport.scale).toBe(1);
+  fireEvent.click(outsideImage);
+  expect(getZoomElements().image.style.transform).toContain("scale(1)");
+});
+
+it("keeps pinch and zoomed image panning from starting carousel drag", () => {
+  render(<GalleryZoomJourney />);
+  const outsideImage = screen.getByAltText("Outside product image");
+  const transformContainer = outsideImage.parentElement?.parentElement;
+  const touchContainer = transformContainer?.parentElement;
+  if (!transformContainer || !touchContainer) throw new Error("Outside gallery is not mounted");
+  const carouselTouchStart = vi.fn();
+  touchContainer.parentElement?.addEventListener("touchstart", carouselTouchStart);
+  pinchImage(touchContainer);
+  expect(carouselTouchStart).not.toHaveBeenCalled();
+  dispatchTouch(touchContainer, "touchstart", [{ clientX: 100, clientY: 100 }]);
+  dispatchTouch(touchContainer, "touchmove", [{ clientX: 110, clientY: 120 }]);
+  expect(carouselTouchStart).not.toHaveBeenCalled();
+  expect(transformContainer.style.transform).toBe("translate(10px, 20px) scale(2)");
+});
+
+it("allows one-finger carousel gestures while the outside image is unzoomed", () => {
+  render(<GalleryZoomJourney />);
+  const outsideImage = screen.getByAltText("Outside product image");
+  const touchContainer = outsideImage.parentElement?.parentElement?.parentElement;
+  if (!touchContainer) throw new Error("Outside gallery is not mounted");
+  const carouselTouchStart = vi.fn();
+  touchContainer.parentElement?.addEventListener("touchstart", carouselTouchStart);
+  const singleTouch = dispatchTouch(touchContainer, "touchstart", [{ clientX: 100, clientY: 100 }]);
+  expect(carouselTouchStart).toHaveBeenCalledOnce();
+  expect(singleTouch.defaultPrevented).toBe(false);
+  const pinchStart = dispatchTouch(touchContainer, "touchstart", [{ clientX: 100, clientY: 100 }, { clientX: 200, clientY: 100 }]);
+  expect(pinchStart.defaultPrevented).toBe(true);
+  expect(carouselTouchStart).toHaveBeenCalledOnce();
+});
+
+function setZoomGeometry(image: HTMLElement, container: HTMLElement, imageWidth: number, imageHeight: number,
+  containerWidth: number, containerHeight: number): void {
+  Object.defineProperties(image, {
+    offsetWidth: { configurable: true, value: imageWidth },
+    offsetHeight: { configurable: true, value: imageHeight },
+  });
+  Object.defineProperties(container, {
+    clientWidth: { configurable: true, value: containerWidth },
+    clientHeight: { configurable: true, value: containerHeight },
+  });
+  fireEvent.load(image);
+}
+
+it.each([
+  [10000, 10000, 140, 100],
+  [-10000, -10000, -140, -100],
+  [110, 120, 10, 20],
+])("keeps overlay touch panning inside image edges (%s, %s)", (touchX, touchY, panX, panY) => {
+  renderZoom();
+  const { image, container } = getZoomElements();
+  setZoomGeometry(image, container, 340, 400, 400, 600);
+  pinchImage(container);
+  dispatchTouch(container, "touchstart", [{ clientX: 100, clientY: 100 }]);
+  dispatchTouch(container, "touchmove", [{ clientX: touchX, clientY: touchY }]);
+  expect(image.style.transform).toBe(`translate3d(${panX}px, ${panY}px, 0) scale(2)`);
+});
+
+it("keeps mouse panning bounded and reclamps pan when toolbar zoom decreases", () => {
+  renderZoom();
+  const { image, container } = getZoomElements();
+  setZoomGeometry(image, container, 340, 400, 400, 600);
+  pinchImage(container);
+  fireEvent.mouseDown(container, { clientX: 100, clientY: 100 });
+  fireEvent.mouseMove(container, { clientX: 10000, clientY: 10000 });
+  fireEvent.mouseUp(container, { clientX: 10000, clientY: 10000 });
+  expect(image.style.transform).toBe("translate3d(140px, 100px, 0) scale(2)");
+  fireEvent.click(screen.getByLabelText("Zoom out"));
+  expect(image.style.transform).toBe("translate3d(55px, 0px, 0) scale(1.5)");
+});
+
+it("centers an axis when the zoomed image is smaller than its container", () => {
+  renderZoom();
+  const { image, container } = getZoomElements();
+  setZoomGeometry(image, container, 200, 200, 400, 600);
+  pinchImage(container);
+  dispatchTouch(container, "touchstart", [{ clientX: 100, clientY: 100 }]);
+  dispatchTouch(container, "touchmove", [{ clientX: 10000, clientY: -10000 }]);
+  expect(image.style.transform).toBe("translate3d(0px, 0px, 0) scale(2)");
+});
+
+it("reclamps pan when image dimensions change after load", () => {
+  renderZoom();
+  const { image, container } = getZoomElements();
+  pinchImage(container);
+  dispatchTouch(container, "touchstart", [{ clientX: 100, clientY: 100 }]);
+  dispatchTouch(container, "touchmove", [{ clientX: 10000, clientY: 10000 }]);
+  expect(image.style.transform).toBe("translate3d(200px, 350px, 0) scale(2)");
+  setZoomGeometry(image, container, 340, 400, 400, 600);
+  expect(image.style.transform).toBe("translate3d(140px, 100px, 0) scale(2)");
+});
+
+it("keeps the outside image inside the gallery when dragged far in either direction", () => {
+  render(<GalleryZoomJourney />);
+  const image = screen.getByAltText("Outside product image");
+  const transformContainer = image.parentElement?.parentElement;
+  const container = transformContainer?.parentElement;
+  if (!transformContainer || !container) throw new Error("Outside gallery is not mounted");
+  setZoomGeometry(image, container, 400, 600, 400, 600);
+  pinchImage(container);
+  dispatchTouch(container, "touchstart", [{ clientX: 100, clientY: 100 }]);
+  dispatchTouch(container, "touchmove", [{ clientX: 10000, clientY: 10000 }]);
+  expect(transformContainer.style.transform).toBe("translate(200px, 300px) scale(2)");
+  dispatchTouch(container, "touchmove", [{ clientX: -10000, clientY: -10000 }]);
+  expect(transformContainer.style.transform).toBe("translate(-200px, -300px) scale(2)");
+  fireEvent.click(image);
+  fireEvent.click(screen.getByRole("button", { name: "Close product zoom" }));
+  expect(transformContainer.style.transform).toBe("translate(0px, 0px) scale(1)");
+});
+
+it("does not let an explicit gallery scale of 1 override browser zoom", () => {
+  viewport.scale = 2.5;
+  render(<ProductZoomComponent images={images} initialIndex={0} initialScale={1} isOpen onClose={vi.fn()} />);
+  expect(getZoomElements().image.style.transform).toContain("scale(2.5)");
 });

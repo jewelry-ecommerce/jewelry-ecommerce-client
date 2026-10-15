@@ -16,7 +16,7 @@ async function cardPage(query:IParamsGetProducts,page:number):Promise<IProductSk
   const take=query.isPagination===false?CONTENT_PRODUCT_QUERY_POLICY.maximumTake:
     Math.min(Math.max(query.take??CONTENT_PRODUCT_QUERY_POLICY.defaultTake,1),CONTENT_PRODUCT_QUERY_POLICY.maximumTake);
   const params=new URLSearchParams({page:String(page),take:String(take)});
-  for(const key of ['search','productIds','collectionSlug','categorySlug'] as const) {
+  for(const key of ['search','productIds','collectionSlug','categorySlug','categorySlugs','attributes'] as const) {
     const value=query[key]?.trim();
     const javaKey = key === "categorySlug" ? "category" : key === "collectionSlug" ? "collection" : key;
     if(value) params.set(isJavaBackend() ? javaKey : key,value);

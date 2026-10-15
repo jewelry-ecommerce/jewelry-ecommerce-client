@@ -41,7 +41,9 @@ import { CdnVideo } from "@/components/cdn-video";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useCountdown } from "../../hooks";
+import { useCountdown, usePinchZoom } from "../../hooks";
+import { PRODUCT_ZOOM_CONFIG } from "../../hooks/pinch-zoom.constants";
+import type { ComponentProps } from "react";
 import useStyles from "../product-detail.styles";
 import { initiateCheckout } from "@/utils/api/checkout/checkout.api";
 import { buildCheckoutItemPayload } from "@/utils/api/cart/cart-checkout.util";
@@ -123,6 +125,28 @@ const GalleryMediaItem = ({
   );
 };
 
+type MobileGalleryMediaProps = Omit<ComponentProps<typeof GalleryMediaItem>, "onClick"> & {
+  onOpenZoom?: (scale: number) => void;
+};
+
+export function MobileGalleryMediaItem({ onOpenZoom, ...mediaProps }: MobileGalleryMediaProps) {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const { scale, pan, resetZoom } = usePinchZoom(onOpenZoom ? container : null);
+  const handleOpen = () => {
+    onOpenZoom?.(scale);
+    // The overlay receives this scale; the underlying image returns to normal immediately.
+    resetZoom();
+  };
+  return (
+    <Box ref={setContainer} sx={{ overflow: "hidden", touchAction: onOpenZoom
+      ? scale > PRODUCT_ZOOM_CONFIG.minScale ? "none" : "pan-y" : "auto" }}>
+      <Box style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` }}>
+        <GalleryMediaItem {...mediaProps} onClick={onOpenZoom ? handleOpen : undefined} />
+      </Box>
+    </Box>
+  );
+}
+
 interface ProductDetailContentProps {
   productData: IProductBySlugResponse;
   productInfos?: IProductInfoItem[];
@@ -137,7 +161,7 @@ interface ProductDetailContentProps {
   onVariantSelect: (attrCode: string, valueCode: string, currentAttributes: Record<string, string>) => void;
   onToggleFavorite?: () => void | Promise<void>;
   onAddToCart: (variationId: string, item?: CartViewItem) => Promise<unknown> | unknown;
-  onOpenLightbox: (index: number) => void;
+  onOpenLightbox: (index: number, initialScale?: number) => void;
   onOpenDrawer: () => void;
 }
 
@@ -360,13 +384,13 @@ const ProductDetailContent = ({
               <Box className={classes.sliderContainer}>
                 {galleryMediaList.map((item, index) => (
                   <Box key={`${item.url || "media"}-${index}`} className={classes.sliderSlide}>
-                    <GalleryMediaItem
+                    <MobileGalleryMediaItem
                       item={item}
                       alt={productData.name}
                       className={classes.galleryImageWrapper}
                       fallbackImage={productDefaultImage}
                       priority={index === 0}
-                      onClick={getMediaType(item.url, item.mediaType) !== MediaType.VIDEO ? () => onOpenLightbox(index) : undefined}
+                      onOpenZoom={getMediaType(item.url, item.mediaType) !== MediaType.VIDEO ? (scale) => onOpenLightbox(index, scale) : undefined}
                     />
                   </Box>
                 ))}

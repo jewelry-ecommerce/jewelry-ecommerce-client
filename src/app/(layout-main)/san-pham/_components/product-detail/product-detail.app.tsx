@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BreadcrumbComponent, ProductSliderComponent } from "@/components";
 import { useProductWishlist } from "@/hooks";
+import { PRODUCT_ZOOM_CONFIG } from "../hooks/pinch-zoom.constants";
 import ProductZoomComponent from "@/components/product/product-zoom/product-zoom.component";
 import useSWR from "swr";
 import { ProductApi } from "@/utils/api";
@@ -70,6 +71,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
   // state
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxScale, setLightboxScale] = useState<number | undefined>();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<IProductVariation | undefined>(() => resolveDefaultVariation(initialData));
   const viewItemTrackedSlugRef = useRef<string | null>(null);
@@ -297,8 +299,9 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
     if (matched) setSelectedVariation(matched);
   };
 
-  const handleOpenLightbox = (index: number) => {
+  const handleOpenLightbox = (index: number, initialScale?: number) => {
     setLightboxIndex(index);
+    setLightboxScale(initialScale && initialScale > PRODUCT_ZOOM_CONFIG.minScale ? initialScale : undefined);
     setIsLightboxOpen(true);
   };
 
@@ -359,6 +362,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
         isOpen={isLightboxOpen}
         onClose={() => setIsLightboxOpen(false)}
         initialIndex={lightboxIndex}
+        initialScale={lightboxScale}
         productName={productData.name}
         images={(productMediaItems.length > 0 ? productMediaItems : [{ url: productDefaultImage }]).map(
           (m) => m.url || productDefaultImage,

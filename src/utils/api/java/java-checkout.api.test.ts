@@ -20,6 +20,15 @@ beforeEach(() => {
   } : { id: 42, code: "ORD42", status: "PENDING", paymentMethod: "COD" } }));
 });
 afterEach(() => vi.resetAllMocks());
+
+test("missing order code never marks the session as placed", async () => {
+  const value=draft();storage.owned.mockResolvedValue(value);
+  transport.common.post.mockImplementation(async(path:string)=>({data:path.includes("quote")
+    ?{items:[],summary:{subtotal:200,productDiscount:0,voucherDiscount:0,shippingFee:0,grandTotal:200}}
+    :{status:404,message:"Invalid SKU"}}));
+  await expect(javaPlaceOrder("checkout-1",{paymentMethod:"COD",consent:false})).rejects.toThrow("mã đơn");
+  expect(value.placed).toBeUndefined();expect(value.uncertain).toBe(true);
+});
 test("guest COD uses numeric SKU, backend totals, real address and guest cart header", async () => {
   const value = draft(); storage.owned.mockResolvedValue(value);
   const result = await javaPlaceOrder("checkout-1", { paymentMethod: "COD", consent: false });

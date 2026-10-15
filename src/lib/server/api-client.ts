@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { isJavaBackend, javaApiPath, unwrapJavaResponse } from "@/utils/config/java-backend.config";
+import { isJavaBackend, javaApiPath, unwrapJavaResponse, getJavaHttpStatus } from "@/utils/config/java-backend.config";
 import { getApiBeUrl } from "@/utils/config/common";
 import { getRuntimeTenantCode } from "./tenant-headers";
 import { getAuthTokens, type RequiredAuthCookieTokens } from "./cookies";
@@ -114,7 +114,11 @@ type RequestOutcome =
 const runRequest = async (send: () => Promise<Response>): Promise<RequestOutcome> => {
   try {
     const response = await send();
-    return { kind: "response", response, data: await parseJson(response) };
+    const data = await parseJson(response);
+    const status = isJavaBackend() ? getJavaHttpStatus(data, response.status) : response.status;
+    const normalizedResponse = status === response.status ? response
+      : new Response(null, { status, headers: response.headers });
+    return { kind: "response", response: normalizedResponse, data };
   } catch (error) {
     if (isOutOfRangeStatusError(error)) {
       return { kind: "expiredStatus" };

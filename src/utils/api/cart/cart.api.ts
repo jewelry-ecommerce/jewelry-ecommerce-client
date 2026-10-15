@@ -16,13 +16,19 @@ function persistGuestCartIdFromResponse(data: CartApiResponsePost) {
   if (data.guestId) setGuestCartId(data.guestId);
 }
 
+function cartViewIds<T extends CartApiResponse[number]>(items: T[]): T[] {
+  if (!isJavaBackend()) return items;
+  return items.map(item => "variationId" in item && item.variationId
+    ? { ...item, id: String(item.variationId), variationId: String(item.variationId) } : item);
+}
+
 function normalizeGetCartResponse(data: unknown): CartApiResponse {
-  if (Array.isArray(data)) return data;
+  if (Array.isArray(data)) return cartViewIds(data);
 
   if (data && typeof data === "object" && "items" in data) {
     const envelope = data as CartApiResponsePost;
     persistGuestCartIdFromResponse(envelope);
-    return envelope.items ?? [];
+    return cartViewIds(envelope.items ?? []);
   }
 
   return [];
@@ -76,7 +82,8 @@ async function javaSetCart(params: ParamPostCartItem, options?: CartRequestOptio
       withFreshGuestCartHeader(options ?? {}))).data;
     persistGuestCartIdFromResponse(result);
   }
-  return (await authAxios.get("cart/cart", withFreshGuestCartHeader(options ?? {}))).data;
+  const response:CartApiResponsePost=(await authAxios.get("cart/cart", withFreshGuestCartHeader(options ?? {}))).data;
+  return {...response,items:cartViewIds(response.items??[])};
 }
 
 export const postCart = async (paramPostCartItem: ParamPostCartItem, options?: PostCartOptions): Promise<CartApiResponsePost> => {

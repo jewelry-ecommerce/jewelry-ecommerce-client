@@ -90,7 +90,8 @@ export const getOrderShippingServicesWithLeadtime = async (
   (await commonAxios.post("order/orders/services/with-leadtime", payload, { signal: config?.signal })).data;
 
 export const cancelOrder = async (orderCode: string, payload: CancelOrderRequest): Promise<void> => {
-  if (isJavaBackend()) { await authAxios.post(`storefront/order/${orderCode}/cancel`, payload); return; }
+  if (isJavaBackend()) { await authAxios.post(`storefront/order/${encodeURIComponent(orderCode)}/cancel`,
+    { reason: payload.note?.trim() || payload.cancellationReason }); return; }
   const guestOrderAccessToken = readStoredGuestOrderAccessToken();
   const config = guestOrderAccessToken ? { headers: { "x-guest-order-access-token": guestOrderAccessToken } } : undefined;
   await commonAxios.post(`order/orders/client/${orderCode}/cancel`, payload, config);
