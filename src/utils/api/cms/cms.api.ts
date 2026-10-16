@@ -1,4 +1,6 @@
 import { commonAxios } from "@/utils/axios";
+import { isJavaBackend } from '@/utils/config/java-backend.config';
+import { javaGlobalConfig, javaSiteLayout } from '../java/java-site-layout.api';
 import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
 import { getContentPage } from "../content-backend/content-backend.api";
 import { STOREFRONT_NAVIGATION_ITEMS } from "@/utils/config/storefront-navigation.config";
@@ -27,13 +29,13 @@ const compactQueryParams = (params: StorefrontNavigationPlpRailParams) =>
   Object.fromEntries(Object.entries(params).filter(([, value]) => typeof value === "string" && value.trim()));
 
 export const getStorefrontPageBySlug = async (slug: string): Promise<PageResponse> =>
-  getContentApiBaseUrl() ? getContentPage(slug) : (await commonAxios.get<PageResponse>(`cms/storefront/pages/${slug}`)).data;
+  getContentApiBaseUrl() ? getContentPage(slug,typeof window==='undefined'?undefined:window.matchMedia('(max-width: 810px)').matches?'MOBILE':'DESKTOP') : (await commonAxios.get<PageResponse>(`cms/storefront/pages/${slug}`)).data;
 
 export const getStorefrontSitemapPages = async (locale = "vi-VN"): Promise<StorefrontSitemapResponse> =>
   (await commonAxios.get<StorefrontSitemapResponse>("cms/storefront/pages", { params: { locale } })).data;
 
 export const getStorefrontGlobalConfig = async (): Promise<StorefrontGlobalConfigResponse> =>
-  (await commonAxios.get<StorefrontGlobalConfigResponse>("cms/storefront/global-config")).data;
+  isJavaBackend() ? javaGlobalConfig() : (await commonAxios.get<StorefrontGlobalConfigResponse>("cms/storefront/global-config")).data;
 
 export const getStorefrontTopBanner = async (): Promise<TopBannerResponse | null> => {
   const config = await getStorefrontGlobalConfig();
@@ -41,7 +43,7 @@ export const getStorefrontTopBanner = async (): Promise<TopBannerResponse | null
 };
 
 export const getStorefrontLogos = async (): Promise<StorefrontLogosResponse> =>
-  (await commonAxios.get<StorefrontLogosResponse>("cms/storefront/logo/v2")).data;
+  isJavaBackend() ? (await javaSiteLayout()).logos : (await commonAxios.get<StorefrontLogosResponse>("cms/storefront/logo/v2")).data;
 
 export const getStorefrontLogo = async (type: LogoType = "HEADER"): Promise<StorefrontLogoResponse> => {
   const logos = await getStorefrontLogos();

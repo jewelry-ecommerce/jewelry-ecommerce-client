@@ -4,6 +4,7 @@ export const JAVA_CHECKOUT_POLICY = { storagePrefix: "java-checkout:", ttlMs: 30
 export interface JavaOrderLine { id: number | string; productId: number | string; skuId: number | string;
   name: string; imageUrl: string | null; quantity: number; unitPrice: number | string; lineTotal: number | string }
 export interface JavaOrder { id: number | string; code: string; status: string; paymentStatus: string; paymentMethod: string;
+  customerId?:number|string|null;contactEmail?:string|null;deliveredAt?:string|null;
   shippingMethod: string; shipRecipientName: string; shipPhone: string; shipProvince: string; shipWard: string;
   shipAddressLine: string; subtotal: number | string; productDiscount: number | string; voucherDiscount: number | string;
   shippingFee: number | string; grandTotal: number | string; placedAt: string; createdAt?: string; updatedAt?: string;
@@ -15,6 +16,7 @@ export interface JavaAddress { id: number | string; recipientName: string; phone
 export interface JavaCartLine { id: string; found: boolean; productId: string; variationId: string; name: string; skuCode: string;
   quantity: number; sellingPriceAfterTaxMinor: number; product?: { image?: string }; isValid: boolean }
 export interface JavaDraft { session: CheckoutSession; items: Array<{ skuId: number; quantity: number }>;
+  submission?: { path: string; body: Record<string, unknown>; key: string };
   addressId?: string; authenticated: boolean; ownerId: string | null; expiresAt: number; submitting?: boolean;
   uncertain?: boolean; placed?: { orderId: string; orderCode: string; status: string; paymentMethod: string } }
 export interface JavaPage<T> { list: T[]; total: number; pagination: { hasNextPage: boolean; currentPage: number } }

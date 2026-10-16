@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from 'next/headers';
 import { notFound } from "next/navigation";
 import { isAxiosError } from "axios";
 import { getCachedStorefrontPage } from "@/lib/storefront";
@@ -17,6 +18,10 @@ import { resolveTenantBranding } from "@/lib/server/resolve-tenant-branding.serv
 import { configureDevSelfSignedTls } from "./tls";
 import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
 import { ContentHttpError, getContentPage } from "@/utils/api/content-backend/content-backend.api";
+async function requestContentPage(slug:string):Promise<PageResponse> {
+  const agent=(await headers()).get('user-agent')??'';
+  return getContentPage(slug,/Mobi|Android|iPhone|iPad/i.test(agent)?'MOBILE':'DESKTOP');
+}
 
 type MetadataImage = {
   url: string;
@@ -158,7 +163,7 @@ export const fetchStorefrontApiJson = async <T>(path: string): Promise<T | null>
 
 export const fetchStorefrontPageBySlug = async (slug: string): Promise<PageResponse> => {
   if (getContentApiBaseUrl()) {
-    try { return await getContentPage(slug); }
+    try { return await requestContentPage(slug); }
     catch (error) {
       if(error instanceof ContentHttpError && error.status===404) notFound();
       throw error;
@@ -236,7 +241,7 @@ export async function getStorefrontPageMetadata({
 }: StorefrontMetadataOptions): Promise<Metadata> {
   try {
     const demoPage = !getContentApiBaseUrl() && process.env.NODE_ENV === "development" ? await findCmsDemoPage(slug) : undefined;
-    const data = getContentApiBaseUrl() ? await getContentPage(slug) : demoPage ? toStorefrontPage(demoPage) : await fetchApiJson<PageResponse>(`cms/storefront/pages/${slug}`);
+    const data = getContentApiBaseUrl() ? await requestContentPage(slug) : demoPage ? toStorefrontPage(demoPage) : await fetchApiJson<PageResponse>(`cms/storefront/pages/${slug}`);
     if (!data) {
       return createFallbackMetadata({ path, canonicalUrl, defaults });
     }

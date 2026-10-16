@@ -16,7 +16,7 @@ function resolvePath(segments: string[]): string | null {
 
 function forwardedHeaders(request: NextRequest): Headers {
   const headers = new Headers({ Accept: "application/json" });
-  for (const name of ["Content-Type", "X-Guest-Cart-Id", "x-guest-id", "Language"]) {
+  for (const name of ["Content-Type", "X-Guest-Cart-Id", "x-guest-id", "Language", "Idempotency-Key"]) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
   }

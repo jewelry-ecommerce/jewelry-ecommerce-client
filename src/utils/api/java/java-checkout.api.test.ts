@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 const transport = vi.hoisted(() => ({ common: { post: vi.fn() }, auth: { post: vi.fn(), get: vi.fn() } }));
 const storage = vi.hoisted(() => ({ owned: vi.fn(), save: vi.fn() }));
 vi.mock("@/utils/axios", () => ({ commonAxios: transport.common, authAxios: transport.auth }));
@@ -37,14 +37,15 @@ test("guest COD uses numeric SKU, backend totals, real address and guest cart he
   expect(transport.common.post).toHaveBeenCalledWith("storefront/order/guest", expect.objectContaining({
     recipientName: "Khách", phone: "0796406514", province: "Hồ Chí Minh", items: [{ skuId: 12, quantity: 2 }],
     paymentMethod: "COD",
-  }), expect.objectContaining({ headers: { "x-guest-id": "guest-1" } }));
+  }), expect.objectContaining({ headers: expect.objectContaining({ "x-guest-id": "guest-1", "Idempotency-Key": expect.any(String) }) }));
 });
 test("authenticated COD saves new address once and uses the returned numeric ID", async () => {
   const value = draft(); value.authenticated = true; value.ownerId = "7"; storage.owned.mockResolvedValue(value);
   transport.auth.post.mockImplementation(async (path: string) => ({ data: path.endsWith("addresses") ? { id: 15 } :
     { id: 43, code: "ORD43", status: "PENDING", paymentMethod: "COD" } }));
   await javaPlaceOrder("checkout-1", { paymentMethod: "COD", consent: false });
-  expect(transport.auth.post).toHaveBeenCalledWith("storefront/order", expect.objectContaining({ addressId: 15 }));
+  expect(transport.auth.post).toHaveBeenCalledWith("storefront/order", expect.objectContaining({ addressId: 15 }),
+    expect.objectContaining({ headers: expect.objectContaining({ "Idempotency-Key": expect.any(String) }) }));
   expect(transport.common.post.mock.calls.some(call => call[0] === "storefront/order/guest")).toBe(false);
 });
 test("double click shares one placement and reloading a placed draft never creates again", async () => {
@@ -53,7 +54,7 @@ test("double click shares one placement and reloading a placed draft never creat
   expect(first).toBe(second); await first; await javaPlaceOrder("checkout-1", { consent: false });
   expect(transport.common.post.mock.calls.filter(call => call[0] === "storefront/order/guest")).toHaveLength(1);
 });
-test("network failure blocks blind retry to avoid duplicate orders", async () => {
+test("v6 retries a lost response with the same key and frozen body, without re-quoting", async () => {
   const value = draft(); storage.owned.mockResolvedValue(value);
   transport.common.post.mockRejectedValueOnce(new axios.AxiosError("offline"));
   await expect(javaPlaceOrder("checkout-1", { consent: false })).rejects.toThrow("offline");
@@ -65,7 +66,14 @@ test("network failure blocks blind retry to avoid duplicate orders", async () =>
   });
   await expect(javaPlaceOrder("checkout-1", { consent: false })).rejects.toThrow("connection lost");
   expect(value.uncertain).toBe(true);
-  await expect(javaPlaceOrder("checkout-1", { consent: false })).rejects.toThrow("trùng đơn");
+  const submission = value.submission;
+  const quoteCalls = transport.common.post.mock.calls.filter(call => call[0].includes('quote')).length;
+  transport.common.post.mockResolvedValue({ data: { id: 42, code: 'ORD42', status: 'PENDING', paymentMethod: 'COD' } });
+  await javaPlaceOrder("checkout-1", { consent: false });
+  expect(transport.common.post).toHaveBeenLastCalledWith(submission!.path, submission!.body,
+    expect.objectContaining({ headers: expect.objectContaining({ 'Idempotency-Key': submission!.key }) }));
+  expect(transport.common.post.mock.calls.filter(call => call[0].includes('quote'))).toHaveLength(quoteCalls);
+  expect(value.uncertain).toBe(false);
 });
 test("online payment and multiple vouchers cannot silently fall back to COD", async () => {
   storage.owned.mockResolvedValue(draft());
@@ -77,4 +85,16 @@ test("saved address selection must belong to the current customer", async () => 
   storage.owned.mockResolvedValue(draft()); transport.auth.get.mockResolvedValue({ data: [{ id: 15 }] });
   await expect(javaUpdateAddress("checkout-1", { addressId: "99" })).rejects.toThrow("địa chỉ");
   expect(transport.common.post).not.toHaveBeenCalled();
+});
+test('key-reused conflict remains locked; editing the payload cannot silently generate another key',async()=>{
+  const value=draft();storage.owned.mockResolvedValue(value);
+  const response={status:409,data:{errors:[{code:'IDEMPOTENCY_KEY_REUSED'}]}};
+  transport.common.post.mockImplementation(async(path:string)=>{
+    if(path.includes('quote'))return {data:{items:[],summary:{subtotal:200,productDiscount:0,voucherDiscount:0,shippingFee:0,grandTotal:200}}};
+    throw new axios.AxiosError('Key reused',undefined,undefined,undefined,response as AxiosResponse);
+  });
+  await expect(javaPlaceOrder('checkout-1',{consent:false})).rejects.toThrow('Key reused');
+  const key=value.submission?.key;expect(value.uncertain).toBe(true);
+  await expect(javaPlaceOrder('checkout-1',{consent:false,note:'Changed'})).rejects.toThrow('Giữ nguyên');
+  expect(value.submission?.key).toBe(key);
 });

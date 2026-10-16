@@ -28,3 +28,10 @@ test('unpublished page does not silently show mock data',async()=>{
   vi.stubGlobal('fetch',vi.fn().mockResolvedValue(new Response(JSON.stringify({message:'Chưa publish'}),{status:404})));
   await expect(getContentPage('trang-chu')).rejects.toBeInstanceOf(ContentHttpError);
 });
+test('CMS device query is forwarded instead of treating every device as ALL',async()=>{
+  vi.stubEnv('NEXT_PUBLIC_CONTENT_API_URL','http://localhost:8084');
+  const fetcher=vi.fn().mockResolvedValue(new Response(JSON.stringify(page),{status:200}));
+  vi.stubGlobal('fetch',fetcher);
+  await getContentPage('home','MOBILE');
+  expect(fetcher.mock.calls[0][0]).toContain('/storefront/cms/pages/home?device=MOBILE');
+});

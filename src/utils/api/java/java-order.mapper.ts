@@ -14,7 +14,8 @@ export function javaOrderItem(item: JavaOrderLine) {
     lineTotal: String(item.lineTotal), discountAmount: "0", finalAmount: String(item.lineTotal) };
 }
 export function javaOrderView(order: JavaOrder): OrderDetailResponse {
-  return { id: String(order.id), orderCode: order.code, customerId: "", createdAt: order.createdAt ?? order.placedAt,
+  return { id: String(order.id), orderCode: order.code, customerId: order.customerId==null?'':String(order.customerId),
+    contactEmail:order.contactEmail,deliveredAt:order.deliveredAt,createdAt: order.createdAt ?? order.placedAt,
     status: enumValue(Object.values(OrderStatus), order.status), paymentStatus: enumValue(Object.values(PaymentStatus), order.paymentStatus),
     paymentMethod: enumValue(Object.values(PaymentMethod), order.paymentMethod),
     shippingMethod: enumValue(Object.values(ShippingMethod), order.shippingMethod), source: OrderSource.WEBSITE,

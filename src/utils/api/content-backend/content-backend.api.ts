@@ -30,8 +30,8 @@ export function mapContentBanner(input:WireBanner):BannerPlacement {
   return {...input,id:String(input.id),slots:input.slots.map(slot=>({...slot,id:String(slot.id),
     banners:slot.banners.map(entry=>({...entry,banner:{...entry.banner,id:String(entry.banner.id)}}))}))};
 }
-export async function getContentPage(slug:string):Promise<PageResponse> {
-  return mapContentPage(await requestContentBackend<WirePage>('storefront/cms/pages/'+encodeURIComponent(slug)));
+export async function getContentPage(slug:string,device?:'DESKTOP'|'MOBILE'):Promise<PageResponse> {
+  return mapContentPage(await requestContentBackend<WirePage>('storefront/cms/pages/'+encodeURIComponent(slug)+(device?'?device='+device:'')));
 }
 export async function getContentBanner(code:string):Promise<BannerPlacement> {
   return mapContentBanner(await requestContentBackend<WireBanner>('storefront/banner/placements/code/'+encodeURIComponent(code)+'/render'));

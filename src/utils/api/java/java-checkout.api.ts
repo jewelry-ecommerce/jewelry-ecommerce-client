@@ -47,7 +47,7 @@ export async function javaUpdateAddress(id: string, body: UpdateShippingAddressP
     draft.session.shippingAddress = javaAddressView(address);
     draft.addressId = body.addressId;
   } else { draft.session.shippingAddress = body.shippingAddress; draft.addressId = undefined; }
-  await quoteDraft(draft); saveJavaDraft(draft); return draft.session;
+  await quoteDraft(draft); draft.submission = undefined; saveJavaDraft(draft); return draft.session;
 }
 export async function javaUpdatePricing(id: string, body: UpdatePricingContextPayload) {
   const draft = await ownedJavaDraft(id);
@@ -55,27 +55,44 @@ export async function javaUpdatePricing(id: string, body: UpdatePricingContextPa
   if (body.paymentMethod && body.paymentMethod !== JAVA_CHECKOUT_POLICY.paymentMethod) throw new Error("Hiện chỉ hỗ trợ thanh toán COD.");
   if ((body.couponCodes?.length ?? 0) > 1) throw new Error("Java chỉ hỗ trợ một voucher trên đơn hàng.");
   draft.session.couponCodes = body.couponCodes ?? draft.session.couponCodes;
-  await quoteDraft(draft); saveJavaDraft(draft); return draft.session;
+  await quoteDraft(draft); draft.submission = undefined; saveJavaDraft(draft); return draft.session;
 }
 async function createJavaOrder(draft: JavaDraft): Promise<JavaOrder> {
+  if (draft.submission) return submitJavaOrder(draft);
   const body = guestBody(draft);
-  if (!draft.authenticated) return (await commonAxios.post<JavaOrder>("storefront/order/guest", body, withFreshGuestCartHeader())).data;
+  if (!draft.authenticated) {
+    draft.submission = { path: "storefront/order/guest", body, key: crypto.randomUUID() };
+    saveJavaDraft(draft); return submitJavaOrder(draft);
+  }
   if (!draft.addressId) {
     const address = (await authAxios.post<JavaAddress>("storefront/me/addresses", javaAddressBody(draft.session.shippingAddress ?? {}))).data;
     draft.addressId = String(address.id); saveJavaDraft(draft);
   }
-  return (await authAxios.post<JavaOrder>("storefront/order", { addressId: Number(draft.addressId), items: draft.items,
-    paymentMethod: body.paymentMethod, shippingMethod: body.shippingMethod, voucherCode: body.voucherCode, note: body.note })).data;
+  draft.submission = { path: "storefront/order", key: crypto.randomUUID(), body: {
+    addressId: Number(draft.addressId), items: draft.items, paymentMethod: body.paymentMethod,
+    shippingMethod: body.shippingMethod, voucherCode: body.voucherCode, note: body.note } };
+  saveJavaDraft(draft); return submitJavaOrder(draft);
+}
+async function submitJavaOrder(draft: JavaDraft): Promise<JavaOrder> {
+  const submission = draft.submission;
+  if (!submission) throw new Error("Thiếu thông tin yêu cầu đặt hàng.");
+  const headers = { ...withFreshGuestCartHeader().headers, "Idempotency-Key": submission.key };
+  const transport = draft.authenticated ? authAxios : commonAxios;
+  return (await transport.post<JavaOrder>(submission.path, submission.body, { headers })).data;
 }
 const pendingOrders = new Map<string, Promise<NonNullable<JavaDraft["placed"]>>>();
 async function placeDraft(id: string, body: PlaceOrderPayload): Promise<NonNullable<JavaDraft["placed"]>> {
   const draft = await ownedJavaDraft(id);
   if (draft.placed) return draft.placed;
-  if (draft.uncertain) throw new Error("Chưa xác định được kết quả đặt đơn. Kiểm tra lịch sử/tra cứu đơn trước khi đặt lại để tránh trùng đơn.");
+  if (draft.uncertain && !draft.submission) throw new Error("Chưa xác định được kết quả đặt đơn. Kiểm tra lịch sử/tra cứu đơn trước khi đặt lại để tránh trùng đơn.");
   if (body.paymentMethod && body.paymentMethod !== JAVA_CHECKOUT_POLICY.paymentMethod) throw new Error("Hiện chỉ hỗ trợ COD.");
   if (body.vatInvoice) throw new Error("Java chưa hỗ trợ hóa đơn VAT.");
-  draft.session.note = body.note; draft.session.contactEmail = body.contactEmail ?? body.email;
-  await quoteDraft(draft);
+  if (draft.uncertain && (body.note !== draft.session.note || (body.contactEmail ?? body.email) !== draft.session.contactEmail))
+    throw new Error("Yêu cầu trước chưa rõ kết quả. Giữ nguyên thông tin để thử lại cùng mã yêu cầu.");
+  if (!draft.uncertain) {
+    draft.session.note = body.note; draft.session.contactEmail = body.contactEmail ?? body.email;
+    await quoteDraft(draft);
+  }
   draft.uncertain = true; saveJavaDraft(draft);
   try {
     const order = await createJavaOrder(draft);
@@ -85,9 +102,17 @@ async function placeDraft(id: string, body: PlaceOrderPayload): Promise<NonNulla
     draft.uncertain = false; draft.session.status = "PLACED"; draft.session.orderCode = order.code;
     saveJavaDraft(draft); return draft.placed;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response && error.response.status < 500) draft.uncertain = false;
+    if (axios.isAxiosError(error) && error.response && error.response.status < 500 && !idempotencyConflict(error.response.data)) {
+      draft.uncertain = false; draft.submission = undefined;
+    }
     saveJavaDraft(draft); throw error;
   }
+}
+function idempotencyConflict(payload: unknown): boolean {
+  if (!payload || typeof payload !== 'object') return false;
+  if ('code' in payload && payload.code === 'IDEMPOTENCY_KEY_REUSED') return true;
+  return 'errors' in payload && Array.isArray(payload.errors)
+    && payload.errors.some(error => error && typeof error === 'object' && error.code === 'IDEMPOTENCY_KEY_REUSED');
 }
 export function javaPlaceOrder(id: string, body: PlaceOrderPayload): Promise<NonNullable<JavaDraft["placed"]>> {
   const pending = pendingOrders.get(id); if (pending) return pending;
