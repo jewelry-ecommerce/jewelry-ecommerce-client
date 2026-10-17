@@ -28,6 +28,7 @@ import type {
 } from "./product.interface";
 import { buildRecentlyViewedRequestOptions } from "./recently-viewed-request.util";
 import { authAxios, commonAxios } from "@/utils/axios";
+import { isJavaBackend } from '@/utils/config/java-backend.config';
 import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
 import { getContentProducts } from "../content-backend/content-products.api";
 import { getContentProductDetail, getContentProductVariations } from "../content-backend/content-product-detail.api";
@@ -108,7 +109,12 @@ export const deleteCustomerWishlist = async (productIds: string[]): Promise<void
 export const getSearch = async (params: IParamsGetProducts): Promise<IProductsResponse> =>
   (await commonAxios.get("catalog/search", { params })).data;
 
-export const getSearchLanding = async (): Promise<ApiProduct[]> => (await commonAxios.get("catalog/search/landing")).data;
+export const getSearchLanding = async (): Promise<ApiProduct[]> => {
+  const path = isJavaBackend() ? 'storefront/product/search-pinned' : 'catalog/search/landing';
+  const products = (await commonAxios.get<ApiProduct[]>(path)).data;
+  return products.map(product => ({ ...product, productId: String(product.productId),
+    defaultVariationId: product.defaultVariationId == null ? product.defaultVariationId : String(product.defaultVariationId) }));
+};
 
 export const getSearchTrending = async (limit?: number): Promise<string[]> =>
   (await commonAxios.get(`catalog/search/trending`, { params: { limit } })).data;

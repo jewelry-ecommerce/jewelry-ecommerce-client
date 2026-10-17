@@ -36,3 +36,6 @@ describe("Java contract transport", () => {
     } });
   });
 });
+it('Java omits data for an unconfigured public resource', () => {
+  expect(unwrapJavaResponse({ status: 200, message: 'OK' })).toBeNull();
+});

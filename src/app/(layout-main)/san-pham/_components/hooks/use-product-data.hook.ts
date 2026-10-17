@@ -13,6 +13,7 @@ import {
   buildProductListParams,
   buildProductListSWRKey,
   parseProductListFilterValues,
+  parseProductListCollectionSlug,
   parseProductListPriceRange,
   parseProductListSortValue,
   resolveProductFilterCategoryParams,
@@ -38,7 +39,7 @@ export const useProductData = (
 
   const resolvedCategorySlug = currentSlug || cmsListDefaults?.categorySlug;
   const resolvedCategorySlugs = resolvedCategorySlug ? undefined : cmsListDefaults?.categorySlugs;
-  const resolvedCollectionSlug = resolvedCategorySlug || resolvedCategorySlugs ? undefined : cmsListDefaults?.collectionSlug;
+  const resolvedCollectionSlug = resolvedCategorySlug || resolvedCategorySlugs ? undefined : parseProductListCollectionSlug(searchParams, cmsListDefaults?.collectionSlug);
   const filterCategoryParams = useMemo(() => resolveProductFilterCategoryParams(currentSlug), [currentSlug]);
   const defaultSort = cmsListDefaults?.sort || defaultSortValue;
   const sortValue = useMemo(() => parseProductListSortValue(searchParams, defaultSort), [defaultSort, searchParams]);

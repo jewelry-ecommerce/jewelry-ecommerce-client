@@ -8,6 +8,7 @@ import {
   buildProductListUrl,
   hasProductListFacetSearchParams,
   parseProductListFilterValues,
+  parseProductListCollectionSlug,
   parseProductListSortValue,
   serializeProductListFilterValues,
 } from "./product-list-query.utils";
@@ -27,6 +28,12 @@ const createSearchParams = (entries: Record<string, string | string[]>) => ({
 });
 
 describe("product-list-query.utils", () => {
+  it('reads a collection from navigation links without overriding a CMS-scoped collection', () => {
+    const query = createSearchParams({ collectionSlug: ' sac-tim-mong-mo ' });
+    expect(parseProductListCollectionSlug(query)).toBe('sac-tim-mong-mo');
+    expect(parseProductListCollectionSlug(query, 'fixed-collection')).toBe('fixed-collection');
+    expect(parseProductListCollectionSlug(createSearchParams({}))).toBeUndefined();
+  });
   it("parses and serializes filter values in stable order", () => {
     expect(parseProductListFilterValues(createSearchParams({ filter: "blue,gold,blue" }))).toEqual(["blue", "gold"]);
     expect(parseProductListFilterValues(createSearchParams({ filter: ["gold", "blue", "gold"] }))).toEqual(["blue", "gold"]);

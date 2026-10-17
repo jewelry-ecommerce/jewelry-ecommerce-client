@@ -5,6 +5,7 @@ import {
   parseProductListFilterValues,
   parseProductListPriceRange,
   parseProductListSortValue,
+  parseProductListCollectionSlug,
   resolveProductFilterCategoryParams,
   resolveProductListPriceParams,
   serializeProductListFilterValues,
@@ -186,7 +187,7 @@ export const fetchProductListingInitialData = cache(
     const scopedCategorySlug = extractScopedCategorySlug(pathname, pageBasePath);
     const categorySlug = scopedCategorySlug || productListDefaults?.categorySlug;
     const categorySlugs = categorySlug ? undefined : productListDefaults?.categorySlugs;
-    const collectionSlug = categorySlug || categorySlugs ? undefined : productListDefaults?.collectionSlug;
+    const collectionSlug = categorySlug || categorySlugs ? undefined : parseProductListCollectionSlug(buildSearchParamsReader(searchParams), productListDefaults?.collectionSlug);
     const defaultSort = productListDefaults?.sort || defaultSortValue;
     const sortValue = parseProductListSortValue({ get: (key) => getSearchParamValue(searchParams, key) }, defaultSort);
     const filterValues = parseProductListFilterValues({ get: (key) => getSearchParamValue(searchParams, key) });

@@ -9,7 +9,7 @@ function enumValue<T extends string>(values: T[], value: string): T {
 }
 export function javaOrderItem(item: JavaOrderLine) {
   return { id: String(item.id), productId: String(item.productId), variationId: String(item.skuId),
-    productName: item.name, variationName: item.name, skuCode: "", image: item.imageUrl ?? "",
+    productName: item.name, variationName: [item.sizeLabel, item.metalColorLabel].filter(Boolean).join(' / ') || item.name, skuCode: item.skuCode ?? '', image: item.imageUrl ?? "",
     quantity: item.quantity, unitPrice: String(item.unitPrice), salePrice: String(item.unitPrice),
     lineTotal: String(item.lineTotal), discountAmount: "0", finalAmount: String(item.lineTotal) };
 }
@@ -18,7 +18,7 @@ export function javaOrderView(order: JavaOrder): OrderDetailResponse {
     contactEmail:order.contactEmail,deliveredAt:order.deliveredAt,createdAt: order.createdAt ?? order.placedAt,
     status: enumValue(Object.values(OrderStatus), order.status), paymentStatus: enumValue(Object.values(PaymentStatus), order.paymentStatus),
     paymentMethod: enumValue(Object.values(PaymentMethod), order.paymentMethod),
-    shippingMethod: enumValue(Object.values(ShippingMethod), order.shippingMethod), source: OrderSource.WEBSITE,
+    shippingMethod: enumValue(Object.values(ShippingMethod), order.shippingMethod), source: order.source === 'ADMIN' ? OrderSource.MANUAL : OrderSource.WEBSITE,
     shippingAddressSnapshot: { firstName: order.shipRecipientName, lastName: "", receiverPhone: order.shipPhone,
       provinceName: order.shipProvince, wardName: order.shipWard, addressLine: order.shipAddressLine,
       provinceCode: null, wardCode: null },

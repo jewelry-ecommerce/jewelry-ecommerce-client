@@ -2,8 +2,10 @@ import type { CheckoutSession, Address } from "../checkout/checkout.interface";
 export const JAVA_CHECKOUT_POLICY = { storagePrefix: "java-checkout:", ttlMs: 30 * 60 * 1000, pageTake: 100,
   shippingMethod: "STANDARD", paymentMethod: "COD" } as const;
 export interface JavaOrderLine { id: number | string; productId: number | string; skuId: number | string;
+  skuCode?: string; sizeLabel?: string; metalColorLabel?: string; returnedQuantity?: number;
   name: string; imageUrl: string | null; quantity: number; unitPrice: number | string; lineTotal: number | string }
 export interface JavaOrder { id: number | string; code: string; status: string; paymentStatus: string; paymentMethod: string;
+  source?: string;
   customerId?:number|string|null;contactEmail?:string|null;deliveredAt?:string|null;
   shippingMethod: string; shipRecipientName: string; shipPhone: string; shipProvince: string; shipWard: string;
   shipAddressLine: string; subtotal: number | string; productDiscount: number | string; voucherDiscount: number | string;

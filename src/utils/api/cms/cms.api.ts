@@ -59,6 +59,7 @@ export const getStorefrontFooter = async (): Promise<StorefrontFooterResponse> =
 };
 
 export const getStorefrontNavigation = async (): Promise<StorefrontNavigationResponse> =>
+  isJavaBackend() ? (await commonAxios.get<StorefrontNavigationResponse>('storefront/cms/navigation')).data :
   fetchOrDefault(
     async () => (await commonAxios.get<StorefrontNavigationResponse>("cms/storefront/navigation")).data,
     () => ({ items: STOREFRONT_NAVIGATION_ITEMS }),
@@ -67,6 +68,7 @@ export const getStorefrontNavigation = async (): Promise<StorefrontNavigationRes
 export const getStorefrontNavigationPlpRail = async (
   params: StorefrontNavigationPlpRailParams = {},
 ): Promise<StorefrontNavigationResponse> =>
+  isJavaBackend() ? (await commonAxios.get<StorefrontNavigationResponse>('storefront/cms/navigation/plp-rail', { params: compactQueryParams(params) })).data :
   fetchOrDefault(
     async () =>
       (

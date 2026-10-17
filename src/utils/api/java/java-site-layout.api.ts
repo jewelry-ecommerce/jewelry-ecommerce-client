@@ -3,7 +3,7 @@ import type { StorefrontGlobalConfigResponse, StorefrontLogosResponse, Storefron
 
 interface JavaSiteLayout {
   header: Partial<TopBannerResponse> | null;
-  footer: Omit<StorefrontFooterResponse, 'newsletterHeading'> | null;
+  footer: Partial<StorefrontFooterResponse> | null;
   logos: StorefrontLogosResponse;
 }
 export async function javaSiteLayout(): Promise<JavaSiteLayout> {
@@ -17,6 +17,6 @@ export async function javaGlobalConfig(): Promise<StorefrontGlobalConfigResponse
       bannerContent: header.bannerContent ?? null, bannerBgColor: header.bannerBgColor ?? '', bannerTextColor: header.bannerTextColor ?? '',
       bannerTargetUrl: header.bannerTargetUrl ?? '', bannerAnimationStyle: header.bannerAnimationStyle ?? '',
       bannerLoopIntervalSec: header.bannerLoopIntervalSec ?? 0, bannerStartTime: header.bannerStartTime ?? '', bannerEndTime: header.bannerEndTime ?? null } : null,
-    footer: layout.footer ? { ...layout.footer, newsletterHeading: '', socialLinks: layout.footer.socialLinks ?? [], menuColumns: layout.footer.menuColumns ?? [] } : null,
+    footer: layout.footer ? { ...layout.footer, newsletterHeading: layout.footer.newsletterHeading ?? '', socialLinks: layout.footer.socialLinks ?? [], menuColumns: layout.footer.menuColumns ?? [] } : null,
   };
 }

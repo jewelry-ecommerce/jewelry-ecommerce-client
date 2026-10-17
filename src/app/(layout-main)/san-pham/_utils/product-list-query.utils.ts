@@ -19,6 +19,7 @@ export const PRODUCT_LIST_FILTER_SEARCH_PARAM = "filter";
 /** Query key cho lọc giá. */
 export const PRODUCT_LIST_MIN_PRICE_SEARCH_PARAM = "minPrice";
 export const PRODUCT_LIST_MAX_PRICE_SEARCH_PARAM = "maxPrice";
+export const PRODUCT_LIST_COLLECTION_SEARCH_PARAM = "collectionSlug";
 
 const LEGACY_SORT_MAP: Record<string, CatalogSortType> = {
   "price-asc": CatalogSortType.PRICE_ASC,
@@ -33,6 +34,9 @@ export interface SearchParamsReader {
   get: (key: string) => string | null;
   getAll?: (key: string) => string[];
 }
+
+export const parseProductListCollectionSlug = (params: SearchParamsReader, configuredSlug?: string | null): string | undefined =>
+  configuredSlug?.trim() || params.get(PRODUCT_LIST_COLLECTION_SEARCH_PARAM)?.trim() || undefined;
 
 const normalizeProductListFilterValues = (values: string[]): string[] =>
   Array.from(new Set(values.map((value) => value.trim()).filter(Boolean))).sort();

@@ -29,9 +29,9 @@ export function javaApiPath(path: string): string {
   return normalized;
 }
 export function unwrapJavaResponse(payload: unknown): unknown {
-  if (!payload || typeof payload !== 'object' || !('status' in payload) || !('data' in payload)) return payload;
+  if (!payload || typeof payload !== 'object' || !('status' in payload)) return payload;
   if (typeof payload.status !== 'number' || payload.status < 200 || payload.status >= 300) return payload;
-  return normalizeJavaPage(payload.data);
+  return normalizeJavaPage('data' in payload ? payload.data : null);
 }
 export function normalizeJavaPage(payload: unknown): unknown {
   if (!payload || typeof payload !== 'object' || !('content' in payload) || !Array.isArray(payload.content)) return payload;
