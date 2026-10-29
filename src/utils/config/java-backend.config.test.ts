@@ -13,6 +13,10 @@ describe("Java contract transport", () => {
   it.each([
     ["iam/customer/login", "auth/login"],
     ["iam/customer/profile", "storefront/me"],
+    ["catalog/search/trending", "storefront/product/search/trending"],
+    ["catalog/search/suggestions", "storefront/product/search/suggestions"],
+    ["catalog/search/history", "storefront/product/search/history"],
+    ["catalog/search/history/keyword", "storefront/product/search/history/keyword"],
     ["/cart/cart", "storefront/cart/cart"],
     ["cart/cart/merge", "storefront/cart/cart/merge"],
     ["catalog/products/ring", "storefront/product/ring"],

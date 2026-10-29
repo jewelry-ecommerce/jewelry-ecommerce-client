@@ -17,6 +17,10 @@ export function javaApiPath(path: string): string {
     'iam/customer/reset-password': 'storefront/auth/reset-password',
     'catalog/categories': 'storefront/product/categories', 'catalog/products': 'storefront/product',
     'catalog/search': 'storefront/product', 'iam/addresses': 'storefront/me/addresses',
+    'catalog/search/trending': 'storefront/product/search/trending',
+    'catalog/search/suggestions': 'storefront/product/search/suggestions',
+    'catalog/search/history': 'storefront/product/search/history',
+    'catalog/search/history/keyword': 'storefront/product/search/history/keyword',
     'order/orders/me': 'storefront/order'
   };
   if (aliases[normalized]) return aliases[normalized];

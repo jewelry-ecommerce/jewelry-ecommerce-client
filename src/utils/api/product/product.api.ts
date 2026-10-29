@@ -120,15 +120,17 @@ export const getSearchTrending = async (limit?: number): Promise<string[]> =>
   (await commonAxios.get(`catalog/search/trending`, { params: { limit } })).data;
 
 export const getSearchSuggestions = async (q: string): Promise<ISearchSuggestionsResponse[]> =>
-  (await commonAxios.get(`catalog/search/suggestions?q=${q}`)).data;
+  (await commonAxios.get("catalog/search/suggestions", { params: { q } })).data;
 
 export const getSearchHistory = async (limit?: number): Promise<Array<string | ISearchHistoryItem>> =>
   (await authAxios.get("catalog/search/history", { params: { limit } })).data;
 
 export const deleteSearchHistory = async (): Promise<void> => (await authAxios.delete(`catalog/search/history`)).data;
 
-export const deleteSearchHistoryKeyword = async (keyword: string): Promise<void> =>
-  (await authAxios.delete(`catalog/search/history/keyword/${keyword}`)).data;
+export const deleteSearchHistoryKeyword = async (keyword: string): Promise<void> => {
+  const path = isJavaBackend() ? "catalog/search/history/keyword" : `catalog/search/history/keyword/${encodeURIComponent(keyword)}`;
+  return (await authAxios.delete(path, isJavaBackend() ? { params: { keyword } } : undefined)).data;
+};
 
 // review
 export const getProductReviews = async (params: IGetProductReviewsParams): Promise<IProductReviewsResponse> =>
