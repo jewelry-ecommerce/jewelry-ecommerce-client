@@ -3,6 +3,13 @@ import { resolveOrderRedirect } from "./checkout-order-redirect.util";
 import type { CheckoutSession, PlaceOrderResponse } from "@/utils/api/checkout/checkout.interface";
 
 describe("resolveOrderRedirect", () => {
+  it("opens only the MoMo page of the created order without declaring it paid", () => {
+    const result = { orderCode: "DH123", paymentMethod: "MOMO", paymentUrl: "/thanh-toan-momo?orderCode=DH123&start=1" };
+    expect(resolveOrderRedirect({ result, session: null, sessionId: "session-1", paymentMethod: "MOMO_WALLET" }))
+      .toEqual({ type: "redirect", url: result.paymentUrl });
+    expect(resolveOrderRedirect({ result: { ...result, paymentUrl: "https://evil.test/pay" },
+      session: null, sessionId: "session-1", paymentMethod: "MOMO_WALLET" }).type).toBe("error");
+  });
   it("redirects pre-order reserve checkout to confirmation page with fulfillment=pre-order", () => {
     const session: CheckoutSession = {
       consentThirdPartySharing: false,
@@ -46,7 +53,7 @@ describe("resolveOrderRedirect", () => {
       paymentMethod: "PAYOO",
     });
 
-    expect(redirect).toEqual({ type: "error", message: "Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng." });
+    expect(redirect.type).toBe("error");
   });
 
   it("rejects online payment without a payment URL too", () => {
@@ -66,7 +73,7 @@ describe("resolveOrderRedirect", () => {
       paymentMethod: "PAYOO",
     });
 
-    expect(redirect).toEqual({ type: "error", message: "Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng." });
+    expect(redirect.type).toBe("error");
   });
 
   it("handles COD payment successfully", () => {

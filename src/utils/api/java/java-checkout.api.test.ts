@@ -77,9 +77,22 @@ test("v6 retries a lost response with the same key and frozen body, without re-q
 });
 test("online payment and multiple vouchers cannot silently fall back to COD", async () => {
   storage.owned.mockResolvedValue(draft());
-  await expect(javaPlaceOrder("checkout-1", { paymentMethod: "MOMO", consent: false })).rejects.toThrow("COD");
+  await expect(javaPlaceOrder("checkout-1", { paymentMethod: "VNPAY", consent: false })).rejects.toThrow("COD");
   await expect(javaUpdatePricing("checkout-1", { couponCodes: ["A", "B"] })).rejects.toThrow("một voucher");
   expect(transport.common.post).not.toHaveBeenCalled();
+});
+
+test("MoMo keeps one created order and sends the customer to its payment page", async () => {
+  const value = draft(); storage.owned.mockResolvedValue(value);
+  transport.common.post.mockImplementation(async (path: string) => ({ data: path.includes("quote")
+    ? { items: [], summary: { subtotal: 2000, productDiscount: 0, voucherDiscount: 0, shippingFee: 0, grandTotal: 2000 } }
+    : { id: 42, code: "ORD42", status: "PENDING", paymentMethod: "MOMO" } }));
+  const first = await javaPlaceOrder("checkout-1", { paymentMethod: "MOMO_WALLET", consent: false });
+  expect(first.paymentUrl).toBe("/thanh-toan-momo?orderCode=ORD42&start=1");
+  expect(transport.common.post).toHaveBeenCalledWith("storefront/order/guest",
+    expect.objectContaining({ paymentMethod: "MOMO" }), expect.any(Object));
+  expect(await javaPlaceOrder("checkout-1", { paymentMethod: "MOMO_WALLET", consent: false })).toEqual(first);
+  expect(transport.common.post.mock.calls.filter(call => call[0] === "storefront/order/guest")).toHaveLength(1);
 });
 test("saved address selection must belong to the current customer", async () => {
   storage.owned.mockResolvedValue(draft()); transport.auth.get.mockResolvedValue({ data: [{ id: 15 }] });
