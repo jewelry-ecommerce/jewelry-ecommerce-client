@@ -10,8 +10,6 @@ import useStyles from "./checkout-payment.styles";
 import { CheckoutFormValues } from "../checkout.constant";
 import { PaymentMethod as PaymentMethodEnum } from "@/utils/api/order/order.enum";
 import { getOrdersMe } from "@/utils/api/order/order.api";
-import { isJavaBackend } from "@/utils/config/java-backend.config";
-import { javaPaymentMethods } from "@/utils/api/java/java-momo.api";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/slices/auth.slice";
 import {
@@ -53,10 +51,6 @@ function CheckoutPaymentSection({
   const { dirtyFields } = useFormState({ control, name: "paymentMethod" });
   const userId = useAppSelector(selectCurrentUser)?.id;
   const smartSelectAppliedRef = useRef(false);
-  const { data: paymentAvailability } = useSWR(isJavaBackend() ? "java-payment-methods" : null, javaPaymentMethods,
-    { revalidateOnFocus: false, shouldRetryOnError: false });
-  const paymentMethods = paymentAvailability?.momoEnabled ? [...PAYMENT_METHODS,
-    { id: PaymentMethodEnum.MOMO_WALLET, label: "MoMo (thanh toán thử nghiệm)", icon: undefined, icons: undefined }] : PAYMENT_METHODS;
 
   const selectedId = useWatch({ control, name: "paymentMethod" });
   const isPaymentMethodDirty = Boolean(dirtyFields.paymentMethod);
@@ -162,7 +156,7 @@ function CheckoutPaymentSection({
         </Box>
       ) : (
         <Box className={classes.paymentList}>
-          {paymentMethods.map((method) => {
+          {PAYMENT_METHODS.map((method) => {
             const isActive = selectedId === method.id;
             const isCodRow = method.id === PaymentMethodEnum.COD;
             const isInstallmentRow = method.id === PaymentMethodEnum.INSTALLMENT;

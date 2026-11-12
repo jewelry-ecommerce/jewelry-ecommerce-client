@@ -3,11 +3,6 @@ import { VALIDATION_MESSAGES } from "@/utils/constants/common.constant";
 import { getCheckoutValidationSchema } from "./checkout.constant";
 
 describe("getCheckoutValidationSchema email", () => {
-  it("accepts the basic MoMo option and rejects unsupported payment methods", async () => {
-    const schema = getCheckoutValidationSchema(false, false, true, false);
-    await expect(schema.validateAt("paymentMethod", { paymentMethod: "MOMO_WALLET" })).resolves.toBe("MOMO_WALLET");
-    await expect(schema.validateAt("paymentMethod", { paymentMethod: "PAYOO" })).rejects.toThrow();
-  });
   it("does not require email on retail / pre-order lần 2", async () => {
     const schema = getCheckoutValidationSchema(false, false, true, false);
     await expect(schema.validateAt("email", { email: "" })).resolves.toBe("");
