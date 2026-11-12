@@ -3,7 +3,7 @@ import type { AxiosError } from "axios";
 const SESSION_EXPIRED_STATUS_CODES = new Set([401, 888]);
 
 /** Routes where losing session should redirect to login (not silent guest on browse). */
-const LOGIN_REQUIRED_ROUTE_PREFIXES = ["/don-hang", "/san-pham-yeu-thich", "/tai-khoan", "/thanh-toan", "/gio-hang"] as const;
+const LOGIN_REQUIRED_ROUTE_PREFIXES = ["/don-hang", "/san-pham-yeu-thich", "/tai-khoan", "/thanh-toan", "/gio-hang", "/stylist/lich-su"] as const;
 
 export const isAuthStatusCode = (status?: number, statusCode?: number) => {
   const code = statusCode ?? status;

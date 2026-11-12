@@ -12,7 +12,7 @@ vi.mock("./cart.util", () => ({
     ...options, headers: { ...options.headers, "x-guest-id": transport.guestId }
   })
 }));
-import { postCart, getCart } from "./cart.api";
+import { batchAddToCart, postCart, getCart } from "./cart.api";
 
 beforeEach(() => {
   vi.stubEnv("NEXT_PUBLIC_BACKEND_PROVIDER", "JAVA");
@@ -44,6 +44,17 @@ test("Java clears the cart before setting replacement lines", async () => {
   await postCart({ clearAll: true, items: [{ variationId: "1", quantity: 1 }] });
   expect(transport.post).toHaveBeenCalledWith("cart/cart", { clearAll: true, items: [] }, expect.anything());
   expect(transport.post.mock.invocationCallOrder[0]).toBeLessThan(transport.put.mock.invocationCallOrder[0]);
+});
+
+test("Java batch add posts once and does not loop quantity updates", async () => {
+  transport.post.mockResolvedValue({ data: { success: true, guestId: "guest-1", items: [] } });
+  await batchAddToCart([{ variationId: "5", quantity: 1 }, { variationId: "6", quantity: 1 }]);
+  expect(transport.put).not.toHaveBeenCalled();
+  expect(transport.post).toHaveBeenCalledTimes(1);
+  expect(transport.post).toHaveBeenCalledWith("cart/cart/batch-add", {
+    clearAll: false,
+    items: [{ variationId: "5", quantity: 1 }, { variationId: "6", quantity: 1 }],
+  }, expect.anything());
 });
 
 test("Java does not silently drop set products or packaging selections", async () => {

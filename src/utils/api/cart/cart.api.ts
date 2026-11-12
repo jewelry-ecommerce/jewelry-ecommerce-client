@@ -86,6 +86,27 @@ async function javaSetCart(params: ParamPostCartItem, options?: CartRequestOptio
   return {...response,items:cartViewIds(response.items??[])};
 }
 
+export type CartBatchAddItem = {
+  variationId: string;
+  quantity: number;
+};
+
+/** One POST for the whole set. Does not clear the cart and does not send setId/setComponents. */
+export const batchAddToCart = async (items: CartBatchAddItem[], options?: CartRequestOptions): Promise<CartApiResponsePost> => {
+  const data = await retryWhenGuestCartForbidden(async (resolvedOptions) => {
+    const result = await authAxios.post(
+      "cart/cart/batch-add",
+      { items, clearAll: false },
+      withFreshGuestCartHeader(resolvedOptions ?? {}),
+    );
+    persistGuestCartIdFromResponse(result.data);
+    return result.data;
+  }, options);
+  return data;
+};
+
+export const addItemsBatch = batchAddToCart;
+
 export const postCart = async (paramPostCartItem: ParamPostCartItem, options?: PostCartOptions): Promise<CartApiResponsePost> => {
   if (isJavaBackend()) return retryWhenGuestCartForbidden(resolved => javaSetCart(paramPostCartItem, resolved), options);
   const data = await retryWhenGuestCartForbidden(async (resolvedOptions) => {

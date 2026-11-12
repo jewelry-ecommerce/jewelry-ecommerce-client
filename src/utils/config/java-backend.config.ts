@@ -25,6 +25,7 @@ export function javaApiPath(path: string): string {
   };
   if (aliases[normalized]) return aliases[normalized];
   for (const [prefix, target] of [
+    ['ai/', 'storefront/ai/'],
     ['cart/cart', 'storefront/cart/cart'], ['product/customer/wishlist', 'storefront/product/customer/wishlist'],
     ['order/orders/me/', 'storefront/order/'], ['iam/addresses/', 'storefront/me/addresses/'],
     ['catalog/products/', 'storefront/product/'], ['cms/storefront/pages/', 'storefront/cms/pages/'],
