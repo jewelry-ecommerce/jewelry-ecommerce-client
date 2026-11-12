@@ -1,0 +1,25 @@
+export const AI_BUDGET_MIN = 500_000;
+export const AI_BUDGET_MAX = 100_000_000;
+export const AI_BUDGET_STEP = 500_000;
+export const AI_BUDGET_DEFAULT = 5_000_000;
+export const AI_RECIPIENT_MAX_LENGTH = 80;
+export const AI_SET_MIN_ITEMS = 2;
+export const AI_SET_MAX_ITEMS = 6;
+export const AI_CATALOG_SEARCH_TAKE = 8;
+export const AI_FALLBACK_SOURCE = "FALLBACK";
+export const AI_MODEL_SOURCE = "AI";
+export const AI_FALLBACK_BANNER = "Gợi ý cơ bản";
+export const AI_BUDGET_SCOPE_ITEM = "ITEM";
+export const AI_BUDGET_SCOPE_SET = "SET";
+export const AI_SET_DRAFT_STORAGE_KEY = "ai-stylist-set-draft";
+export const CART_BATCH_FAILED_CODE = "CART_BATCH_FAILED";
+export const AI_OCCASIONS = ["Sinh nhật", "Đám cưới", "Kỷ niệm", "Thường ngày", "Khác"] as const;
+export const AI_STYLES = ["Cổ điển", "Hiện đại", "Bohemian", "Tối giản"] as const;
+
+export const AI_BUDGET_OVER_MESSAGE = "Tổng bộ vượt ngân sách. Hãy bỏ bớt món hoặc tăng ngân sách.";
+export const AI_SET_SIZE_MESSAGE = "Bộ cần từ 2 đến 6 sản phẩm.";
+export const AI_SET_MAX_MESSAGE = "Bộ tối đa 6 sản phẩm.";
+export const AI_DUPLICATE_PRODUCT_MESSAGE = "Sản phẩm đã có trong bộ.";
+export const AI_CONFIRM_SKU_MESSAGE = "Mỗi món cần xác nhận SKU trước khi thêm giỏ.";
+export const AI_OUT_OF_STOCK_MESSAGE = "Có món hết hàng. Hãy thay sản phẩm khác.";
+export const AI_MISSING_PRICE_MESSAGE = "Mỗi món cần có giá trước khi thêm giỏ.";

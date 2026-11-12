@@ -53,6 +53,8 @@ export const getCmsDefaults = (brandNameOverride?: string) => {
             { label: "Hướng dẫn mua hàng & thanh toán", url: "/", orderIndex: 5 },
             { label: "Hướng dẫn đổi hàng/hoàn tiền", url: "/", orderIndex: 6 },
             { label: "Cá nhân hóa & quà tặng", url: "/", orderIndex: 7 },
+            { label: "Gợi ý trang sức AI", url: "/stylist", orderIndex: 8 },
+            { label: "Tạo bộ trang sức", url: "/set-builder", orderIndex: 9 },
           ],
         },
         {
@@ -104,6 +106,8 @@ export const getCmsDefaults = (brandNameOverride?: string) => {
                 { label: "Hướng dẫn mua hàng & thanh toán", url: "/", orderIndex: 5 },
                 { label: "Hướng dẫn đổi hàng/hoàn tiền", url: "/", orderIndex: 6 },
                 { label: "Cá nhân hóa & quà tặng", url: "/", orderIndex: 7 },
+                { label: "Gợi ý trang sức AI", url: "/stylist", orderIndex: 8 },
+                { label: "Tạo bộ trang sức", url: "/set-builder", orderIndex: 9 },
               ],
             },
             {

@@ -70,6 +70,12 @@ const HeaderUserAccount = ({ user, anchorElUser, setAnchorElUser, isUserDrawerOp
         icon: "/images/icons/icon-marker-pin.svg",
         href: "/tai-khoan?tab=so-dia-chi",
       },
+      {
+        key: "lich-su-goi-y",
+        label: "Lịch sử gợi ý",
+        icon: "/images/icons/icon-file-check.svg",
+        href: "/stylist/lich-su",
+      },
     ],
     [formattedOrderCount, formattedVoucherCount],
   );
@@ -128,6 +134,9 @@ const HeaderUserAccount = ({ user, anchorElUser, setAnchorElUser, isUserDrawerOp
               }}
             >
               Đăng ký
+            </Box>
+            <Box component="button" className={classes.userPopupButton} onClick={() => { setAnchorElUser(null); router.push("/stylist"); }}>
+              Gợi ý trang sức AI
             </Box>
           </Stack>
           <Typography className={classes.userPopupText}>Rất nhiều đặc quyền và quyền lợi mua sắm đang chờ bạn</Typography>

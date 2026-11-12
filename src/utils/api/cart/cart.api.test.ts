@@ -10,7 +10,7 @@ vi.mock("@/utils/axios", () => ({
   },
 }));
 
-const { getCartRecommendations, mergeCart, postCart } = await import("./cart.api");
+const { batchAddToCart, getCartRecommendations, mergeCart, postCart } = await import("./cart.api");
 const { getGuestCartId, GUEST_CART_ID_STORAGE_KEY, setGuestCartId } = await import("./guest-cart-id.util");
 
 describe("cart.api guestId persistence", () => {
@@ -105,6 +105,31 @@ describe("cart.api guestId persistence", () => {
     expect(getMock).toHaveBeenCalledWith("cart/cart/recommendation", {
       params: { page: 1, take: 10 },
     });
+  });
+
+  it("batchAddToCart posts every SKU once and keeps the existing cart", async () => {
+    postMock.mockResolvedValue({
+      data: { guestId: "guest-batch", success: true, items: [] },
+    });
+
+    await batchAddToCart([
+      { variationId: "12", quantity: 1 },
+      { variationId: "13", quantity: 1 },
+    ]);
+
+    expect(postMock).toHaveBeenCalledTimes(1);
+    expect(postMock).toHaveBeenCalledWith(
+      "cart/cart/batch-add",
+      {
+        clearAll: false,
+        items: [
+          { variationId: "12", quantity: 1 },
+          { variationId: "13", quantity: 1 },
+        ],
+      },
+      {},
+    );
+    expect(getGuestCartId()).toBe("guest-batch");
   });
 
   it("postCart clears stale guest id on 403 and retries without x-guest-id", async () => {

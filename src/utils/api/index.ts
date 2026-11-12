@@ -15,6 +15,8 @@ export * as OrderApi from "./order/order.api";
 export * as CustomerRequestApi from "./customer-request/customer-request.api";
 export * as BadgeApi from "./badge/badge.api";
 export * from "./badge/badge.interface";
+export * as AiApi from "./ai/ai.api";
+export * from "./ai/ai.interface";
 export * as PromotionApi from "./promotion/promotion.api";
 export * from "./promotion/promotion.interface";
 export * from "./promotion/promotion.enum";
