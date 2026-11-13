@@ -31,6 +31,11 @@ export type AiRecommendation = {
   slug: string | null;
 };
 
+export type AiAssistantReply = {
+  reply: string;
+  recommendations: AiRecommendation[];
+};
+
 export type AiStylistResponse = {
   source: AiResultSource;
   banner?: string;

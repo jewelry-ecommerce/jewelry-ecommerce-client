@@ -221,12 +221,6 @@ const Header = () => {
           </StackRowAlignCenter>
 
           <StackRowAlignCenter className={classes.headerRight}>
-            {isPC ? (
-              <StackRowAlignCenter gap="16px">
-                <AppLink href="/stylist">Gợi ý AI</AppLink>
-                <AppLink href="/set-builder">Tạo bộ</AppLink>
-              </StackRowAlignCenter>
-            ) : null}
             {isPC && <HeaderMegaSearchTrigger open={searchOpen} onClick={handleOpenSearch} />}
 
             {!isPC && (
@@ -297,13 +291,6 @@ const Header = () => {
           </StackRowAlignCenter>
         </StackRowAlignCenterJustBetween>
       </Box>
-
-      {!isPC ? (
-        <StackRowAlignCenter gap="16px" sx={{ px: 2, pb: 1 }}>
-          <AppLink href="/stylist">Gợi ý AI</AppLink>
-          <AppLink href="/set-builder">Tạo bộ</AppLink>
-        </StackRowAlignCenter>
-      ) : null}
 
       <HeaderMegaMenu
         open={menuOpen}

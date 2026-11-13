@@ -69,6 +69,31 @@ describe("resolveOrderRedirect", () => {
     expect(redirect).toEqual({ type: "error", message: "Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng." });
   });
 
+  it("routes a VNPay order to the sandbox start page", () => {
+    const session: CheckoutSession = {
+      consentThirdPartySharing: false,
+      totalAmount: 500000,
+    };
+    const result: PlaceOrderResponse = {
+      orderCode: "DH1",
+      status: "PENDING",
+      paymentMethod: "VNPAY",
+      paymentUrl: "/thanh-toan-vnpay?orderCode=DH1&start=1",
+    };
+
+    const redirect = resolveOrderRedirect({
+      result,
+      session,
+      sessionId: "session-4",
+      paymentMethod: "VNPAY",
+    });
+
+    expect(redirect).toEqual({
+      type: "redirect",
+      url: "/thanh-toan-vnpay?orderCode=DH1&start=1",
+    });
+  });
+
   it("handles COD payment successfully", () => {
     const session: CheckoutSession = {
       consentThirdPartySharing: false,

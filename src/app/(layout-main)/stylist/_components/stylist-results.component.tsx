@@ -20,7 +20,7 @@ const StylistResults = ({ result, selectedIds, canFeedback, onToggle, onOpenDeta
     <AiSourceBanner source={result.source} banner={result.banner} />
     <Stack direction={{ xs: "column", sm: "row" }} sx={{ justifyContent: "space-between", gap: "12px" }}>
       <Typography>{result.recommendations.length} gợi ý</Typography>
-      <ButtonComponent content="Tạo bộ trang sức" onClick={onCreateSet} />
+      <ButtonComponent content="Phối thành một bộ" onClick={onCreateSet} />
     </Stack>
     <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", lg: "1fr 1fr 1fr" }, gap: "16px" }}>
       {result.recommendations.map((item) => (

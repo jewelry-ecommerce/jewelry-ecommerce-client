@@ -20,7 +20,7 @@ export interface JavaCartLine { id: string; found: boolean; productId: string; v
 export interface JavaDraft { session: CheckoutSession; items: Array<{ skuId: number; quantity: number }>;
   submission?: { path: string; body: Record<string, unknown>; key: string };
   addressId?: string; authenticated: boolean; ownerId: string | null; expiresAt: number; submitting?: boolean;
-  uncertain?: boolean; placed?: { orderId: string; orderCode: string; status: string; paymentMethod: string } }
+  uncertain?: boolean; placed?: { orderId: string; orderCode: string; status: string; paymentMethod: string; paymentUrl?: string } }
 export interface JavaPage<T> { list: T[]; total: number; pagination: { hasNextPage: boolean; currentPage: number } }
 export function javaAddressView(address: JavaAddress): Address {
   return { id: String(address.id), firstName: address.recipientName, lastName: "", receiverPhone: address.phone,

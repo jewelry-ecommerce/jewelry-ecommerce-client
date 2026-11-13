@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host");
   return createPageMetadata({
     path: "/set-builder",
-    title: `Tạo bộ trang sức | ${siteConfig.name}`,
+    title: `Phối bộ trang sức | ${siteConfig.name}`,
     description: `Phối 2 đến 6 món trang sức theo dịp và ngân sách tại ${siteConfig.name}.`,
     image: getSharedSeoImage(host),
   });

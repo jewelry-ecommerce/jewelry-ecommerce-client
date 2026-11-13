@@ -103,6 +103,15 @@ const mapRecommendation = (value: unknown): AiRecommendation | null => {
   };
 };
 
+export const mapAssistantReply = (payload: unknown): { reply: string; recommendations: AiRecommendation[] } => {
+  const row = isRecord(payload) ? payload : {};
+  const recommendations = Array.isArray(row.recommendations) ? row.recommendations.flatMap((item) => {
+    const mapped = mapRecommendation(item);
+    return mapped ? [mapped] : [];
+  }) : [];
+  return { reply: readString(row, "reply"), recommendations };
+};
+
 export const mapStylistResponse = (payload: unknown): AiStylistResponse => {
   const row = isRecord(payload) ? payload : {};
   const recommendations = Array.isArray(row.recommendations) ? row.recommendations.flatMap((item) => {
