@@ -1,4 +1,5 @@
-﻿import { Footer, Header } from "@/components";
+﻿import AiAssistantWidget from "@/components/ai-assistant/ai-assistant.widget";
+import { Footer, Header } from "@/components";
 import { siteHeaderHeightCssVar } from "@/utils/constants/layout.constant";
 import { Box } from "@mui/material";
 import React from "react";
@@ -16,6 +17,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         {children}
       </Box>
       <Footer />
+      <AiAssistantWidget />
     </Box>
   );
 };

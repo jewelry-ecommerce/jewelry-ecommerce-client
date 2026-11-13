@@ -7,6 +7,7 @@ import CheckboxComponent from "@/components/checkbox/checkbox.component";
 import CheckoutSectionHeaderComponent from "../checkout-header/checkout-header.component";
 import { StackRowAlignCenter, StackRowAlignJustCenter } from "@/components/styled";
 import useStyles from "./checkout-payment.styles";
+import { isJavaBackend } from "@/utils/config/java-backend.config";
 import { CheckoutFormValues } from "../checkout.constant";
 import { PaymentMethod as PaymentMethodEnum } from "@/utils/api/order/order.enum";
 import { getOrdersMe } from "@/utils/api/order/order.api";
@@ -18,6 +19,7 @@ import {
   INSTALLMENT_DISABLED_HINT,
   INSTALLMENT_MIN_ORDER_AMOUNT_VND,
   PAYMENT_METHODS,
+  VNPAY_PAYMENT_METHOD,
 } from "./checkout-payment.constant";
 import {
   getFirstPaymentMethodId,
@@ -67,6 +69,10 @@ function CheckoutPaymentSection({
     [isCodDisabled, isInstallmentDisabledByAmount],
   );
   const fallbackPaymentMethodId = getFirstSelectablePaymentMethodId(amountLockOptions);
+  const methods = useMemo(
+    () => (isJavaBackend() ? [...PAYMENT_METHODS, VNPAY_PAYMENT_METHOD] : PAYMENT_METHODS),
+    [],
+  );
 
   const { data: memberPreferredPaymentMethod, isLoading: isLoadingMemberPreferred } = useSWR(
     isLoggedIn && !isDeferredPayment && userId ? (["checkout-smart-select-payment", userId] as const) : null,
@@ -156,7 +162,7 @@ function CheckoutPaymentSection({
         </Box>
       ) : (
         <Box className={classes.paymentList}>
-          {PAYMENT_METHODS.map((method) => {
+          {methods.map((method) => {
             const isActive = selectedId === method.id;
             const isCodRow = method.id === PaymentMethodEnum.COD;
             const isInstallmentRow = method.id === PaymentMethodEnum.INSTALLMENT;

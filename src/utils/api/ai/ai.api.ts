@@ -1,7 +1,10 @@
 import { authAxios, commonAxios } from "@/utils/axios";
 import { AI_CATALOG_SEARCH_TAKE } from "./ai.constant";
-import type { AiFeedbackRequest, AiStylistRequest, AiStylistResponse, AiSetBuilderResponse, AiStylistSession, CatalogPick } from "./ai.interface";
-import { mapCatalogHits, mapSetBuilderResponse, mapStylistResponse, mapStylistSessions, pickCatalogSlug } from "./ai.mapper";
+import type { AiAssistantReply, AiFeedbackRequest, AiStylistRequest, AiStylistResponse, AiSetBuilderResponse, AiStylistSession, CatalogPick } from "./ai.interface";
+import { mapAssistantReply, mapCatalogHits, mapSetBuilderResponse, mapStylistResponse, mapStylistSessions, pickCatalogSlug } from "./ai.mapper";
+
+export const chatWithAssistant = async (message: string): Promise<AiAssistantReply> =>
+  mapAssistantReply((await authAxios.post("ai/assistant", { message })).data);
 
 export const recommendStylist = async (body: AiStylistRequest): Promise<AiStylistResponse> =>
   mapStylistResponse((await authAxios.post("ai/stylist/recommendations", body)).data);

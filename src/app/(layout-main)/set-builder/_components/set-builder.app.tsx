@@ -140,7 +140,7 @@ const SetBuilderApp = () => {
   const total = setBuilderTotal(lines);
 
   return (
-    <AiPageFrame currentLabel="Tạo bộ trang sức" title="Tạo bộ trang sức">
+    <AiPageFrame currentLabel="Phối bộ trang sức" title="Phối bộ trang sức">
       <AiPreferenceForm key={formKey} initialValues={prefs} submitLabel="Gợi ý bộ" submitting={loading} onSubmit={(values) => void requestSet(values)} />
       {loading ? <Typography>Đang phối bộ...</Typography> : null}
       {errorMessage ? <Typography color="error">{errorMessage}</Typography> : null}

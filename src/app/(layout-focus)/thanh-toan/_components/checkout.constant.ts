@@ -37,7 +37,7 @@ export interface CheckoutFormValues {
 export const CART_USER_ID = "b1c2d3e4-f5a6-7890-1234-56789abcdef0";
 export const POINTS_TO_VND_RATE = 10_000_000 / 9_000;
 
-export const VALID_PAYMENT_METHODS = [PaymentMethod.COD];
+export const VALID_PAYMENT_METHODS = [PaymentMethod.COD, PaymentMethod.VNPAY];
 
 export const getCheckoutInitialValues = (
   session?: CheckoutSession | null,
