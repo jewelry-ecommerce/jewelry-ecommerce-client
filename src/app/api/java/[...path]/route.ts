@@ -6,6 +6,7 @@ import { isSameOriginRequest } from "@/lib/server/same-origin.util";
 import { isJavaBackend, javaApiPath } from "@/utils/config/java-backend.config";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 type RouteContext = { params: Promise<{ path: string[] }> };
 
 function resolvePath(segments: string[]): string | null {
