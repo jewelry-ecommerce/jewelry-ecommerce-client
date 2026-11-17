@@ -143,7 +143,6 @@ const CheckoutFormInner = ({
   const activeIsAddressSaved = isLoggedIn && !isManualEntry && userAddresses.length > 0;
   const isPreOrderReserve = isPreOrderReserveCheckout(session);
   const preOrderDeferredPaymentNotice = isPreOrderReserve ? buildPreOrderReservePaymentNotice(brandName) : null;
-  const submitButtonLabel = isPreOrderReserve ? "Xác Nhận Đặt Trước" : "Đặt Hàng COD";
 
   const validationSchema = useMemo(
     () => getCheckoutValidationSchema(isLoggedIn, activeIsAddressSaved, !isPreOrderReserve, isPreOrderReserve),
@@ -160,6 +159,9 @@ const CheckoutFormInner = ({
 
   const [showVat, showNote] = useWatch({ control, name: ["showVat", "showNote"] });
   const paymentMethod = useWatch({ control, name: "paymentMethod" });
+  const submitButtonLabel = isPreOrderReserve
+    ? "Xác Nhận Đặt Trước"
+    : paymentMethod === "MOMO" ? "Thanh toán MoMo" : "Đặt hàng COD";
 
   const watchedShippingValues = useWatch({
     control,

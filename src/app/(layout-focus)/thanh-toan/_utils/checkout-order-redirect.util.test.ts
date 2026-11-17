@@ -69,7 +69,7 @@ describe("resolveOrderRedirect", () => {
     expect(redirect).toEqual({ type: "error", message: "Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng." });
   });
 
-  it("routes a VNPay order to the sandbox start page", () => {
+  it("routes a MoMo order to the MoMo start page", () => {
     const session: CheckoutSession = {
       consentThirdPartySharing: false,
       totalAmount: 500000,
@@ -77,20 +77,20 @@ describe("resolveOrderRedirect", () => {
     const result: PlaceOrderResponse = {
       orderCode: "DH1",
       status: "PENDING",
-      paymentMethod: "VNPAY",
-      paymentUrl: "/thanh-toan-vnpay?orderCode=DH1&start=1",
+      paymentMethod: "MOMO",
+      paymentUrl: "/thanh-toan-momo?orderCode=DH1&start=1",
     };
 
     const redirect = resolveOrderRedirect({
       result,
       session,
       sessionId: "session-4",
-      paymentMethod: "VNPAY",
+      paymentMethod: "MOMO",
     });
 
     expect(redirect).toEqual({
       type: "redirect",
-      url: "/thanh-toan-vnpay?orderCode=DH1&start=1",
+      url: "/thanh-toan-momo?orderCode=DH1&start=1",
     });
   });
 

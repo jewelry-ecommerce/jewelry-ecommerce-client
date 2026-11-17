@@ -5,7 +5,7 @@ import type { PlaceOrderPayload, UpdatePricingContextPayload, UpdateShippingAddr
 import { JAVA_CHECKOUT_POLICY, javaAddressView, type JavaAddress, type JavaDraft, type JavaQuote, type JavaOrder } from "./java-commerce.types";
 import { ownedJavaDraft, saveJavaDraft } from "./java-checkout.storage";
 import { javaOrderItem } from "./java-order.mapper";
-import { javaPaymentMethod, vnpayStartUrl } from "./java-vnpay.api";
+import { javaPaymentMethod, momoStartUrl } from "./java-momo.api";
 
 export function javaAddressBody(address: Partial<ShippingAddress>, isDefault = false) {
   return { recipientName: [address.lastName, address.firstName].filter(Boolean).join(" ").trim(),
@@ -101,7 +101,7 @@ async function placeDraft(id: string, body: PlaceOrderPayload): Promise<NonNulla
     if (!order || !/^[1-9][0-9]*$/.test(String(order.id)) || !order.code?.trim())
       throw new Error("Chưa nhận được mã đơn hợp lệ. Kiểm tra đơn hàng trước khi đặt lại.");
     draft.placed = { orderId: String(order.id), orderCode: order.code, status: order.status, paymentMethod: order.paymentMethod,
-      paymentUrl: order.paymentMethod === "VNPAY" ? vnpayStartUrl(order.code) : undefined };
+      paymentUrl: order.paymentMethod === "MOMO" ? momoStartUrl(order.code) : undefined };
     draft.uncertain = false; draft.session.status = "PLACED"; draft.session.orderCode = order.code;
     saveJavaDraft(draft); return draft.placed;
   } catch (error) {
