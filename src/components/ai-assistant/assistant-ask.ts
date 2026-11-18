@@ -1,5 +1,5 @@
 import { AiApi } from "@/utils/api";
-import type { AiRecommendation } from "@/utils/api/ai/ai.interface";
+import type { AiRecommendation, AssistantHistoryItem } from "@/utils/api/ai/ai.interface";
 import { getErrorMessage } from "@/utils/helpers/axios";
 
 export type AssistantCard = {
@@ -27,9 +27,9 @@ const cardFromRecommendation = (item: AiRecommendation): AssistantCard => ({
   href: productHref(item.slug, item.name),
 });
 
-export const askAssistant = async (text: string): Promise<AssistantAnswer> => {
+export const askAssistant = async (text: string, history: AssistantHistoryItem[] = []): Promise<AssistantAnswer> => {
   try {
-    const result = await AiApi.chatWithAssistant(text);
+    const result = await AiApi.chatWithAssistant(text, history);
     const reply = result.reply.trim() || "Shop chưa nhận được nội dung. Bạn nhắn lại giúp shop nhé.";
     return { text: reply, cards: result.recommendations.map(cardFromRecommendation) };
   } catch (error) {
