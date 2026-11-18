@@ -11,9 +11,9 @@ export const PAYMENT_METHODS: CheckoutPaymentMethodOption[] = [
   { id: PaymentMethod.COD, label: "Thanh toán khi nhận hàng", icon: "/images/checkout/icon-payment-cod.svg" },
 ];
 
-export const MOMO_PAYMENT_METHOD: CheckoutPaymentMethodOption = {
-  id: PaymentMethod.MOMO,
-  label: "Ví MoMo",
+export const PAYOS_PAYMENT_METHOD: CheckoutPaymentMethodOption = {
+  id: PaymentMethod.PAYOS,
+  label: "PayOS (QR ngân hàng)",
 };
 
 export const COD_MAX_ORDER_AMOUNT_VND = Number.POSITIVE_INFINITY;

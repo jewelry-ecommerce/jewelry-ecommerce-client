@@ -161,7 +161,7 @@ const CheckoutFormInner = ({
   const paymentMethod = useWatch({ control, name: "paymentMethod" });
   const submitButtonLabel = isPreOrderReserve
     ? "Xác Nhận Đặt Trước"
-    : paymentMethod === "MOMO" ? "Thanh toán MoMo" : "Đặt hàng COD";
+    : paymentMethod === "PAYOS" ? "Thanh toán PayOS" : "Đặt hàng COD";
 
   const watchedShippingValues = useWatch({
     control,
