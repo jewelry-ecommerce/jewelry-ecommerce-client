@@ -2,7 +2,9 @@
 
 import { CdnImage } from "@/components";
 import { useProductDefaultImage } from "@/components/providers.component";
-import { askAssistant, type AssistantCard } from "@/components/ai-assistant/assistant-ask";
+import type { AssistantCard } from "@/components/ai-assistant/assistant-ask";
+import type { AssistantTranscriptTurn } from "@/components/ai-assistant/assistant-transcript.storage";
+import { useAssistantConversation } from "@/components/ai-assistant/use-assistant-conversation";
 import { formatPrice } from "@/utils/constants/common.constant";
 import { Box, Stack, Typography } from "@mui/material";
 import type { ChangeEvent } from "react";
@@ -10,12 +12,7 @@ import { MessageChatCircle, XClose } from "@untitledui/icons";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-type Turn = { role: "user" | "assistant"; text: string; cards?: AssistantCard[]; setPath?: string };
-
-const greeting: Turn = {
-  role: "assistant",
-  text: "Xin chào, cảm ơn bạn đã ghé shop. Bạn cần tư vấn món nào ạ?",
-};
+type Turn = AssistantTranscriptTurn;
 
 const AssistantCards = ({ cards }: { cards: AssistantCard[] }) => {
   const fallback = useProductDefaultImage();
@@ -90,15 +87,7 @@ const AssistantPanel = ({ turns, busy, onSend, onClose }: {
 
 const AiAssistantWidget = () => {
   const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [turns, setTurns] = useState<Turn[]>([greeting]);
-  const send = async (text: string) => {
-    setTurns((current) => [...current, { role: "user", text }]);
-    setBusy(true);
-    const answer = await askAssistant(text);
-    setTurns((current) => [...current, { role: "assistant", text: answer.text, cards: answer.cards, setPath: answer.setPath }]);
-    setBusy(false);
-  };
+  const { turns, busy, send } = useAssistantConversation();
   return (
     <>
       {open ? <AssistantPanel turns={turns} busy={busy} onSend={(text) => void send(text)} onClose={() => setOpen(false)} /> : null}

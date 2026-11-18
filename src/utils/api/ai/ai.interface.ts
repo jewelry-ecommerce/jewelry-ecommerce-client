@@ -36,6 +36,11 @@ export type AiAssistantReply = {
   recommendations: AiRecommendation[];
 };
 
+export type AssistantHistoryItem = {
+  role: "user" | "assistant";
+  content: string;
+};
+
 export type AiStylistResponse = {
   source: AiResultSource;
   banner?: string;
