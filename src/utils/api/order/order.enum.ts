@@ -182,6 +182,7 @@ export enum PaymentMethod {
   ZALO_PAY = "ZALO_PAY",
   INSTALLMENT = "INSTALLMENT",
   MOMO = "MOMO",
+  PAYOS = "PAYOS",
 }
 
 export const PAYMENT_METHOD_LABELS: Record<string, string> = {
@@ -193,6 +194,7 @@ export const PAYMENT_METHOD_LABELS: Record<string, string> = {
   [PaymentMethod.ZALO_PAY]: "ZaloPay",
   [PaymentMethod.INSTALLMENT]: "Thanh toán trả góp",
   [PaymentMethod.MOMO]: "Ví MoMo",
+  [PaymentMethod.PAYOS]: "PayOS",
   MOMO_PAY_LATER: "Trả sau MoMo",
   ATM_CARD: "Thẻ ATM",
 };

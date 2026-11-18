@@ -19,7 +19,7 @@ import {
   INSTALLMENT_DISABLED_HINT,
   INSTALLMENT_MIN_ORDER_AMOUNT_VND,
   PAYMENT_METHODS,
-  MOMO_PAYMENT_METHOD,
+  PAYOS_PAYMENT_METHOD,
 } from "./checkout-payment.constant";
 import {
   getFirstPaymentMethodId,
@@ -70,7 +70,7 @@ function CheckoutPaymentSection({
   );
   const fallbackPaymentMethodId = getFirstSelectablePaymentMethodId(amountLockOptions);
   const methods = useMemo(
-    () => (isJavaBackend() ? [...PAYMENT_METHODS, MOMO_PAYMENT_METHOD] : PAYMENT_METHODS),
+    () => (isJavaBackend() ? [...PAYMENT_METHODS, PAYOS_PAYMENT_METHOD] : PAYMENT_METHODS),
     [],
   );
 

@@ -26,8 +26,8 @@ describe("Java contract transport", () => {
     ["catalog/products/ring", "storefront/product/ring"],
     ["cms/storefront/pages/home", "storefront/cms/pages/home"],
     ["order/orders/me/123", "storefront/order/123"],
-    ["payment/momo/start", "storefront/payment/momo/start"],
-    ["payment/momo/return", "storefront/payment/momo/return"]
+    ["payment/payos/start", "storefront/payment/payos/start"],
+    ["payment/payos/return", "storefront/payment/payos/return"]
   ])("maps %s without duplicating storefront", (source, target) => {
     expect(javaApiPath(source)).toBe(target);
     expect(javaApiPath(target)).toBe(target);

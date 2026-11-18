@@ -75,21 +75,21 @@ test("v6 retries a lost response with the same key and frozen body, without re-q
   expect(transport.common.post.mock.calls.filter(call => call[0].includes('quote'))).toHaveLength(quoteCalls);
   expect(value.uncertain).toBe(false);
 });
-test("MoMo placement keeps the method and points at the start page", async () => {
+test("PayOS placement keeps the method and points at the start page", async () => {
   const value = draft(); storage.owned.mockResolvedValue(value);
   transport.common.post.mockImplementation(async (path: string) => ({ data: path.includes("quote") ? {
     items: [{ id: 1, productId: 4, skuId: 12, name: "Nhẫn", imageUrl: null, quantity: 2, unitPrice: 100, lineTotal: 200 }],
     summary: { subtotal: 200, productDiscount: 0, voucherDiscount: 0, shippingFee: 0, grandTotal: 200 },
-  } : { id: 42, code: "ORD42", status: "PENDING", paymentMethod: "MOMO" } }));
-  const result = await javaPlaceOrder("checkout-1", { paymentMethod: "MOMO", consent: false });
-  expect(result.paymentUrl).toBe("/thanh-toan-momo?orderCode=ORD42&start=1");
+  } : { id: 42, code: "ORD42", status: "PENDING", paymentMethod: "PAYOS" } }));
+  const result = await javaPlaceOrder("checkout-1", { paymentMethod: "PAYOS", consent: false });
+  expect(result.paymentUrl).toBe("/thanh-toan-payos?orderCode=ORD42&start=1");
   expect(transport.common.post).toHaveBeenCalledWith("storefront/order/guest", expect.objectContaining({
-    paymentMethod: "MOMO",
+    paymentMethod: "PAYOS",
   }), expect.anything());
 });
 test("online payment and multiple vouchers cannot silently fall back to COD", async () => {
   storage.owned.mockResolvedValue(draft());
-  await expect(javaPlaceOrder("checkout-1", { paymentMethod: "PAYPAL", consent: false })).rejects.toThrow("COD");
+  await expect(javaPlaceOrder("checkout-1", { paymentMethod: "PAYPAL", consent: false })).rejects.toThrow("PayOS");
   await expect(javaUpdatePricing("checkout-1", { couponCodes: ["A", "B"] })).rejects.toThrow("một voucher");
   expect(transport.common.post).not.toHaveBeenCalled();
 });

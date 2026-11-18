@@ -1,5 +1,5 @@
 import type { CheckoutSession, PlaceOrderResponse } from "@/utils/api/checkout/checkout.interface";
-import { momoStartUrl } from "@/utils/api/java/java-momo.api";
+import { payosStartUrl } from "@/utils/api/java/java-payos.api";
 import { isPreOrderReserveCheckout } from "@/utils/api/pre-order/pre-order-checkout.util";
 
 export type OrderRedirectResult = { type: "redirect"; url: string } | { type: "error"; message: string };
@@ -20,7 +20,7 @@ export function resolveOrderRedirect({
   paymentMethod,
 }: ResolveOrderRedirectParams): OrderRedirectResult {
   const isPreOrder = isPreOrderReserveCheckout(session) || isPreOrderReserveCheckout(syncedPricingSession);
-  if (!isPreOrder && paymentMethod === "MOMO") return momoRedirect(result);
+  if (!isPreOrder && paymentMethod === "PAYOS") return payosRedirect(result);
   if (!isPreOrder && paymentMethod !== "COD") {
     return { type: "error", message: "Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng." };
   }
@@ -29,9 +29,9 @@ export function resolveOrderRedirect({
   return { type: "redirect", url: `/trang-thai-thanh-toan?${query.toString()}` };
 }
 
-function momoRedirect(result: PlaceOrderResponse): OrderRedirectResult {
-  if (result.paymentMethod === "MOMO" && result.orderCode && result.paymentUrl === momoStartUrl(result.orderCode)) {
+function payosRedirect(result: PlaceOrderResponse): OrderRedirectResult {
+  if (result.paymentMethod === "PAYOS" && result.orderCode && result.paymentUrl === payosStartUrl(result.orderCode)) {
     return { type: "redirect", url: result.paymentUrl };
   }
-  return { type: "error", message: "Chưa tạo được liên kết thanh toán MoMo." };
+  return { type: "error", message: "Chưa tạo được liên kết thanh toán PayOS." };
 }
