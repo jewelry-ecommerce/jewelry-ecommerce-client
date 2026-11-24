@@ -18,6 +18,7 @@ import { resolveTenantBranding } from "@/lib/server/resolve-tenant-branding.serv
 import { configureDevSelfSignedTls } from "./tls";
 import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
 import { ContentHttpError, getContentPage } from "@/utils/api/content-backend/content-backend.api";
+import { getContentProductDetail } from "@/utils/api/content-backend/content-product-detail.api";
 async function requestContentPage(slug:string):Promise<PageResponse> {
   const agent=(await headers()).get('user-agent')??'';
   return getContentPage(slug,/Mobi|Android|iPhone|iPad/i.test(agent)?'MOBILE':'DESKTOP');
@@ -276,26 +277,37 @@ export async function getProductPageMetadata({
   defaults,
 }: ProductMetadataOptions): Promise<Metadata> {
   try {
-    const product = await fetchApiJson<IProductBySlugResponse>(`catalog/products/${slug}`);
+    // Java/content: dùng cùng nguồn PDP (`storefront/product/{slug}`) để khớp SEO admin.
+    const product = getContentApiBaseUrl()
+      ? await getContentProductDetail(slug).catch(() => null)
+      : await fetchApiJson<IProductBySlugResponse>(`catalog/products/${slug}`);
     if (!product) {
       return createFallbackMetadata({ path, canonicalUrl, defaults });
     }
+    const seoImage = product.seo?.image || (product as { metaImage?: string }).metaImage;
     const primaryImage =
-      product.seo?.image ||
+      seoImage ||
       product.defaultVariant?.image ||
       product.gallery?.find((item) => item.isPrimary)?.url ||
-      product.gallery?.[0]?.url;
+      product.gallery?.[0]?.url ||
+      product.image;
+
+    const title = product.seo?.metaTitle || (product as { metaTitle?: string }).metaTitle || defaults.title;
+    const description =
+      product.seo?.metaDescription || (product as { metaDescription?: string }).metaDescription || defaults.description;
 
     return createPageMetadata({
       path,
       canonicalUrl,
-      title: product.seo?.metaTitle ?? defaults.title,
-      description: product.seo?.metaDescription ?? defaults.description,
+      title,
+      description,
       keywords: product.seo?.metaKeywords ?? defaults.keywords,
       image: primaryImage
         ? {
             url: primaryImage,
-            alt: product.name,
+            width: 1200,
+            height: 630,
+            alt: product.name || title,
           }
         : defaults.image,
       noIndex: defaults.noIndex,
