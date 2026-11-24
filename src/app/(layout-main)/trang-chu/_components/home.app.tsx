@@ -101,6 +101,14 @@ const CmsTextBlock = dynamic(() => import("@/components/cms/cms-text-block/cms-t
   ssr: false,
 });
 
+const CmsCtaBlock = dynamic(() =>
+  import("@/components/cms/cms-cta-block/cms-cta-block.component").then((module) => module.CmsCtaBlock),
+);
+
+const CmsTopLineBanner = dynamic(() =>
+  import("@/components/cms/cms-top-line-banner/cms-top-line-banner.component").then((module) => module.CmsTopLineBanner),
+);
+
 interface HomeProps {
   slug?: string;
   initialData?: HomeInitialData | null;
@@ -486,6 +494,10 @@ const Home = ({ slug = "trang-chu", initialData }: HomeProps) => {
             return renderProductExpandableDescription(block);
           case BlockTypeCode.TEXT_BLOCK:
             return renderTextBlock(block);
+          case BlockTypeCode.CTA_BLOCK:
+            return <CmsCtaBlock key={block.id} config={block.config} />;
+          case BlockTypeCode.TOP_LINE_BANNER:
+            return <CmsTopLineBanner key={block.id} blockId={block.id} config={block.config} />;
           case BlockTypeCode.INFO_CARDS: {
             const desktopColumns = block.config.display?.columns ?? 3;
             return (

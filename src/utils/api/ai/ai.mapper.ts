@@ -4,8 +4,6 @@ import type {
   AiPreferenceValues,
   AiRecommendation,
   AiResultSource,
-  AiSetBuilderItem,
-  AiSetBuilderResponse,
   AiStylistRequest,
   AiStylistResponse,
   AiStylistSession,
@@ -125,48 +123,6 @@ export const mapStylistResponse = (payload: unknown): AiStylistResponse => {
     ...(banner ? { banner } : {}),
     ...(sessionId != null ? { sessionId } : {}),
     recommendations,
-  };
-};
-
-const mapSetItem = (value: unknown): AiSetBuilderItem | null => {
-  if (!isRecord(value)) return null;
-  const productId = readPositiveId(value, "productId") ?? readPositiveId(value, "id");
-  const productName = readString(value, "productName") || readString(value, "name");
-  if (productId == null || !productName) return null;
-  return {
-    productId,
-    productName,
-    thumbnailUrl: readThumbnail(value),
-    slotName: readString(value, "slotName"),
-    isKeyPiece: value.isKeyPiece === true || value.keyPiece === true,
-    sortOrder: readNumber(value, "sortOrder") ?? 0,
-    skuId: readPositiveId(value, "skuId"),
-    skuCode: readNullableString(value, "skuCode"),
-    price: readNumber(value, "price"),
-    stock: readStock(value),
-    source: readSource(value.source),
-    slug: readSlug(value),
-  };
-};
-
-export const mapSetBuilderResponse = (payload: unknown): AiSetBuilderResponse => {
-  const row = isRecord(payload) ? payload : {};
-  const items = Array.isArray(row.items) ? row.items.flatMap((item) => {
-    const mapped = mapSetItem(item);
-    return mapped ? [mapped] : [];
-  }) : [];
-  const sessionId = readPositiveId(row, "sessionId");
-  const banner = readNullableString(row, "banner");
-  return {
-    code: readString(row, "code"),
-    name: readString(row, "name"),
-    description: readString(row, "description"),
-    bundleDiscountPercent: readNumber(row, "bundleDiscountPercent") ?? 0,
-    items,
-    source: readSource(row.source),
-    ...(banner ? { banner } : {}),
-    totalPrice: readNumber(row, "totalPrice") ?? 0,
-    ...(sessionId != null ? { sessionId } : {}),
   };
 };
 

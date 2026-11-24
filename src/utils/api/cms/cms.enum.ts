@@ -7,6 +7,8 @@ export enum PlacementDisplayType {
 }
 
 export enum BlockTypeCode {
+  CTA_BLOCK = "CTA_BLOCK",
+  TOP_LINE_BANNER = "TOP_LINE_BANNER",
   BANNER = "BANNER",
   PRODUCT_CAROUSEL = "PRODUCT_CAROUSEL",
   INFO_CARDS = "INFO_CARDS",
@@ -23,6 +25,17 @@ export enum BlockTypeCode {
 export enum ActionType {
   NONE = "NONE",
   LINK = "LINK",
+}
+
+export enum CtaLinkTarget {
+  SELF = "_self",
+  BLANK = "_blank",
+}
+
+export enum CtaAlignment {
+  LEFT = "LEFT",
+  CENTER = "CENTER",
+  RIGHT = "RIGHT",
 }
 
 export enum AnimationType {

@@ -57,6 +57,14 @@ const ProductExpandableDescription = dynamic(
 
 const CmsTextBlock = dynamic(() => import("@/components/cms/cms-text-block/cms-text-block.component"));
 
+const CmsCtaBlock = dynamic(() =>
+  import("@/components/cms/cms-cta-block/cms-cta-block.component").then((module) => module.CmsCtaBlock),
+);
+
+const CmsTopLineBanner = dynamic(() =>
+  import("@/components/cms/cms-top-line-banner/cms-top-line-banner.component").then((module) => module.CmsTopLineBanner),
+);
+
 type ProductPageProps = {
   /** Slug trang CMS (vd: san-pham). Mặc định san-pham. */
   cmsPageSlug?: string;
@@ -314,6 +322,10 @@ const Product = ({
         return renderExpandableDescription(block);
       case BlockTypeCode.TEXT_BLOCK:
         return renderTextBlock(block);
+      case BlockTypeCode.CTA_BLOCK:
+        return <CmsCtaBlock key={block.id} config={block.config} />;
+      case BlockTypeCode.TOP_LINE_BANNER:
+        return <CmsTopLineBanner key={block.id} blockId={block.id} config={block.config} />;
       default:
         return null;
     }
