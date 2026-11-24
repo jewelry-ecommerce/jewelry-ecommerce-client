@@ -55,17 +55,17 @@ const EARRING_NAMES = [
 ];
 
 const BANGLE_NAMES = [
-  'Lắc Mắt Xích Box', 'Lắc Tennis CZ', 'Lắc Charm Base', 'Lắc Plate Khắc', 'Lắc Snake Mảnh',
-  'Lắc Figaro', 'Lắc Đôi Layer', 'Lắc Bead Bạc', 'Lắc Paperclip', 'Lắc Rope',
-  'Lắc ID Bar', 'Lắc Mesh', 'Lắc Cuban Slim', 'Lắc Satellite', 'Lắc Twist',
-  'Lắc Open Cuff Soft', 'Lắc Lock Motif', 'Lắc Station', 'Lắc Organic Link', 'Lắc Quiet Chain',
+  'Mắt Xích Box', 'Tennis CZ', 'Charm Base', 'Plate Khắc', 'Snake Mảnh',
+  'Figaro', 'Đôi Layer', 'Bead Bạc', 'Paperclip', 'Rope',
+  'ID Bar', 'Mesh', 'Cuban Slim', 'Satellite', 'Twist',
+  'Open Cuff Soft', 'Lock Motif', 'Station', 'Organic Link', 'Quiet Chain',
 ];
 
 const CHARM_NAMES = [
-  'Charm Tim Outline', 'Charm Ngôi Sao', 'Charm Moon', 'Charm Key Mini', 'Charm Flower CZ',
-  'Charm Letter Disk', 'Charm Butterfly', 'Charm Clover', 'Charm Anchor', 'Charm Spark CZ',
-  'Charm Book', 'Charm Music Note', 'Charm Paw', 'Charm Shell', 'Charm Crown',
-  'Charm Infinity', 'Charm Sun', 'Charm Feather', 'Charm Lock', 'Charm Smile',
+  'Tim Outline', 'Ngôi Sao', 'Moon', 'Key Mini', 'Flower CZ',
+  'Letter Disk', 'Butterfly', 'Clover', 'Anchor', 'Spark CZ',
+  'Book', 'Music Note', 'Paw', 'Shell', 'Crown',
+  'Infinity', 'Sun', 'Feather', 'Lock', 'Smile',
 ];
 
 function styles(names) {
