@@ -114,4 +114,28 @@ for (const code of placementCodes) {
   }
 }
 
+const logoMap = {
+  HEADER: 'images/logo/header-logo.svg',
+  FOOTER: 'images/logo/footer-logo.svg',
+  AUTH: 'images/logo/login-logo.svg',
+  FAVICON: 'images/logo/favicon.png',
+};
+const logosPayload = await api('admin/cms/logos?take=100');
+const logoRows = Array.isArray(logosPayload) ? logosPayload : logosPayload.content ?? logosPayload.list ?? [];
+for (const row of logoRows) {
+  const type = row.type || row.logoType;
+  const relative = logoMap[type];
+  if (!relative) continue;
+  if (!isEphemeralBeFile(row.logoUrl) && String(row.logoUrl || '').includes(site)) continue;
+  const logoUrl = publicUrl(relative);
+  await api('admin/cms/logos/' + row.id, 'PATCH', {
+    name: row.name,
+    type,
+    logoUrl,
+    logoTargetUrl: row.logoTargetUrl || '/',
+  });
+  await api('admin/cms/logos/' + row.id + '/status', 'PATCH', { status: 'ACTIVE' });
+  process.stdout.write('LOGO ' + type + ' -> ' + logoUrl + '\n');
+}
+
 process.stdout.write('DONE durable media rewrite\n');
