@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { api, login, publicMediaUrl, verifyThesisTarget } from './thesis-catalog.api.mjs';
+import { api, login, verifyThesisTarget } from './thesis-catalog.api.mjs';
 
 verifyThesisTarget();
 await login();
@@ -31,11 +31,7 @@ form.append('file', new Blob([bytes], { type: 'image/webp' }), 'mau-bac.webp');
 const uploaded = await api('admin/catalog/upload', 'POST', form);
 assert.ok(uploaded?.url, 'admin upload missing url');
 const origin = new URL(process.env.JEWELRY_DEMO_API_URL || 'https://jewelry-ecommerce-be-java.onrender.com/api/v1').origin;
-const adminUrl = String(uploaded.url).startsWith('http') ? uploaded.url : origin + uploaded.url;
-process.stdout.write('UPLOAD_ADMIN ' + adminUrl + '\n');
-
-// Durable display URL (Render disk is ephemeral). File is also in client public/.
-const imageUrl = publicMediaUrl(RELATIVE);
+const imageUrl = String(uploaded.url).startsWith('http') ? uploaded.url : origin + uploaded.url;
 process.stdout.write('ATTR_IMAGE ' + imageUrl + '\n');
 
 const attrs = await api('admin/catalog/attributes?take=100');
