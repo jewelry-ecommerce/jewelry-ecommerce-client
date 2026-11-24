@@ -1,14 +1,18 @@
 /**
  * Tạo trang CMS cho mọi URL footer + PUT admin/cms/footer.
+ * Ưu tiên TEXT_BLOCK (CKEditor). Fallback: Nội dung mô tả trang (rich HTML).
  * ENV: JEWELRY_DEMO_CONFIRM=CREATE_THESIS_CATALOG_120 + phone/password
  */
 import { api, login, thesisBlock, verifyThesisTarget } from './thesis-catalog.api.mjs';
+import { THESIS_POLICY } from './thesis-catalog.data.mjs';
 
 verifyThesisTarget();
 await login();
 
+const BRAND = THESIS_POLICY.brand;
+
 const FOOTER_PAGES = [
-  { slug: 'faqs-lien-he', name: 'FAQs & Liên hệ', title: 'FAQs & Liên hệ', body: '<p>Bạn cần hỗ trợ? Liên hệ hotline hoặc email chăm sóc khách hàng Heartlock. Chúng tôi phản hồi trong giờ làm việc.</p><p><strong>Hotline:</strong> 1900 8888<br/><strong>Email:</strong> support@heartlock.vn</p>' },
+  { slug: 'faqs-lien-he', name: 'FAQs & Liên hệ', title: 'FAQs & Liên hệ', body: `<p>Bạn cần hỗ trợ? Liên hệ hotline hoặc email chăm sóc khách hàng ${BRAND}. Chúng tôi phản hồi trong giờ làm việc.</p><p><strong>Hotline:</strong> 1900 8888<br/><strong>Email:</strong> support@example.com</p>` },
   { slug: 'huong-dan-do-size', name: 'Hướng dẫn đo size', title: 'Hướng dẫn đo size', body: '<p>Đo chu vi ngón tay hoặc cổ tay bằng thước dây, đối chiếu bảng size trên trang sản phẩm để chọn vừa khít.</p><p>Nếu phân vân giữa hai size, ưu tiên size lớn hơn để đeo thoải mái mỗi ngày.</p>' },
   { slug: 'huong-dan-bao-duong', name: 'Hướng dẫn bảo dưỡng trang sức', title: 'Bảo dưỡng trang sức bạc', body: '<p>Giữ trang sức khô ráo, tránh hóa chất và nước hoa. Lau nhẹ bằng khăn mềm sau khi đeo để giữ độ sáng.</p><p>Bảo quản riêng từng món trong hộp hoặc túi chống ẩm.</p>' },
   { slug: 'huong-dan-dang-ky-dang-nhap', name: 'Hướng dẫn đăng ký/đăng nhập', title: 'Đăng ký & đăng nhập', body: '<p>Tạo tài khoản bằng số điện thoại, xác thực OTP rồi hoàn tất hồ sơ để theo dõi đơn hàng và ưu đãi thành viên.</p>' },
@@ -20,14 +24,14 @@ const FOOTER_PAGES = [
   { slug: 'chinh-sach-giao-nhan', name: 'Chính sách giao nhận', title: 'Chính sách giao nhận', body: '<p>Giao hàng toàn quốc. Đơn đủ điều kiện freeship theo chương trình đang chạy. Thời gian giao dự kiến 1–5 ngày làm việc tùy khu vực.</p>' },
   { slug: 'chinh-sach-doi-hang-hoan-tien', name: 'Chính sách đổi hàng/hoàn tiền', title: 'Chính sách đổi hàng/hoàn tiền', body: '<p>Đổi/hoàn trong 7 ngày với sản phẩm còn nguyên. Phí vận chuyển đổi hàng theo quy định từng trường hợp.</p>' },
   { slug: 'chinh-sach-bao-hanh', name: 'Chính sách bảo hành', title: 'Chính sách bảo hành', body: '<p>Bảo hành lỗi kỹ thuật theo thời hạn ghi trên phiếu/đơn hàng. Không áp dụng với hao mòn tự nhiên hoặc va đập.</p>' },
-  { slug: 'chinh-sach-bao-mat', name: 'Chính sách bảo mật', title: 'Chính sách bảo mật', body: '<p>Heartlock chỉ dùng thông tin khách hàng để xử lý đơn và chăm sóc. Không chia sẻ cho bên thứ ba ngoài phạm vi cần thiết để giao hàng/thanh toán.</p>' },
+  { slug: 'chinh-sach-bao-mat', name: 'Chính sách bảo mật', title: 'Chính sách bảo mật', body: `<p>${BRAND} chỉ dùng thông tin khách hàng để xử lý đơn và chăm sóc. Không chia sẻ cho bên thứ ba ngoài phạm vi cần thiết để giao hàng/thanh toán.</p>` },
   { slug: 'nang-cap-san-pham', name: 'Nâng cấp sản phẩm', title: 'Nâng cấp sản phẩm', body: '<p>Chương trình nâng cấp (nếu có) sẽ được thông báo trên website và tới thành viên đủ điều kiện.</p>' },
   { slug: 'cong-tac-vien', name: 'Cộng tác viên', title: 'Cộng tác viên', body: '<p>Đăng ký cộng tác viên qua form liên hệ. Hoa hồng và điều kiện hợp tác sẽ được gửi sau khi xét duyệt.</p>' },
   { slug: 'gia-nhap-keyholder', name: 'Gia nhập Keyholder', title: 'Đặc quyền thành viên Keyholder', body: '<p>Thành viên Keyholder nhận ưu đãi sớm, quà sinh nhật và điểm tích lũy theo đơn hàng.</p>' },
-  { slug: 've-chung-toi', name: 'Về chúng tôi', title: 'Về Heartlock', body: '<p>Heartlock mang đến trang sức bạc 925 tinh tế cho phong cách mỗi ngày — tối giản, hiện đại và dễ phối.</p>' },
-  { slug: 'tin-tuc-xu-huong', name: 'Tin tức và xu hướng', title: 'Tin tức & xu hướng', body: '<p>Cập nhật lookbook, xu hướng trang sức bạc và cảm hứng phối đồ mới nhất từ Heartlock.</p>' },
-  { slug: 'su-kien-hop-tac', name: 'Sự kiện và hợp tác', title: 'Sự kiện & hợp tác', body: '<p>Theo dõi các sự kiện pop-up, collab và chiến dịch mùa từ Heartlock trên website và mạng xã hội.</p>' },
-  { slug: 'co-hoi-nghe-nghiep', name: 'Cơ hội nghề nghiệp', title: 'Cơ hội nghề nghiệp', body: '<p>Gửi CV về careers@heartlock.vn nếu bạn muốn đồng hành cùng đội ngũ Heartlock.</p>' },
+  { slug: 've-chung-toi', name: 'Về chúng tôi', title: `Về ${BRAND}`, body: `<p>${BRAND} mang đến trang sức bạc 925 tinh tế cho phong cách mỗi ngày — tối giản, hiện đại và dễ phối.</p>` },
+  { slug: 'tin-tuc-xu-huong', name: 'Tin tức và xu hướng', title: 'Tin tức & xu hướng', body: `<p>Cập nhật lookbook, xu hướng trang sức bạc và cảm hứng phối đồ mới nhất từ ${BRAND}.</p>` },
+  { slug: 'su-kien-hop-tac', name: 'Sự kiện và hợp tác', title: 'Sự kiện & hợp tác', body: `<p>Theo dõi các sự kiện pop-up, collab và chiến dịch mùa từ ${BRAND} trên website và mạng xã hội.</p>` },
+  { slug: 'co-hoi-nghe-nghiep', name: 'Cơ hội nghề nghiệp', title: 'Cơ hội nghề nghiệp', body: `<p>Gửi CV về careers@example.com nếu bạn muốn đồng hành cùng đội ngũ ${BRAND}.</p>` },
   { slug: 'he-thong-cua-hang', name: 'Hệ thống cửa hàng', title: 'Hệ thống cửa hàng', body: '<p>Hiện hỗ trợ mua online toàn quốc. Thông tin showroom (nếu mở) sẽ cập nhật tại trang này.</p>' },
 ];
 
@@ -75,8 +79,8 @@ async function savePage(meta, blocks) {
     isActive: true,
     targetDevice: 'ALL',
     seo: {
-      title: meta.title + ' | Heartlock',
-      description: meta.title + ' — thông tin hỗ trợ khách hàng Heartlock.',
+      title: meta.title + ' | ' + BRAND,
+      description: meta.title + ' — thông tin hỗ trợ khách hàng ' + BRAND + '.',
       keywords: meta.slug.replaceAll('-', ', '),
       canonicalUrl: '/' + meta.slug,
       imageUrl: '',
@@ -101,13 +105,13 @@ for (const meta of FOOTER_PAGES) {
 
 const footer = {
   newsletterHeading: 'Đăng ký nhận tin',
-  newsletterSubHeading: 'Nhận ưu đãi và bộ sưu tập mới từ Heartlock',
-  copyrightText: '© ' + new Date().getFullYear() + ' Heartlock. All rights reserved.',
+  newsletterSubHeading: 'Nhận ưu đãi và bộ sưu tập mới từ ' + BRAND,
+  copyrightText: '© ' + new Date().getFullYear() + ' ' + BRAND + '. All rights reserved.',
   socialLinks: [
-    { platform: 'Facebook', displayName: 'Facebook Heartlock', url: 'https://facebook.com', orderIndex: 0 },
-    { platform: 'Instagram', displayName: 'Instagram Heartlock', url: 'https://instagram.com', orderIndex: 1 },
-    { platform: 'TikTok', displayName: 'TikTok Heartlock', url: 'https://tiktok.com', orderIndex: 2 },
-    { platform: 'YouTube', displayName: 'YouTube Heartlock', url: 'https://youtube.com', orderIndex: 3 },
+    { platform: 'Facebook', displayName: 'Facebook ' + BRAND, url: 'https://facebook.com', orderIndex: 0 },
+    { platform: 'Instagram', displayName: 'Instagram ' + BRAND, url: 'https://instagram.com', orderIndex: 1 },
+    { platform: 'TikTok', displayName: 'TikTok ' + BRAND, url: 'https://tiktok.com', orderIndex: 2 },
+    { platform: 'YouTube', displayName: 'YouTube ' + BRAND, url: 'https://youtube.com', orderIndex: 3 },
   ],
   menuColumns: [
     {
@@ -144,14 +148,14 @@ const footer = {
       orderIndex: 2,
       items: [
         { label: 'Đăng ký', url: '/dang-ky', orderIndex: 0 },
-        { label: 'Gia nhập Heartlock Keyholder', url: '/gia-nhap-keyholder', orderIndex: 1 },
+        { label: 'Gia nhập ' + BRAND + ' Keyholder', url: '/gia-nhap-keyholder', orderIndex: 1 },
       ],
     },
     {
       title: 'Về chúng tôi',
       orderIndex: 3,
       items: [
-        { label: 'Về Heartlock', url: '/ve-chung-toi', orderIndex: 0 },
+        { label: 'Về ' + BRAND, url: '/ve-chung-toi', orderIndex: 0 },
         { label: 'Tin tức và xu hướng', url: '/tin-tuc-xu-huong', orderIndex: 1 },
         { label: 'Sự kiện và hợp tác', url: '/su-kien-hop-tac', orderIndex: 2 },
         { label: 'Cơ hội nghề nghiệp', url: '/co-hoi-nghe-nghiep', orderIndex: 3 },

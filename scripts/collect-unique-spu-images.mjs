@@ -1,5 +1,5 @@
 /**
- * Thu thập bộ ảnh unique từ Heartlock (public) + local demo PNG.
+ * Thu thập bộ ảnh unique từ catalog public mẫu + local demo PNG (chỉ nguồn ảnh, không dùng brand đó trên storefront).
  * Mỗi SPU = 1 bộ riêng (không share), tối đa 4 ảnh/SPU.
  * Output: .demo-data/spu-image-sets.json
  */
@@ -40,7 +40,7 @@ function classify(title, href) {
   for (const rule of CATEGORY_RULES) {
     if (rule.match.test(hay)) return rule;
   }
-  // Heartlock naming defaults: Charm* / Nhẫn*
+  // Naming mặc định trên nguồn public: Charm* / Nhẫn*
   if (/^charm/i.test(title)) return CATEGORY_RULES.find((r) => r.code === 'CHARM');
   if (/^nhẫn/i.test(title)) return CATEGORY_RULES.find((r) => r.code === 'RING');
   return CATEGORY_RULES.find((r) => r.code === 'CHARM');

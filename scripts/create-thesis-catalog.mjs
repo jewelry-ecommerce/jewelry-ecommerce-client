@@ -261,15 +261,6 @@ const homeMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'trang-chu');
 const listingMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'san-pham');
 
 const home = await savePage(homeMeta.slug, homeMeta.name, homeMeta.seo, [
-  thesisBlock('TOP_LINE_BANNER', {
-    settings: { isClosable: true, animationType: 'MARQUEE', animationSpeed: 12, backgroundColor: '#111827', textColor: '#FFFFFF' },
-    badge: { text: 'BẠC 925', actionType: 'NONE', backgroundColor: '#F59E0B', textColor: '#111827' },
-    items: [
-      { text: 'Freeship đơn từ 500K', actionType: 'NONE' },
-      { text: 'Chỉ bạc & hợp kim — không vàng', actionType: 'LINK', actionUrl: '/san-pham' },
-      { text: 'Đổi trả 7 ngày', actionType: 'NONE' },
-    ],
-  }),
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.heroCode }),
   thesisBlock('PRODUCT_CAROUSEL', {
     header: { title: 'Everyday Silver', subtitle: 'Trang sức bạc mỏng nhẹ — đeo mỗi ngày vẫn nổi bật' },
@@ -283,7 +274,7 @@ const home = await savePage(homeMeta.slug, homeMeta.name, homeMeta.seo, [
     items: showcase.slice(0, 3),
   }),
   thesisBlock('INFO_CARDS', {
-    header: { title: 'Vì sao chọn Heartlock', subtitle: 'Chất liệu rõ ràng · Phối set dễ · Bảo quản đơn giản' },
+    header: { title: 'Vì sao chọn Jewelry Ecommerce', subtitle: 'Chất liệu rõ ràng · Phối set dễ · Bảo quản đơn giản' },
     display: { columns: 3 },
     items: cards,
   }),

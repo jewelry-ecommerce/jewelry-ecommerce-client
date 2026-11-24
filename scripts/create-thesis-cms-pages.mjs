@@ -66,7 +66,7 @@ async function ensureSliderPlacement(code, images, actionUrl = '/san-pham') {
   if (!placement) {
     placement = await api('admin/banner/placements', 'POST', {
       code,
-      name: 'Heartlock ' + code,
+      name: 'Jewelry Ecommerce ' + code,
       displayType: 'SLIDER',
       platform: 'ALL',
       status: 'ACTIVE',
@@ -107,7 +107,7 @@ async function ensureDoublePlacement(code, images) {
   if (!placement) {
     placement = await api('admin/banner/placements', 'POST', {
       code,
-      name: 'Heartlock ' + code,
+      name: 'Jewelry Ecommerce ' + code,
       displayType: 'DOUBLE_BANNER',
       platform: 'ALL',
       status: 'ACTIVE',
@@ -149,7 +149,7 @@ async function ensureBestSellerGrid(code, images) {
   if (!placement) {
     placement = await api('admin/banner/placements', 'POST', {
       code,
-      name: 'Heartlock Best Seller Grid',
+      name: 'Jewelry Ecommerce Best Seller Grid',
       displayType: 'GRID',
       platform: 'ALL',
       status: 'ACTIVE',
@@ -303,7 +303,7 @@ const blackFridayMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'black-fri
 const bestSellerMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'best-seller');
 
 const homeBlocksLive = await api('storefront/cms/pages/trang-chu', 'GET', undefined, false).catch(() => null);
-const allowNew = (homeBlocksLive?.blocks || []).some((block) => ['CTA_BLOCK', 'NEWSLETTER_SIGNUP', 'TOP_LINE_BANNER'].includes(block.type || block.blockTypeCode))
+const allowNew = (homeBlocksLive?.blocks || []).some((block) => ['CTA_BLOCK', 'NEWSLETTER_SIGNUP'].includes(block.type || block.blockTypeCode))
   || true;
 
 const everyday = collectionsBySlug['everyday-silver'] || collectionsBySlug['bac-toi-gian'];
@@ -372,7 +372,7 @@ const homeBlocks = [
     items: showcase,
   }),
   thesisBlock('INFO_CARDS', {
-    header: { title: 'Vì sao chọn Heartlock', subtitle: 'Chất liệu rõ ràng · Phối set dễ · Bảo quản đơn giản' },
+    header: { title: 'Vì sao chọn Jewelry Ecommerce', subtitle: 'Chất liệu rõ ràng · Phối set dễ · Bảo quản đơn giản' },
     display: { columns: 3 },
     items: cards,
   }),
@@ -488,7 +488,7 @@ for (const [index, pageMeta] of storyPages.entries()) {
       maxCollapsedLines: 4,
     }),
     thesisBlock('PRODUCT_CAROUSEL', {
-      header: { title: 'Gợi ý trong bộ', subtitle: collection?.name || 'Heartlock' },
+      header: { title: 'Gợi ý trong bộ', subtitle: collection?.name || 'Jewelry Ecommerce' },
       display: { limit: 8 },
       dataSource: { filterType: 'COLLECTION', collectionSlug: collection?.slug },
       seeMore: {

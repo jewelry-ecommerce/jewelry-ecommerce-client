@@ -6,7 +6,7 @@ import useStyles from "./product-size-guide-drawer.styles";
 import { ArrowNarrowLeft, XClose } from "@untitledui/icons";
 import { RemoveScroll } from "react-remove-scroll";
 
-const SIZE_GUIDE_DETAIL_URL = "https://heartlock.com.vn/huong-dan-chon-size";
+const SIZE_GUIDE_DETAIL_URL = "/huong-dan-do-size";
 
 const SIZE_GUIDE_SECTIONS = [
   {

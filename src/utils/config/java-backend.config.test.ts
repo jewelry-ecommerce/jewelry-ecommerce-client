@@ -26,7 +26,10 @@ describe("Java contract transport", () => {
     ["cms/storefront/pages/home", "storefront/cms/pages/home"],
     ["order/orders/me/123", "storefront/order/123"],
     ["payment/payos/start", "storefront/payment/payos/start"],
-    ["payment/payos/return", "storefront/payment/payos/return"]
+    ["payment/payos/return", "storefront/payment/payos/return"],
+    ["order/order-returns/client", "storefront/order-returns"],
+    ["order/order-returns/client/by-code/RT1/cancel", "storefront/order-returns/by-code/RT1/cancel"],
+    ["order/orders/fee/calculate", "storefront/shipping/ghn/fee"],
   ])("maps %s without duplicating storefront", (source, target) => {
     expect(javaApiPath(source)).toBe(target);
     expect(javaApiPath(target)).toBe(target);
