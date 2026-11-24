@@ -52,8 +52,12 @@ export async function upload(relativePath) {
   form.append('file', new Blob([bytes], { type: mime }), basename(absolute));
   const result = await api('admin/catalog/upload', 'POST', form);
   assert.ok(result.url);
-  assetCache.set(relativePath, result.url);
-  return result.url;
+  const origin = new URL(baseUrl).origin;
+  const url = result.url.startsWith('/api/v1/storefront/files/')
+    ? origin + result.url
+    : result.url;
+  assetCache.set(relativePath, url);
+  return url;
 }
 
 export const numericId = (value) => {

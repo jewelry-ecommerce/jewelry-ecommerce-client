@@ -14,11 +14,10 @@ coverage
 npm-install.log
 .demo-data/
 
-# thesis unsplash product photos (regenerate via scripts/download-thesis-product-images.mjs)
+# thesis unsplash product photos (local seed only — do not commit)
 public/images/product/nhan/
 public/images/product/vong-tay/
 public/images/product/khuyen-tai/
 public/images/product/lac-tay/
-public/images/product/charm/*.jpg
-public/images/product/day-chuyen/*.jpg
+public/images/product/**/*.jpg
 
