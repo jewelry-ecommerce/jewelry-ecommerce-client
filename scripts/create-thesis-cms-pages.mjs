@@ -1,13 +1,12 @@
 /**
- * Tiếp tục sau khi catalog JEW-* đã seed: banner placements + CMS pages + menu.
- * ENV giống create-thesis-catalog.mjs
+ * Banner placements + CMS pages + collections + menu (copy trang sức chuẩn).
+ * ENV: JEWELRY_DEMO_CONFIRM=CREATE_THESIS_CATALOG_120 + phone/password + API URL
  */
 import assert from 'node:assert/strict';
 import { api, login, numericId, thesisBlock, upload, verifyThesisTarget } from './thesis-catalog.api.mjs';
 import {
   THESIS_CMS_PAGES,
   THESIS_COLLECTIONS,
-  THESIS_GROUPS,
   THESIS_INFORMATION,
   THESIS_POLICY,
 } from './thesis-catalog.data.mjs';
@@ -17,83 +16,250 @@ await login();
 
 const productsPayload = await api('admin/catalog/products?take=' + THESIS_POLICY.catalogTake);
 const products = (productsPayload.content ?? []).filter((product) => String(product.code || '').startsWith(THESIS_POLICY.prefix));
-assert.ok(products.length >= 100, 'Need JEW-* products first, got ' + products.length);
+assert.ok(products.length >= 40, 'Need JEW-* products first, got ' + products.length);
 
 const categories = (await api('admin/catalog/categories')).filter((row) => String(row.code || '').startsWith(THESIS_POLICY.prefix));
+
+function groupCodeOf(product) {
+  const code = String(product.code || '');
+  const match = code.match(/^JEW-([A-Z]+)-/i);
+  return match ? match[1].toUpperCase() : '';
+}
+
+function pickProducts(definition, limit = 18) {
+  const wanted = new Set((definition.pick || []).map((code) => code.toUpperCase()));
+  const matched = products.filter((product) => wanted.size === 0 || wanted.has(groupCodeOf(product)));
+  const pool = matched.length ? matched : products;
+  return pool.slice(0, limit).map((row) => numericId(row.id));
+}
+
+async function resolveMedia(source) {
+  if (/^https?:\/\//i.test(source)) return source;
+  return upload(source);
+}
+
 let collections = await api('admin/catalog/collections');
 for (const definition of THESIS_COLLECTIONS) {
-  if (!collections.find((row) => row.slug === definition.slug)) {
-    await api('admin/catalog/collections', 'POST', {
+  let collection = collections.find((row) => row.slug === definition.slug);
+  if (!collection) {
+    collection = await api('admin/catalog/collections', 'POST', {
       name: definition.name,
       slug: definition.slug,
-      heroImageUrl: await upload(definition.image),
+      heroImageUrl: await resolveMedia(definition.image),
       status: 'PUBLISHED',
       description: definition.blurb,
     });
+    process.stdout.write('COLLECTION_NEW ' + definition.slug + '\n');
+  }
+  const productIds = pickProducts(definition);
+  if (productIds.length) {
+    await api('admin/catalog/collections/' + collection.id + '/products', 'POST', { productIds });
   }
 }
 collections = await api('admin/catalog/collections');
-collections = THESIS_COLLECTIONS.map((definition) => collections.find((row) => row.slug === definition.slug)).filter(Boolean);
+const collectionsBySlug = Object.fromEntries(collections.map((row) => [row.slug, row]));
 
-async function ensurePlacement(code, displayType, images) {
+async function ensureSliderPlacement(code, images, actionUrl = '/san-pham') {
   const list = await api('admin/banner/placements?take=100');
   const rows = Array.isArray(list) ? list : list.content ?? list.list ?? [];
   let placement = rows.find((row) => row.code === code);
   if (!placement) {
     placement = await api('admin/banner/placements', 'POST', {
-      code, name: 'Thesis ' + code, displayType, platform: 'ALL', status: 'ACTIVE',
+      code,
+      name: 'Heartlock ' + code,
+      displayType: 'SLIDER',
+      platform: 'ALL',
+      status: 'ACTIVE',
     });
   }
   const current = await api('storefront/banner/placements/code/' + code + '/render', 'GET', undefined, false).catch(() => null);
   if (current?.slots?.some((slot) => slot.banners?.length)) return placement;
+
   const banners = [];
   for (const [index, image] of images.entries()) {
     banners.push(await api('admin/banner/banners', 'POST', {
-      internalName: 'Thesis ' + code + ' ' + index,
+      internalName: code + ' ' + index,
       status: 'ACTIVE',
-      mediaUrl: await upload(image),
-      mediaMobileUrl: await upload(image),
+      mediaUrl: await resolveMedia(image),
+      mediaMobileUrl: await resolveMedia(image),
       actionType: 'LINK_URL',
-      actionUrl: '/san-pham',
+      actionUrl,
     }));
   }
   await api('admin/banner/placements/' + placement.id + '/layouts', 'POST', {
-    name: 'Thesis layout',
+    name: code + ' layout',
     status: 'ACTIVE',
     items: banners.map((banner, index) => ({
       bannerId: numericId(banner.id),
-      slotKey: displayType === 'SLIDER' ? 'main' : 'slot-' + index,
+      slotKey: 'main',
       isActive: true,
       priority: index,
-      displayMetadata: { slotType: displayType, x: index, y: 0, width: 1, height: 1, order: index },
+      displayMetadata: { slotType: 'SLIDER', layoutType: 'SLIDER', x: 0, y: 0, width: 1, height: 1, order: index },
     })),
   });
   return placement;
 }
 
-await ensurePlacement(THESIS_POLICY.heroCode, 'SLIDER', ['images/banner/grid-banner/01.png']);
-await ensurePlacement(THESIS_POLICY.storiesCode, 'DOUBLE_BANNER', THESIS_COLLECTIONS.slice(0, 2).map((row) => row.image));
-await ensurePlacement(THESIS_POLICY.listingCode, 'SLIDER', ['images/banner/product-banner/1.webp']);
-await ensurePlacement(THESIS_POLICY.collectionHeroCode, 'SLIDER', ['images/banner/double-banner/01.webp']);
+async function ensureDoublePlacement(code, images) {
+  const list = await api('admin/banner/placements?take=100');
+  const rows = Array.isArray(list) ? list : list.content ?? list.list ?? [];
+  let placement = rows.find((row) => row.code === code);
+  if (!placement) {
+    placement = await api('admin/banner/placements', 'POST', {
+      code,
+      name: 'Heartlock ' + code,
+      displayType: 'DOUBLE_BANNER',
+      platform: 'ALL',
+      status: 'ACTIVE',
+    });
+  }
+  const current = await api('storefront/banner/placements/code/' + code + '/render', 'GET', undefined, false).catch(() => null);
+  if (current?.slots?.some((slot) => slot.banners?.length)) return placement;
 
-const showcase = await Promise.all(THESIS_COLLECTIONS.map(async (definition) => ({
+  const banners = [];
+  for (const [index, image] of images.entries()) {
+    banners.push(await api('admin/banner/banners', 'POST', {
+      internalName: code + ' ' + index,
+      status: 'ACTIVE',
+      mediaUrl: await resolveMedia(image),
+      mediaMobileUrl: await resolveMedia(image),
+      actionType: 'LINK_URL',
+      actionUrl: '/san-pham',
+    }));
+  }
+  await api('admin/banner/placements/' + placement.id + '/layouts', 'POST', {
+    name: code + ' layout',
+    status: 'ACTIVE',
+    items: banners.map((banner, index) => ({
+      bannerId: numericId(banner.id),
+      slotKey: 'slot-' + index,
+      isActive: true,
+      priority: index,
+      displayMetadata: { slotType: 'DOUBLE_BANNER', layoutType: 'DOUBLE_BANNER', x: index, y: 0, width: 1, height: 1, order: index },
+    })),
+  });
+  return placement;
+}
+
+/** GRID 4×2 (8 ô) — layout 4 ảnh: hero lớn + 3 ô phụ. */
+async function ensureBestSellerGrid(code, images) {
+  const list = await api('admin/banner/placements?take=100');
+  const rows = Array.isArray(list) ? list : list.content ?? list.list ?? [];
+  let placement = rows.find((row) => row.code === code);
+  if (!placement) {
+    placement = await api('admin/banner/placements', 'POST', {
+      code,
+      name: 'Heartlock Best Seller Grid',
+      displayType: 'GRID',
+      platform: 'ALL',
+      status: 'ACTIVE',
+      settings: { columns: 4, rows: 2, gap: 0, mobileOddFullWidthItem: 'LAST' },
+    });
+  } else if (!placement.settings?.columns) {
+    try {
+      await api('admin/banner/placements/' + placement.id, 'PATCH', {
+        settings: { columns: 4, rows: 2, gap: 0, mobileOddFullWidthItem: 'LAST' },
+      });
+    } catch {
+      /* keep existing */
+    }
+  }
+
+  const current = await api('storefront/banner/placements/code/' + code + '/render', 'GET', undefined, false).catch(() => null);
+  if (current?.slots?.some((slot) => slot.banners?.length)) return placement;
+
+  const slots = [
+    { key: 'A', x: 0, y: 0, width: 2, height: 2, image: images[0], href: '/best-seller' },
+    { key: 'B', x: 2, y: 0, width: 2, height: 1, image: images[1], href: '/san-pham?collectionSlug=best-sellers' },
+    { key: 'C', x: 2, y: 1, width: 1, height: 1, image: images[2], href: '/san-pham' },
+    { key: 'D', x: 3, y: 1, width: 1, height: 1, image: images[3], href: '/bo-suu-tap' },
+  ];
+
+  const items = [];
+  for (const [index, slot] of slots.entries()) {
+    const banner = await api('admin/banner/banners', 'POST', {
+      internalName: code + ' ' + slot.key,
+      status: 'ACTIVE',
+      mediaUrl: await resolveMedia(slot.image),
+      mediaMobileUrl: await resolveMedia(slot.image),
+      actionType: 'LINK_URL',
+      actionUrl: slot.href,
+    });
+    items.push({
+      bannerId: numericId(banner.id),
+      slotKey: slot.key,
+      isActive: true,
+      priority: index,
+      displayMetadata: {
+        slotType: 'SINGLE_IMAGE',
+        layoutType: 'GRID',
+        x: slot.x,
+        y: slot.y,
+        width: slot.width,
+        height: slot.height,
+        order: index,
+      },
+    });
+  }
+
+  await api('admin/banner/placements/' + placement.id + '/layouts', 'POST', {
+    name: 'Best seller mosaic',
+    status: 'ACTIVE',
+    items,
+  });
+  return placement;
+}
+
+await ensureSliderPlacement(THESIS_POLICY.heroCode, ['images/banner/grid-banner/01.png'], '/black-friday');
+await ensureDoublePlacement(
+  THESIS_POLICY.storiesCode,
+  ['images/banner/double-banner/01.webp', 'images/banner/double-banner/02.webp'],
+);
+await ensureSliderPlacement(THESIS_POLICY.listingCode, ['images/banner/product-banner/1.webp']);
+await ensureSliderPlacement(THESIS_POLICY.collectionHeroCode, ['images/banner/double-banner/01.webp'], '/bo-suu-tap');
+await ensureSliderPlacement(THESIS_POLICY.blackFridayHeroCode, ['images/banner/campaign/bf-hero.jpg'], '/black-friday');
+await ensureBestSellerGrid(THESIS_POLICY.bestSellerGridCode, [
+  'images/banner/campaign/bs-1.jpg',
+  'images/banner/campaign/bs-2.jpg',
+  'images/banner/campaign/bs-3.jpg',
+  'images/banner/campaign/bs-4.jpg',
+]);
+
+const featuredCollections = ['everyday-silver', 'layered-look', 'cz-glow', 'gift-edit', 'black-friday-picks', 'best-sellers']
+  .map((slug) => THESIS_COLLECTIONS.find((row) => row.slug === slug))
+  .filter(Boolean);
+
+const showcase = await Promise.all(featuredCollections.slice(0, 3).map(async (definition) => ({
   title: definition.name,
-  imageUrl: await upload(definition.image),
+  imageUrl: await resolveMedia(definition.image),
   actionUrl: '/san-pham?collectionSlug=' + definition.slug,
 })));
+
 const cards = await Promise.all(THESIS_INFORMATION.map(async (info) => ({
   title: info.title,
   description: info.description,
-  imageUrl: await upload(info.image),
+  imageUrl: await resolveMedia(info.image),
   actionText: 'Khám phá',
   actionUrl: '/san-pham',
 })));
+
 const gallery = await Promise.all([1, 2, 3, 4].map(async (index) => ({
-  imageUrl: await upload('images/gallery-image/0' + index + '.webp'),
-  title: 'Lookbook ' + index,
-  label: 'JEWELRY',
+  imageUrl: await resolveMedia('images/gallery-image/0' + index + '.webp'),
+  title: ['Ánh bạc ban ngày', 'Layered necklace', 'Hoop & cuff', 'Gift-ready set'][index - 1],
+  label: 'LOOKBOOK',
   actionUrl: '/san-pham',
 })));
+
+async function buildSeo(meta) {
+  const imageUrl = meta.seo?.image ? await resolveMedia(meta.seo.image) : '';
+  return {
+    title: meta.seo?.title || meta.name,
+    description: meta.seo?.description || '',
+    keywords: meta.seo?.keywords || '',
+    canonicalUrl: '/' + meta.slug,
+    imageUrl,
+  };
+}
 
 function withSort(blocks) {
   return blocks.map((block, sortOrder) => ({
@@ -104,162 +270,233 @@ function withSort(blocks) {
   }));
 }
 
-async function savePage(slug, name, seo, newBlocks) {
+async function savePage(meta, newBlocks) {
   const pages = await api('admin/cms/pages');
-  const previous = pages.find((page) => page.slug === slug);
+  const previous = pages.find((page) => page.slug === meta.slug);
   const blocks = withSort(newBlocks);
+  const seo = await buildSeo(meta);
   const body = {
-    name: previous?.name ?? name,
-    slug,
+    name: meta.name,
+    slug: meta.slug,
     locale: previous?.locale ?? 'vi-VN',
     isActive: true,
     targetDevice: 'ALL',
-    seo: previous?.seo ?? seo,
+    seo,
     blocks,
   };
   const page = await api('admin/cms/pages' + (previous ? '/' + previous.id : ''), previous ? 'PUT' : 'POST', body);
   await api('admin/cms/pages/' + page.id + '/publish', 'POST');
-  process.stdout.write('PAGE ' + slug + ' blocks=' + blocks.length + '\n');
+  process.stdout.write('PAGE ' + meta.slug + ' blocks=' + blocks.length + '\n');
   return page;
 }
 
 const homeMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'trang-chu');
 const listingMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'san-pham');
 const collectionHub = THESIS_CMS_PAGES.find((page) => page.slug === 'bo-suu-tap');
+const blackFridayMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'black-friday');
+const bestSellerMeta = THESIS_CMS_PAGES.find((page) => page.slug === 'best-seller');
 
-async function supportsBlock(type, config) {
-  const probe = withSort([thesisBlock(type, config)]);
-  try {
-    await api('admin/cms/pages/' + (await api('admin/cms/pages')).find((page) => page.slug === 'trang-chu').id, 'PUT', {
-      name: 'trang chủ',
-      slug: 'trang-chu',
-      locale: 'vi-VN',
-      isActive: true,
-      targetDevice: 'ALL',
-      seo: { title: 'probe', description: 'probe' },
-      blocks: probe,
-    });
-    return true;
-  } catch {
-    return false;
-  }
+const homeBlocksLive = await api('storefront/cms/pages/trang-chu', 'GET', undefined, false).catch(() => null);
+const allowNew = (homeBlocksLive?.blocks || []).some((block) => ['CTA_BLOCK', 'NEWSLETTER_SIGNUP', 'TOP_LINE_BANNER'].includes(block.type || block.blockTypeCode))
+  || true;
+
+const everyday = collectionsBySlug['everyday-silver'] || collectionsBySlug['bac-toi-gian'];
+const layered = collectionsBySlug['layered-look'] || collectionsBySlug['cz-lap-lanh'];
+const blackFridayCollection = collectionsBySlug['black-friday-picks'];
+const bestSellerCollection = collectionsBySlug['best-sellers'];
+
+// Top banner = admin/cms/headers (trong Header như trading-fe) — không seed TOP_LINE_BANNER vào nội dung trang.
+async function ensureBlackFridayHeader() {
+  const start = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  await api('admin/cms/headers', 'POST', {
+    bannerName: 'Black Friday',
+    bannerDisplayStyle: 'TEXT',
+    bannerContent: 'BLACK FRIDAY — Giảm sâu trang sức bạc 925 · Freeship đơn từ 500K · Đổi trả 7 ngày',
+    bannerBgColor: '#000000',
+    bannerTextColor: '#FFFFFF',
+    bannerTargetUrl: '/black-friday',
+    bannerAnimationStyle: 'MARQUEE',
+    bannerLoopIntervalSec: 14,
+    bannerStartTime: start,
+    status: 'ACTIVE',
+    confirmReplaceActive: true,
+  });
+  process.stdout.write('HEADER Black Friday ACTIVE\n');
 }
 
-const allowNew = await supportsBlock('CTA_BLOCK', {
-  title: 'T',
-  alignment: 'CENTER',
-  buttons: [{ label: 'A', url: '/san-pham', textColor: '#FFFFFF', backgroundColor: '#0A0A0A', borderColor: '#0A0A0A', target: '_self' }],
-  background: { color: '#FFFFFF', borderColor: 'transparent', borderRadius: 8 },
-});
-process.stdout.write('NEW_BLOCKS=' + allowNew + '\n');
+await ensureBlackFridayHeader();
 
-// Không seed TOP_LINE_BANNER — storefront đã có top banner sẵn.
 const homeBlocks = [
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.heroCode }),
   thesisBlock('PRODUCT_CAROUSEL', {
-    header: { title: 'MỚI VỀ BẠC', subtitle: '120 thiết kế cho hội đồng' },
+    header: {
+      title: 'Everyday Silver',
+      subtitle: 'Trang sức bạc mỏng nhẹ — đeo mỗi ngày vẫn nổi bật',
+    },
     display: { limit: 8 },
-    dataSource: { filterType: 'MANUAL_PRODUCTS', productIds: products.slice(0, 8).map((row) => String(row.id)) },
-    seeMore: { enabled: true, text: 'Xem tất cả', url: '/san-pham' },
+    dataSource: {
+      filterType: 'COLLECTION',
+      collectionSlug: everyday?.slug || 'everyday-silver',
+    },
+    seeMore: {
+      enabled: true,
+      text: 'Xem bộ sưu tập',
+      url: '/san-pham?collectionSlug=' + (everyday?.slug || 'everyday-silver'),
+    },
   }),
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.storiesCode }),
+  thesisBlock('PRODUCT_CAROUSEL', {
+    header: {
+      title: 'Layered Look',
+      subtitle: 'Dây chuyền, charm và vòng — xếp lớp theo mood của bạn',
+    },
+    display: { limit: 8 },
+    dataSource: {
+      filterType: 'COLLECTION',
+      collectionSlug: layered?.slug || 'layered-look',
+    },
+    seeMore: {
+      enabled: true,
+      text: 'Khám phá Layered',
+      url: '/san-pham?collectionSlug=' + (layered?.slug || 'layered-look'),
+    },
+  }),
   thesisBlock('PRODUCT_COLLECTION_SHOWCASE', {
-    header: { title: 'BỘ SƯU TẬP', subtitle: 'Tối giản · Hiện đại · CZ' },
-    items: showcase.slice(0, 3),
+    header: { title: 'Bộ sưu tập nổi bật', subtitle: 'Chọn mood — còn lại để trang sức lo' },
+    items: showcase,
   }),
   thesisBlock('INFO_CARDS', {
-    header: { title: 'VÌ SAO CHỌN BẠC', subtitle: 'Rõ ràng cho thầy và hội đồng' },
+    header: { title: 'Vì sao chọn Heartlock', subtitle: 'Chất liệu rõ ràng · Phối set dễ · Bảo quản đơn giản' },
     display: { columns: 3 },
     items: cards,
   }),
   ...(allowNew
     ? [thesisBlock('CTA_BLOCK', {
-        title: 'Khám phá toàn bộ danh mục bạc',
+        title: 'Khám phá toàn bộ trang sức',
         description: 'Nhẫn · Dây chuyền · Vòng tay · Khuyên tai · Lắc tay · Charm',
         alignment: 'CENTER',
         buttons: [
           { label: 'Xem sản phẩm', url: '/san-pham', textColor: '#FFFFFF', backgroundColor: '#0A0A0A', borderColor: '#0A0A0A', target: '_self' },
-          { label: 'Bộ sưu tập', url: '/bo-suu-tap', textColor: '#0A0A0A', backgroundColor: '#FFFFFF', borderColor: '#0A0A0A', target: '_self' },
+          { label: 'Black Friday', url: '/black-friday', textColor: '#0A0A0A', backgroundColor: '#FFFFFF', borderColor: '#0A0A0A', target: '_self' },
         ],
         background: { color: '#F8FAFC', borderColor: 'transparent', borderRadius: 24 },
       })]
-    : [thesisBlock('PRODUCT_EXPANDABLE_DESCRIPTION', {
-        title: 'Khám phá toàn bộ danh mục bạc',
-        description: '<p>Nhẫn · Dây chuyền · Vòng tay · Khuyên tai · Lắc tay · Charm. Chỉ bạc 925 và hợp kim phủ bạc.</p>',
-        maxCollapsedLines: 3,
-      })]),
+    : []),
   thesisBlock('IMAGE_GALLERY', {
-    header: { title: 'LOOKBOOK BẠC', subtitle: 'Ảnh minh họa — không dùng ảnh Sevatrading' },
+    header: { title: 'Lookbook', subtitle: 'Gợi ý phối trang sức bạc theo từng khoảnh khắc' },
     display: { columns: 4 },
     items: gallery,
   }),
   ...(allowNew
     ? [thesisBlock('NEWSLETTER_SIGNUP', {
-        heading: 'Đăng ký nhận tin bộ sưu tập bạc mới',
+        heading: 'Nhận tin bộ sưu tập & ưu đãi mới',
         consentText: 'Bằng cách đăng ký, bạn đồng ý với chính sách bảo mật thông tin.',
       })]
     : []),
 ];
 
-const home = await savePage(homeMeta.slug, homeMeta.name, homeMeta.seo, homeBlocks);
+const home = await savePage(homeMeta, homeBlocks);
 
-const listing = await savePage(listingMeta.slug, listingMeta.name, listingMeta.seo, [
+const listing = await savePage(listingMeta, [
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.listingCode }),
   thesisBlock('PRODUCT_CATEGORY_NAV', { display: { limit: 6 } }),
   thesisBlock('PRODUCT_LIST', {
-    header: { title: 'TẤT CẢ TRANG SỨC BẠC', subtitle: '6 danh mục · ~120 SPU' },
+    header: { title: 'Tất cả trang sức', subtitle: 'Nhẫn, dây chuyền, vòng, khuyên, lắc và charm bạc 925' },
     productDataSource: { filterType: 'ALL_PRODUCTS', sort: 'newest' },
   }),
 ]);
 
-await savePage(collectionHub.slug, collectionHub.name, collectionHub.seo, [
+await savePage(collectionHub, [
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.collectionHeroCode }),
   thesisBlock('PRODUCT_COLLECTION_SHOWCASE', {
-    header: { title: 'BỘ SƯU TẬP', subtitle: 'Chọn cảm hứng phù hợp' },
-    items: showcase.slice(0, 3),
+    header: { title: 'Bộ sưu tập', subtitle: 'Từ everyday đến gift edit — chọn phong cách của bạn' },
+    items: showcase,
   }),
-  ...(allowNew
-    ? [thesisBlock('CTA_BLOCK', {
-        title: 'Xem toàn bộ sản phẩm',
-        alignment: 'CENTER',
-        buttons: [{ label: 'Tới trang sản phẩm', url: '/san-pham', textColor: '#FFFFFF', backgroundColor: '#0A0A0A', borderColor: '#0A0A0A', target: '_self' }],
-        background: { color: '#FFFFFF', borderColor: '#E5E7EB', borderRadius: 16 },
-      })]
-    : [thesisBlock('PRODUCT_EXPANDABLE_DESCRIPTION', {
-        title: 'Xem toàn bộ sản phẩm',
-        description: '<p><a href="/san-pham">Tới trang sản phẩm</a> để xem ~120 SPU bạc / hợp kim.</p>',
-        maxCollapsedLines: 3,
-      })]),
+  thesisBlock('CTA_BLOCK', {
+    title: 'Chưa tìm thấy mood phù hợp?',
+    alignment: 'CENTER',
+    buttons: [{ label: 'Xem tất cả sản phẩm', url: '/san-pham', textColor: '#FFFFFF', backgroundColor: '#0A0A0A', borderColor: '#0A0A0A', target: '_self' }],
+    background: { color: '#FFFFFF', borderColor: '#E5E7EB', borderRadius: 16 },
+  }),
+]);
+
+const blackFriday = await savePage(blackFridayMeta, [
+  thesisBlock('BANNER', { placementCode: THESIS_POLICY.blackFridayHeroCode }),
+  thesisBlock('CTA_BLOCK', {
+    title: 'Black Friday đã sẵn sàng',
+    titleColor: '#FFFFFF',
+    description: 'Chọn nhanh món trang sức bạn thích — hoặc xem thêm toàn bộ deal mùa này.',
+    descriptionColor: '#E5E7EB',
+    alignment: 'CENTER',
+    buttons: [
+      {
+        label: 'Chọn món bạn thích',
+        url: '/san-pham?collectionSlug=' + (blackFridayCollection?.slug || 'black-friday-picks'),
+        textColor: '#000000',
+        backgroundColor: '#FFFFFF',
+        borderColor: '#FFFFFF',
+        target: '_self',
+      },
+      {
+        label: 'Xem thêm',
+        url: '/san-pham',
+        textColor: '#FFFFFF',
+        backgroundColor: '#000000',
+        borderColor: '#FFFFFF',
+        target: '_self',
+      },
+    ],
+    background: { color: '#000000', borderColor: '#000000', borderRadius: 0 },
+  }),
+  thesisBlock('PRODUCT_LIST', {
+    header: { title: 'Deal Black Friday', subtitle: 'Ưu đãi trang sức bạc đáng sắm ngay' },
+    productDataSource: {
+      filterType: 'COLLECTION',
+      collectionSlugs: [blackFridayCollection?.slug || 'black-friday-picks'],
+      sort: 'newest',
+    },
+  }),
+]);
+
+const bestSeller = await savePage(bestSellerMeta, [
+  thesisBlock('BANNER', { placementCode: THESIS_POLICY.bestSellerGridCode }),
+  thesisBlock('PRODUCT_LIST', {
+    header: { title: 'Best sellers', subtitle: 'Những thiết kế được yêu thích nhất' },
+    productDataSource: {
+      filterType: 'COLLECTION',
+      collectionSlugs: [bestSellerCollection?.slug || 'best-sellers'],
+      sort: 'newest',
+    },
+  }),
 ]);
 
 const storyPages = THESIS_CMS_PAGES.filter((page) => page.slug.startsWith('bst-') || page.slug.startsWith('cam-hung-'));
+const storyCollectionSlugs = ['bac-toi-gian', 'anh-kim-hien-dai', 'cz-lap-lanh', 'everyday-silver', 'layered-look'];
 for (const [index, pageMeta] of storyPages.entries()) {
-  const collection = collections[index % collections.length];
-  await savePage(pageMeta.slug, pageMeta.name, pageMeta.seo, [
+  const collection = collectionsBySlug[storyCollectionSlugs[index % storyCollectionSlugs.length]];
+  await savePage(pageMeta, [
     thesisBlock('BANNER', { placementCode: THESIS_POLICY.collectionHeroCode }),
     thesisBlock('PRODUCT_EXPANDABLE_DESCRIPTION', {
       title: pageMeta.name,
-      description: '<p>' + (pageMeta.seo?.description || '') + '</p><p>Toàn bộ sản phẩm thuộc dòng bạc / hợp kim phủ bạc.</p>',
+      description: '<p>' + (pageMeta.seo?.description || '') + '</p>',
       maxCollapsedLines: 4,
     }),
     thesisBlock('PRODUCT_CAROUSEL', {
-      header: { title: 'Gợi ý trong bộ', subtitle: collection?.name || 'Jewelry' },
+      header: { title: 'Gợi ý trong bộ', subtitle: collection?.name || 'Heartlock' },
       display: { limit: 8 },
       dataSource: { filterType: 'COLLECTION', collectionSlug: collection?.slug },
-      seeMore: { enabled: true, text: 'Xem listing', url: '/san-pham?collectionSlug=' + (collection?.slug || '') },
+      seeMore: {
+        enabled: true,
+        text: 'Xem thêm',
+        url: '/san-pham?collectionSlug=' + (collection?.slug || ''),
+      },
     }),
-    ...(allowNew
-      ? [thesisBlock('CTA_BLOCK', {
-          title: 'Tiếp tục mua sắm',
-          alignment: 'CENTER',
-          buttons: [{ label: 'Tất cả sản phẩm', url: '/san-pham', textColor: '#FFFFFF', backgroundColor: '#111827', borderColor: '#111827', target: '_self' }],
-          background: { color: '#F9FAFB', borderColor: 'transparent', borderRadius: 20 },
-        })]
-      : [thesisBlock('PRODUCT_EXPANDABLE_DESCRIPTION', {
-          title: 'Tiếp tục mua sắm',
-          description: '<p><a href="/san-pham">Tất cả sản phẩm bạc</a></p>',
-          maxCollapsedLines: 2,
-        })]),
+    thesisBlock('CTA_BLOCK', {
+      title: 'Tiếp tục khám phá',
+      alignment: 'CENTER',
+      buttons: [{ label: 'Tất cả sản phẩm', url: '/san-pham', textColor: '#FFFFFF', backgroundColor: '#111827', borderColor: '#111827', target: '_self' }],
+      background: { color: '#F9FAFB', borderColor: 'transparent', borderRadius: 20 },
+    }),
   ]);
 }
 
@@ -269,8 +506,15 @@ async function ensureMenu(label, type, targetId, url, parentId, sortOrder) {
   const existing = flatten(tree).find((node) => node.label === label && String(node.parentId ?? '') === String(parentId ?? ''));
   if (existing) return existing;
   return api('admin/cms/navigations', 'POST', {
-    label, type, targetId: String(targetId), url, parentId, sortOrder,
-    showOnMenuPopup: true, showOnPlp: type === 'CATEGORY', openInNewTab: false,
+    label,
+    type,
+    targetId: String(targetId),
+    url,
+    parentId,
+    sortOrder,
+    showOnMenuPopup: true,
+    showOnPlp: type === 'CATEGORY',
+    openInNewTab: false,
   });
 }
 
@@ -279,9 +523,11 @@ const productMenu = await ensureMenu('Sản phẩm', 'PAGE', listing.id, '/san-p
 for (const [index, category] of categories.entries()) {
   await ensureMenu(category.name, 'CATEGORY', category.id, '/san-pham/' + category.slug, numericId(productMenu.id), index);
 }
+await ensureMenu('Black Friday', 'PAGE', blackFriday.id, '/black-friday', undefined, 2);
+await ensureMenu('Best Seller', 'PAGE', bestSeller.id, '/best-seller', undefined, 3);
+await ensureMenu('Bộ sưu tập', 'PAGE', (await api('admin/cms/pages')).find((page) => page.slug === 'bo-suu-tap').id, '/bo-suu-tap', undefined, 4);
 await api('admin/cms/navigations/publish', 'POST');
 
-// Ẩn danh mục CLOUD cũ nếu API cho phép
 const allCategories = await api('admin/catalog/categories');
 for (const category of allCategories.filter((row) => String(row.code || '').startsWith('CLOUD26-'))) {
   try {
@@ -293,19 +539,21 @@ for (const category of allCategories.filter((row) => String(row.code || '').star
       imageUrl: category.imageUrl,
       directAttributeIds: [],
     });
-    process.stdout.write('INACTIVE ' + category.code + '\n');
   } catch (error) {
     process.stdout.write('SKIP_CAT ' + category.code + ' ' + error.message.slice(0, 80) + '\n');
   }
 }
 
 const storefront = await api('storefront/cms/pages/trang-chu', 'GET', undefined, false);
-const listingLive = await api('storefront/cms/pages/san-pham', 'GET', undefined, false);
+const bfLive = await api('storefront/cms/pages/black-friday', 'GET', undefined, false);
+const bsLive = await api('storefront/cms/pages/best-seller', 'GET', undefined, false);
 process.stdout.write(JSON.stringify({
   ok: true,
   jewProducts: products.length,
-  jewCategories: categories.map((row) => row.slug),
+  collections: Object.keys(collectionsBySlug),
+  homeSeo: storefront.seo,
   homeBlocks: storefront.blocks?.map((block) => block.type || block.blockTypeCode),
-  listingBlocks: listingLive.blocks?.map((block) => block.type || block.blockTypeCode),
+  blackFridayBlocks: bfLive.blocks?.map((block) => block.type || block.blockTypeCode),
+  bestSellerBlocks: bsLive.blocks?.map((block) => block.type || block.blockTypeCode),
   pages: THESIS_CMS_PAGES.map((page) => page.slug),
-}) + '\n');
+}, null, 2) + '\n');
