@@ -48,33 +48,6 @@ export type AiStylistResponse = {
   recommendations: AiRecommendation[];
 };
 
-export type AiSetBuilderItem = {
-  productId: number;
-  productName: string;
-  thumbnailUrl: string | null;
-  slotName: string;
-  isKeyPiece: boolean;
-  sortOrder: number;
-  skuId: number | null;
-  skuCode: string | null;
-  price: number | null;
-  stock: number | null;
-  source: AiResultSource;
-  slug: string | null;
-};
-
-export type AiSetBuilderResponse = {
-  code: string;
-  name: string;
-  description: string;
-  bundleDiscountPercent: number;
-  items: AiSetBuilderItem[];
-  source: AiResultSource;
-  banner?: string;
-  totalPrice: number;
-  sessionId?: number;
-};
-
 export type AiFeedbackRequest = {
   sessionId: number;
   productId: number;

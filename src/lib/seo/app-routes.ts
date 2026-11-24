@@ -28,7 +28,6 @@ export const APP_STATIC_PATHS = [
   "/tra-cuu-don-hang",
   "/stylist",
   "/stylist/lich-su",
-  "/set-builder",
   "/trang-thai-thanh-toan",
   "/ve-chung-toi",
   "/xac-nhan-thanh-toan",

@@ -13,3 +13,12 @@ next-env.d.ts
 coverage
 npm-install.log
 .demo-data/
+
+# thesis unsplash product photos (regenerate via scripts/download-thesis-product-images.mjs)
+public/images/product/nhan/
+public/images/product/vong-tay/
+public/images/product/khuyen-tai/
+public/images/product/lac-tay/
+public/images/product/charm/*.jpg
+public/images/product/day-chuyen/*.jpg
+

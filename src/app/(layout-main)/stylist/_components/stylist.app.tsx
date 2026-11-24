@@ -9,8 +9,6 @@ import { AiApi } from "@/utils/api";
 import { AI_BUDGET_SCOPE_ITEM } from "@/utils/api/ai/ai.constant";
 import type { AiPreferenceValues, AiRecommendation, AiStylistResponse } from "@/utils/api/ai/ai.interface";
 import { toStylistRequest } from "@/utils/api/ai/ai.mapper";
-import { lineFromSetItem } from "@/utils/api/ai/set-builder.validation";
-import { buildStylistSetDraft, saveStylistSetDraft } from "@/utils/api/ai/stylist-draft";
 import { getErrorMessage } from "@/utils/helpers/axios";
 import { Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -19,10 +17,8 @@ import StylistResults from "./stylist-results.component";
 
 type StylistStatus = "idle" | "loading" | "ready" | "empty" | "error";
 
-const applyRecommendations = (response: AiStylistResponse) => ({
-  status: response.recommendations.length > 0 ? "ready" as const : "empty" as const,
-  selectedIds: response.recommendations.map((item) => item.id),
-});
+const applyRecommendations = (response: AiStylistResponse) =>
+  response.recommendations.length > 0 ? "ready" as const : "empty" as const;
 
 const StylistApp = () => {
   const router = useRouter();
@@ -31,7 +27,6 @@ const StylistApp = () => {
   const [status, setStatus] = useState<StylistStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [result, setResult] = useState<AiStylistResponse | null>(null);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [prefs, setPrefs] = useState<AiPreferenceValues | null>(null);
   const [openingId, setOpeningId] = useState<number | null>(null);
 
@@ -43,10 +38,8 @@ const StylistApp = () => {
     setPrefs(values);
     try {
       const response = await AiApi.recommendStylist(toStylistRequest(values, AI_BUDGET_SCOPE_ITEM));
-      const applied = applyRecommendations(response);
       setResult(response);
-      setSelectedIds(applied.selectedIds);
-      setStatus(applied.status);
+      setStatus(applyRecommendations(response));
     } catch (error) {
       setStatus("error");
       setErrorMessage(getErrorMessage(error) || "Không tạo được gợi ý. Vui lòng thử lại.");
@@ -55,30 +48,11 @@ const StylistApp = () => {
     }
   };
 
-  const toggle = (productId: number) => {
-    setSelectedIds((current) => current.includes(productId) ? current.filter((id) => id !== productId) : [...current, productId]);
-  };
-
   const openDetail = async (item: AiRecommendation) => {
     if (openingId != null) return;
     setOpeningId(item.id);
     const href = await AiApi.resolveProductDetailPath(item.id, item.name, item.slug);
     router.push(href);
-  };
-
-  const createSet = () => {
-    if (!result || !prefs) return;
-    const selected = result.recommendations.filter((item) => selectedIds.includes(item.id));
-    const lines = selected.map((item) => lineFromSetItem({
-      ...item,
-      productId: item.id,
-      productName: item.name,
-      slotName: "",
-      isKeyPiece: false,
-      sortOrder: 0,
-    }));
-    saveStylistSetDraft(buildStylistSetDraft(prefs, lines));
-    router.push("/set-builder");
   };
 
   return (
@@ -95,11 +69,8 @@ const StylistApp = () => {
       {status === "ready" && result ? (
         <StylistResults
           result={result}
-          selectedIds={selectedIds}
           canFeedback={isLogin}
-          onToggle={toggle}
           onOpenDetail={(item) => void openDetail(item)}
-          onCreateSet={createSet}
         />
       ) : null}
     </AiPageFrame>
