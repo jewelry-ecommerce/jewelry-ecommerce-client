@@ -272,7 +272,7 @@ const home = await savePage(homeMeta.slug, homeMeta.name, homeMeta.seo, [
   }),
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.heroCode }),
   thesisBlock('PRODUCT_CAROUSEL', {
-    header: { title: 'MỚI VỀ BẠC', subtitle: '120 thiết kế cho hội đồng' },
+    header: { title: 'Everyday Silver', subtitle: 'Trang sức bạc mỏng nhẹ — đeo mỗi ngày vẫn nổi bật' },
     display: { limit: 8 },
     dataSource: { filterType: 'MANUAL_PRODUCTS', productIds: products.slice(0, 8).map((row) => String(row.id)) },
     seeMore: { enabled: true, text: 'Xem tất cả', url: '/san-pham' },
@@ -283,7 +283,7 @@ const home = await savePage(homeMeta.slug, homeMeta.name, homeMeta.seo, [
     items: showcase.slice(0, 3),
   }),
   thesisBlock('INFO_CARDS', {
-    header: { title: 'VÌ SAO CHỌN BẠC', subtitle: 'Rõ ràng cho thầy và hội đồng' },
+    header: { title: 'Vì sao chọn Heartlock', subtitle: 'Chất liệu rõ ràng · Phối set dễ · Bảo quản đơn giản' },
     display: { columns: 3 },
     items: cards,
   }),
@@ -298,7 +298,7 @@ const home = await savePage(homeMeta.slug, homeMeta.name, homeMeta.seo, [
     background: { color: '#F8FAFC', borderColor: 'transparent', borderRadius: 24 },
   }),
   thesisBlock('IMAGE_GALLERY', {
-    header: { title: 'LOOKBOOK BẠC', subtitle: 'Ảnh minh họa Unsplash — không dùng ảnh Sevatrading' },
+    header: { title: 'Lookbook', subtitle: 'Gợi ý phối trang sức bạc theo từng khoảnh khắc' },
     display: { columns: 4 },
     items: gallery,
   }),
@@ -312,7 +312,7 @@ const listing = await savePage(listingMeta.slug, listingMeta.name, listingMeta.s
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.listingCode }),
   thesisBlock('PRODUCT_CATEGORY_NAV', { display: { limit: 6 } }),
   thesisBlock('PRODUCT_LIST', {
-    header: { title: 'TẤT CẢ TRANG SỨC BẠC', subtitle: '6 danh mục · ~120 SPU' },
+    header: { title: 'Tất cả trang sức', subtitle: 'Nhẫn, dây chuyền, vòng, khuyên, lắc và charm bạc 925' },
     productDataSource: { filterType: 'ALL_PRODUCTS', sort: 'newest' },
   }),
 ]);
