@@ -153,18 +153,8 @@ const allowNew = await supportsBlock('CTA_BLOCK', {
 });
 process.stdout.write('NEW_BLOCKS=' + allowNew + '\n');
 
+// Không seed TOP_LINE_BANNER — storefront đã có top banner sẵn.
 const homeBlocks = [
-  ...(allowNew
-    ? [thesisBlock('TOP_LINE_BANNER', {
-        settings: { isClosable: true, animationType: 'MARQUEE', animationSpeed: 12, backgroundColor: '#111827', textColor: '#FFFFFF' },
-        badge: { text: 'BẠC 925', actionType: 'NONE', backgroundColor: '#F59E0B', textColor: '#111827' },
-        items: [
-          { text: 'Freeship đơn từ 500K', actionType: 'NONE' },
-          { text: 'Chỉ bạc & hợp kim — không vàng', actionType: 'LINK', actionUrl: '/san-pham' },
-          { text: 'Đổi trả 7 ngày', actionType: 'NONE' },
-        ],
-      })]
-    : []),
   thesisBlock('BANNER', { placementCode: THESIS_POLICY.heroCode }),
   thesisBlock('PRODUCT_CAROUSEL', {
     header: { title: 'MỚI VỀ BẠC', subtitle: '120 thiết kế cho hội đồng' },
