@@ -18,7 +18,7 @@ import { resolveTenantBranding } from "@/lib/server/resolve-tenant-branding.serv
 import { configureDevSelfSignedTls } from "./tls";
 import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
 import { ContentHttpError, getContentPage } from "@/utils/api/content-backend/content-backend.api";
-import { getContentProductDetail } from "@/utils/api/content-backend/content-product-detail.api";
+import { fetchProductBySlug } from "@/lib/server/product-fetch.server";
 async function requestContentPage(slug:string):Promise<PageResponse> {
   const agent=(await headers()).get('user-agent')??'';
   return getContentPage(slug,/Mobi|Android|iPhone|iPad/i.test(agent)?'MOBILE':'DESKTOP');
@@ -58,6 +58,8 @@ type ProductMetadataOptions = {
   path?: MetadataPath;
   canonicalUrl?: string;
   defaults: StorefrontMetadataOverrides;
+  /** Prefer the product already resolved in `generateMetadata` (avoids a second fetch). */
+  product?: IProductBySlugResponse | null;
 };
 
 export const getSharedSeoImage = (host?: string | null): MetadataImage => {
@@ -275,12 +277,11 @@ export async function getProductPageMetadata({
   path = `/san-pham/${slug}`,
   canonicalUrl,
   defaults,
+  product: resolvedProduct,
 }: ProductMetadataOptions): Promise<Metadata> {
   try {
-    // Java/content: dùng cùng nguồn PDP (`storefront/product/{slug}`) để khớp SEO admin.
-    const product = getContentApiBaseUrl()
-      ? await getContentProductDetail(slug).catch(() => null)
-      : await fetchApiJson<IProductBySlugResponse>(`catalog/products/${slug}`);
+    // Same React-cache source as PDP body — never silent-catch a second content fetch.
+    const product = resolvedProduct ?? (await fetchProductBySlug(slug));
     if (!product) {
       return createFallbackMetadata({ path, canonicalUrl, defaults });
     }
@@ -289,12 +290,17 @@ export async function getProductPageMetadata({
       seoImage ||
       product.defaultVariant?.image ||
       product.gallery?.find((item) => item.isPrimary)?.url ||
-      product.gallery?.[0]?.url ||
-      product.image;
+      product.gallery?.[0]?.url;
 
-    const title = product.seo?.metaTitle || (product as { metaTitle?: string }).metaTitle || defaults.title;
+    const title =
+      product.seo?.metaTitle ||
+      (product as { metaTitle?: string }).metaTitle ||
+      product.name ||
+      defaults.title;
     const description =
-      product.seo?.metaDescription || (product as { metaDescription?: string }).metaDescription || defaults.description;
+      product.seo?.metaDescription ||
+      (product as { metaDescription?: string }).metaDescription ||
+      defaults.description;
 
     return createPageMetadata({
       path,

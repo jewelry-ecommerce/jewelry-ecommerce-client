@@ -48,8 +48,9 @@ export async function generateMetadata({ params, searchParams }: SanPhamCatchAll
     return getProductPageMetadata({
       slug: productSlug,
       path: `/san-pham/${productSlug}`,
+      product,
       defaults: {
-        title: `${productSlug} | ${siteConfig.name}`,
+        title: `${product.name || productSlug} | ${siteConfig.name}`,
         description: `Khám phá chi tiết sản phẩm và thông tin nổi bật tại ${siteConfig.name}.`,
         keywords: `chi tiết sản phẩm, trang sức, ${siteConfig.name}`,
         image: getSharedSeoImage(host),
