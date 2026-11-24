@@ -21,7 +21,9 @@ export function javaApiPath(path: string): string {
     'catalog/search/suggestions': 'storefront/product/search/suggestions',
     'catalog/search/history': 'storefront/product/search/history',
     'catalog/search/history/keyword': 'storefront/product/search/history/keyword',
-    'order/orders/me': 'storefront/order'
+    'order/orders/me': 'storefront/order',
+    'order/order-returns/client': 'storefront/order-returns',
+    'order/orders/fee/calculate': 'storefront/shipping/ghn/fee',
   };
   if (aliases[normalized]) return aliases[normalized];
   for (const [prefix, target] of [
@@ -30,7 +32,8 @@ export function javaApiPath(path: string): string {
     ['cart/cart', 'storefront/cart/cart'], ['product/customer/wishlist', 'storefront/product/customer/wishlist'],
     ['order/orders/me/', 'storefront/order/'], ['iam/addresses/', 'storefront/me/addresses/'],
     ['catalog/products/', 'storefront/product/'], ['cms/storefront/pages/', 'storefront/cms/pages/'],
-    ['banner/storefront/placements/', 'storefront/banner/placements/'], ['customer-requests/', 'storefront/customer-request/']
+    ['banner/storefront/placements/', 'storefront/banner/placements/'], ['customer-requests/', 'storefront/customer-request/'],
+    ['order/order-returns/client/', 'storefront/order-returns/'],
   ]) if (normalized.startsWith(prefix)) return target + normalized.slice(prefix.length);
   return normalized;
 }

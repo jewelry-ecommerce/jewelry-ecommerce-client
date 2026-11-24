@@ -3,6 +3,8 @@
 export const THESIS_POLICY = {
   namespace: 'jewelry-thesis-2026',
   prefix: 'JEW-',
+  /** Brand đồ án — không dùng brand công ty (Heartlock). */
+  brand: 'Jewelry Ecommerce',
   confirm: 'CREATE_THESIS_CATALOG_120',
   rebuildConfirm: 'REBUILD_UNIQUE_CATALOG',
   inventory: 24,
@@ -40,7 +42,7 @@ export const THESIS_POLICY = {
 };
 
 /**
- * Nguồn SPU/ảnh thực tế: `.demo-data/spu-image-sets.json` (Heartlock public + local unique).
+ * Nguồn SPU/ảnh thực tế: `.demo-data/spu-image-sets.json` (ảnh public + local unique).
  * Số SPU mỗi danh mục = số bộ ảnh riêng — không ép 20 nếu thiếu ảnh.
  */
 export const THESIS_GROUP_META = [
@@ -138,9 +140,9 @@ export const THESIS_CMS_PAGES = [
     slug: 'trang-chu',
     name: 'Trang chủ',
     seo: {
-      title: 'Heartlock — Trang sức bạc tinh tế mỗi ngày',
+      title: 'Jewelry Ecommerce — Trang sức bạc tinh tế mỗi ngày',
       description: 'Khám phá nhẫn, dây chuyền, vòng tay, khuyên tai, lắc tay và charm bạc 925. Giao hàng nhanh, đổi trả dễ dàng.',
-      keywords: 'trang sức bạc, bạc 925, nhẫn bạc, dây chuyền bạc, khuyên tai bạc, Heartlock',
+      keywords: 'trang sức bạc, bạc 925, nhẫn bạc, dây chuyền bạc, khuyên tai bạc, Jewelry Ecommerce',
       image: 'images/banner/grid-banner/01.png',
     },
   },
@@ -148,7 +150,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'san-pham',
     name: 'Sản phẩm',
     seo: {
-      title: 'Tất cả trang sức bạc | Heartlock',
+      title: 'Tất cả trang sức bạc | Jewelry Ecommerce',
       description: 'Danh mục trang sức bạc 925 đầy đủ — lọc theo danh mục, bộ sưu tập và kích cỡ.',
       keywords: 'mua trang sức bạc, danh mục bạc 925, trang sức online',
       image: 'images/banner/product-banner/1.webp',
@@ -158,7 +160,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'bo-suu-tap',
     name: 'Bộ sưu tập',
     seo: {
-      title: 'Bộ sưu tập trang sức bạc | Heartlock',
+      title: 'Bộ sưu tập trang sức bạc | Jewelry Ecommerce',
       description: 'Everyday Silver, Layered Look, CZ Glow và Gift Edit — chọn mood phù hợp với bạn.',
       keywords: 'bộ sưu tập bạc, everyday silver, layered jewelry',
       image: 'images/banner/double-banner/01.webp',
@@ -168,7 +170,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'black-friday',
     name: 'Black Friday',
     seo: {
-      title: 'Black Friday — Ưu đãi trang sức bạc | Heartlock',
+      title: 'Black Friday — Ưu đãi trang sức bạc | Jewelry Ecommerce',
       description: 'Săn deal Black Friday với trang sức bạc 925. Chọn món bạn thích hoặc xem thêm toàn bộ ưu đãi.',
       keywords: 'black friday trang sức, sale bạc 925, ưu đãi trang sức',
       image: 'images/gallery-image/01.webp',
@@ -178,7 +180,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'best-seller',
     name: 'Best Seller',
     seo: {
-      title: 'Best Seller — Trang sức được yêu thích | Heartlock',
+      title: 'Best Seller — Trang sức được yêu thích | Jewelry Ecommerce',
       description: 'Những thiết kế bán chạy nhất: nhẫn, dây chuyền, khuyên tai và vòng tay bạc 925.',
       keywords: 'best seller trang sức, trang sức bán chạy, bạc 925 hot',
       image: 'images/gallery-image/02.webp',
@@ -188,7 +190,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'bst-bac-toi-gian',
     name: 'BST Bạc Tối Giản',
     seo: {
-      title: 'BST Bạc Tối Giản | Heartlock',
+      title: 'BST Bạc Tối Giản | Jewelry Ecommerce',
       description: 'Đường nét sạch, form mỏng — trang sức bạc tối giản cho mọi outfit.',
       keywords: 'bạc tối giản, minimal silver jewelry',
       image: 'images/banner/double-banner/01.webp',
@@ -198,7 +200,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'bst-anh-kim-hien-dai',
     name: 'BST Ánh Kim Hiện Đại',
     seo: {
-      title: 'BST Ánh Kim Hiện Đại | Heartlock',
+      title: 'BST Ánh Kim Hiện Đại | Jewelry Ecommerce',
       description: 'Form lớn, ánh kim mạnh mẽ — dành cho look hiện đại và cá tính.',
       keywords: 'trang sức hiện đại, statement silver',
       image: 'images/banner/product-banner/1.webp',
@@ -208,7 +210,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'bst-cz-lap-lanh',
     name: 'BST CZ Lấp Lánh',
     seo: {
-      title: 'BST CZ Lấp Lánh | Heartlock',
+      title: 'BST CZ Lấp Lánh | Jewelry Ecommerce',
       description: 'Điểm CZ tinh tế trên nền bạc 925 — đủ sáng cho ngày thường lẫn dịp đặc biệt.',
       keywords: 'trang sức CZ, bạc đính đá',
       image: 'images/banner/double-banner/02.webp',
@@ -218,7 +220,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'cam-hung-toi-gian',
     name: 'Cảm hứng tối giản',
     seo: {
-      title: 'Cảm hứng tối giản với trang sức bạc | Heartlock',
+      title: 'Cảm hứng tối giản với trang sức bạc | Jewelry Ecommerce',
       description: 'Gợi ý phối đồ với trang sức bạc mảnh — sạch sẽ, thanh lịch, dễ đeo mỗi ngày.',
       keywords: 'phối đồ trang sức bạc, minimal jewelry look',
       image: 'images/gallery-image/03.webp',
@@ -228,7 +230,7 @@ export const THESIS_CMS_PAGES = [
     slug: 'cam-hung-hien-dai',
     name: 'Cảm hứng hiện đại',
     seo: {
-      title: 'Cảm hứng hiện đại với trang sức bạc | Heartlock',
+      title: 'Cảm hứng hiện đại với trang sức bạc | Jewelry Ecommerce',
       description: 'Hoop, cuff và nhẫn form lớn — tạo điểm nhấn hiện đại cho set đồ của bạn.',
       keywords: 'hoop bạc, cuff bạc, statement jewelry',
       image: 'images/gallery-image/04.webp',

@@ -10,7 +10,7 @@ export const maxDuration = 60;
 type RouteContext = { params: Promise<{ path: string[] }> };
 
 function resolvePath(segments: string[]): string | null {
-  if (segments.some(segment => !/^[a-zA-Z0-9_-]+$/.test(segment))) return null;
+  if (segments.some((segment) => !/^[a-zA-Z0-9_-]+$/.test(segment))) return null;
   const path = javaApiPath(segments.join("/"));
   return path.startsWith("storefront/") && !path.startsWith("storefront/auth/") ? path : null;
 }
@@ -34,17 +34,31 @@ function invalidRequest(request: NextRequest, path: string | null): NextResponse
   return null;
 }
 
+async function readBody(request: NextRequest): Promise<BodyInit | undefined> {
+  if (request.method === "GET" || request.method === "HEAD") return undefined;
+  const contentType = request.headers.get("content-type") ?? "";
+  if (contentType.includes("multipart/form-data")) {
+    return await request.arrayBuffer();
+  }
+  const text = await request.text();
+  return text || undefined;
+}
+
 async function forward(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const path = resolvePath((await context.params).path);
   const invalid = invalidRequest(request, path);
   if (invalid) return invalid;
-  const body = request.method === "GET" ? undefined : await request.text();
+  const body = await readBody(request);
   const result = await authFetch(path + request.nextUrl.search, {
-    method: request.method, headers: forwardedHeaders(request), body: body || undefined
+    method: request.method,
+    headers: forwardedHeaders(request),
+    body,
   });
   const status = toValidHttpStatus(result.response.status);
-  const response = status === 204 ? new NextResponse(null, { status, headers: SESSION_SENSITIVE_HEADERS })
-    : NextResponse.json(result.data, { status, headers: SESSION_SENSITIVE_HEADERS });
+  const response =
+    status === 204
+      ? new NextResponse(null, { status, headers: SESSION_SENSITIVE_HEADERS })
+      : NextResponse.json(result.data, { status, headers: SESSION_SENSITIVE_HEADERS });
   if (result.isAuthExpired) clearAuthCookies(response.cookies);
   else if (result.refreshedTokens) setAuthCookies(response.cookies, result.refreshedTokens);
   return response;
