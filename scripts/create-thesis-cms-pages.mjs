@@ -217,12 +217,18 @@ await ensureDoublePlacement(
 );
 await ensureSliderPlacement(THESIS_POLICY.listingCode, ['images/banner/product-banner/1.webp']);
 await ensureSliderPlacement(THESIS_POLICY.collectionHeroCode, ['images/banner/double-banner/01.webp'], '/bo-suu-tap');
-await ensureSliderPlacement(THESIS_POLICY.blackFridayHeroCode, ['images/banner/campaign/bf-hero.jpg'], '/black-friday');
+// Ảnh campaign: URL Cloudinary fetch (không commit JPG nặng vào public/).
+const CDN = (url) => 'https://res.cloudinary.com/dcvr6sf2/image/fetch/f_auto,q_auto,w_1600/' + encodeURIComponent(url);
+await ensureSliderPlacement(
+  THESIS_POLICY.blackFridayHeroCode,
+  [CDN('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1600&q=80')],
+  '/black-friday',
+);
 await ensureBestSellerGrid(THESIS_POLICY.bestSellerGridCode, [
-  'images/banner/campaign/bs-1.jpg',
-  'images/banner/campaign/bs-2.jpg',
-  'images/banner/campaign/bs-3.jpg',
-  'images/banner/campaign/bs-4.jpg',
+  CDN('https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=80'),
+  CDN('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80'),
+  CDN('https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=80'),
+  CDN('https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1200&q=80'),
 ]);
 
 const featuredCollections = ['everyday-silver', 'layered-look', 'cz-glow', 'gift-edit', 'black-friday-picks', 'best-sellers']

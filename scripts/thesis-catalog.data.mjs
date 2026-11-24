@@ -171,7 +171,7 @@ export const THESIS_CMS_PAGES = [
       title: 'Black Friday — Ưu đãi trang sức bạc | Heartlock',
       description: 'Săn deal Black Friday với trang sức bạc 925. Chọn món bạn thích hoặc xem thêm toàn bộ ưu đãi.',
       keywords: 'black friday trang sức, sale bạc 925, ưu đãi trang sức',
-      image: 'images/banner/campaign/bf-hero.jpg',
+      image: 'images/gallery-image/01.webp',
     },
   },
   {
@@ -181,7 +181,7 @@ export const THESIS_CMS_PAGES = [
       title: 'Best Seller — Trang sức được yêu thích | Heartlock',
       description: 'Những thiết kế bán chạy nhất: nhẫn, dây chuyền, khuyên tai và vòng tay bạc 925.',
       keywords: 'best seller trang sức, trang sức bán chạy, bạc 925 hot',
-      image: 'images/banner/campaign/bs-1.jpg',
+      image: 'images/gallery-image/02.webp',
     },
   },
   {
