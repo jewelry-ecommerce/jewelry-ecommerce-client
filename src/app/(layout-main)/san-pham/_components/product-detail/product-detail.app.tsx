@@ -130,7 +130,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
 
   const productSlug = productData?.slug;
 
-  const relatedProductsKey = !usesContentBackend && productSlug ? (["pdp-related-products", productSlug] as const) : null;
+  const relatedProductsKey = productSlug ? (["pdp-related-products", productSlug] as const) : null;
 
   const { data: relatedProductsData } = useSWR(
     relatedProductsKey,
@@ -140,7 +140,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
 
   const relatedSkuCardItems = relatedProductsData?.list ?? [];
 
-  const recentlyViewedKey = !usesContentBackend && productSlug ? (["pdp-recently-viewed-products", productSlug] as const) : null;
+  const recentlyViewedKey = productSlug ? (["pdp-recently-viewed-products", productSlug] as const) : null;
 
   const { data: recentlyViewedData } = useSWR(
     recentlyViewedKey,
@@ -160,7 +160,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
   }, [slug]);
 
   useEffect(() => {
-    if (usesContentBackend || !productData?.slug || recentlyViewedRecordedSlugRef.current === productData.slug) {
+    if (!productData?.slug || recentlyViewedRecordedSlugRef.current === productData.slug) {
       return;
     }
 
@@ -168,7 +168,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
     void ProductApi.recordRecentlyViewedProduct({
       productSlug: productData.slug,
     }).catch(() => {});
-  }, [productData?.slug, usesContentBackend]);
+  }, [productData?.slug]);
 
   useEffect(() => {
     if (!productData || viewItemTrackedSlugRef.current === slug) {

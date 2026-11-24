@@ -27,11 +27,35 @@ import type {
   IVariationCardsResponse,
 } from "./product.interface";
 import { buildRecentlyViewedRequestOptions } from "./recently-viewed-request.util";
+import { listJavaRecentlyViewedSlugs, recordJavaRecentlyViewedSlug } from "./java-recently-viewed.util";
 import { authAxios, commonAxios } from "@/utils/axios";
 import { isJavaBackend } from '@/utils/config/java-backend.config';
 import { getContentApiBaseUrl } from "@/utils/config/content-backend.config";
 import { getContentProducts } from "../content-backend/content-products.api";
 import { getContentProductDetail, getContentProductVariations } from "../content-backend/content-product-detail.api";
+import type { IProductSkuCardItem } from "./product.interface";
+
+const emptySkuCardPage = (): IProductSkuCardResponse => ({
+  total: 0,
+  list: [],
+  pagination: { total: 0, currentPage: 1, totalPage: 0, hasNextPage: false, hasPreviousPage: false, nextPage: false, previousPage: false },
+});
+
+const toSkuCardFromDetail = (product: IProductBySlugResponse): IProductSkuCardItem => {
+  const variant = product.defaultVariant ?? product.variants?.[0];
+  return {
+    ...(product as unknown as IProductSkuCardItem),
+    id: product.id,
+    productId: product.id,
+    slug: product.slug,
+    productSlug: product.slug,
+    name: product.name,
+    productName: product.name,
+    image: product.gallery?.[0]?.url || product.image || "",
+    imageHover: product.imageHover || product.gallery?.[1]?.url || "",
+    defaultVariationId: product.defaultVariantId || variant?.id,
+  } as IProductSkuCardItem;
+};
 
 export const getFiltersByProduct = async (params: IParamsGetProductFilters): Promise<IProductFiltersResponse> =>
   (await commonAxios.get("catalog/products/filters", { params })).data;
@@ -45,23 +69,50 @@ export const getProductsSkuCardV2 = async (params: IParamsGetProducts): Promise<
 };
 
 export const recordRecentlyViewedProduct = async (payload: { productSlug: string }): Promise<void> => {
+  if (isJavaBackend() || getContentApiBaseUrl()) {
+    recordJavaRecentlyViewedSlug(payload.productSlug);
+    return;
+  }
   await authAxios.post("catalog/products/recently-viewed", payload, buildRecentlyViewedRequestOptions());
 };
 
-export const getRecentlyViewedProductsSkuCardV2 = async (params: { excludeSlug?: string }): Promise<IProductSkuCardResponse> =>
-  (
+export const getRecentlyViewedProductsSkuCardV2 = async (params: { excludeSlug?: string }): Promise<IProductSkuCardResponse> => {
+  if (isJavaBackend() || getContentApiBaseUrl()) {
+    const slugs = listJavaRecentlyViewedSlugs(params.excludeSlug);
+    if (!slugs.length) return emptySkuCardPage();
+    const settled = await Promise.allSettled(slugs.map((slug) => getProductBySlug(slug)));
+    const list = settled
+      .filter((row): row is PromiseFulfilledResult<IProductBySlugResponse> => row.status === "fulfilled")
+      .map((row) => toSkuCardFromDetail(row.value));
+    return { ...emptySkuCardPage(), total: list.length, list, pagination: { ...emptySkuCardPage().pagination, total: list.length } };
+  }
+  return (
     await authAxios.get("catalog/products/recently-viewed", {
       params: { ...params, contract: "sku-card-v2" },
       ...buildRecentlyViewedRequestOptions(),
     })
   ).data;
+};
 
-export const getRelatedProductsByProductSlug = async (productSlug: string): Promise<IProductSkuCardResponse> =>
-  (
+export const getRelatedProductsByProductSlug = async (productSlug: string): Promise<IProductSkuCardResponse> => {
+  if (isJavaBackend() || getContentApiBaseUrl()) {
+    try {
+      const product = await getProductBySlug(productSlug);
+      const categorySlug = product.category?.slug || (product as { categorySlug?: string }).categorySlug;
+      if (!categorySlug) return emptySkuCardPage();
+      const page = await getProductsSkuCardV2({ categorySlugs: categorySlug, take: 12, page: 1 });
+      const list = (page.list || []).filter((item) => item.slug !== productSlug && item.productSlug !== productSlug).slice(0, 8);
+      return { ...page, list, total: list.length };
+    } catch {
+      return emptySkuCardPage();
+    }
+  }
+  return (
     await authAxios.get("catalog/products/related", {
       params: { productSlug, contract: "sku-card-v2" },
     })
   ).data;
+};
 
 export const getProductBySlug = async (slug: string): Promise<IProductBySlugResponse> => {
   if (getContentApiBaseUrl()) return getContentProductDetail(slug);
