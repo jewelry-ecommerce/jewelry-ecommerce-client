@@ -51,8 +51,8 @@ const toSkuCardFromDetail = (product: IProductBySlugResponse): IProductSkuCardIt
     productSlug: product.slug,
     name: product.name,
     productName: product.name,
-    image: product.gallery?.[0]?.url || product.image || "",
-    imageHover: product.imageHover || product.gallery?.[1]?.url || "",
+    image: product.gallery?.[0]?.url || "",
+    imageHover: product.gallery?.[1]?.url || "",
     defaultVariationId: product.defaultVariantId || variant?.id,
   } as IProductSkuCardItem;
 };
@@ -101,7 +101,7 @@ export const getRelatedProductsByProductSlug = async (productSlug: string): Prom
       const categorySlug = product.category?.slug || (product as { categorySlug?: string }).categorySlug;
       if (!categorySlug) return emptySkuCardPage();
       const page = await getProductsSkuCardV2({ categorySlugs: categorySlug, take: 12, page: 1 });
-      const list = (page.list || []).filter((item) => item.slug !== productSlug && item.productSlug !== productSlug).slice(0, 8);
+      const list = (page.list || []).filter((item) => item.slug !== productSlug).slice(0, 8);
       return { ...page, list, total: list.length };
     } catch {
       return emptySkuCardPage();

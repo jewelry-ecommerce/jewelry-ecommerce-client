@@ -290,8 +290,7 @@ export async function getProductPageMetadata({
       seoImage ||
       product.defaultVariant?.image ||
       product.gallery?.find((item) => item.isPrimary)?.url ||
-      product.gallery?.[0]?.url ||
-      product.image;
+      product.gallery?.[0]?.url;
 
     const title =
       product.seo?.metaTitle ||
