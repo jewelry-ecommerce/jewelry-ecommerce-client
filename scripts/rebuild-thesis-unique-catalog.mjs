@@ -167,16 +167,21 @@ for (const [code, group] of Object.entries(manifest.groups)) {
     const material = materialFor(index);
     const price = meta.basePrice + index * THESIS_POLICY.priceStep;
     const fullName = spu.seoName;
-    const variants = SIZES.map((size, variant) => ({
-      skuCode: `${spu.code}-S${size}`,
-      name: `${fullName} - Size ${size}`,
-      material,
-      metalColorLabel: COLOR,
-      sizeLabel: size,
-      listPrice: price + variant * 10000,
-      onHand: THESIS_POLICY.inventory + variant,
-      isDefault: variant === 0,
-    }));
+    const variants = SIZES.map((size, variant) => {
+      const salePrice = price + variant * 10000;
+      return {
+        skuCode: `${spu.code}-S${size}`,
+        name: `${fullName} - Size ${size}`,
+        material,
+        metalColorLabel: COLOR,
+        sizeLabel: size,
+        salePrice,
+        listPrice: Math.round((salePrice * 1.2) / 1000) * 1000,
+        costPrice: Math.round((salePrice * 0.55) / 1000) * 1000,
+        onHand: THESIS_POLICY.inventory + variant,
+        isDefault: variant === 0,
+      };
+    });
 
     const searched = await api('admin/catalog/products?take=5&search=' + encodeURIComponent(spu.code));
     const found = (searched.content || []).find((p) => p.code === spu.code)
@@ -201,6 +206,7 @@ for (const [code, group] of Object.entries(manifest.groups)) {
         thumbnailUrl: urls[0],
         metaTitle: `${fullName} | Trang sức bạc`,
         metaDescription: `Mua ${fullName} chất liệu ${material}, màu ${COLOR}, đủ size ${SIZES.join(', ')}.`,
+        metaKeywords: `${fullName}, trang sức bạc, bạc 925, ${THESIS_POLICY.brand}`,
         productInfos: [
           { title: 'Thông tin sản phẩm', description: `<p>Mã ${spu.code}. ${material}. Màu ${COLOR}.</p>`, sortOrder: 0 },
         ],
@@ -211,7 +217,9 @@ for (const [code, group] of Object.entries(manifest.groups)) {
           material,
           metalColorLabel: COLOR,
           sizeLabel: SIZES[variant] || sku.sizeLabel,
+          salePrice: variants[variant]?.salePrice || sku.salePrice,
           listPrice: variants[variant]?.listPrice || sku.listPrice,
+          costPrice: variants[variant]?.costPrice || sku.costPrice,
           onHand: variants[variant]?.onHand || 24,
           isDefault: variant === 0,
         })),
@@ -232,6 +240,7 @@ for (const [code, group] of Object.entries(manifest.groups)) {
         thumbnailUrl: urls[0],
         metaTitle: `${fullName} | Trang sức bạc`,
         metaDescription: `Mua ${fullName} chất liệu ${material}, màu ${COLOR}, đủ size ${SIZES.join(', ')}.`,
+        metaKeywords: `${fullName}, trang sức bạc, bạc 925, ${THESIS_POLICY.brand}`,
         productInfos: [
           { title: 'Thông tin sản phẩm', description: `<p>Mã ${spu.code}. ${material}. Màu ${COLOR}.</p>`, sortOrder: 0 },
         ],
