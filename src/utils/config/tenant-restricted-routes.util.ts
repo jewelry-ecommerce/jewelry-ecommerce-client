@@ -19,8 +19,9 @@ export const TENANT_RESTRICTED_ROUTE_RULES: readonly TenantRestrictedRouteRule[]
     allowedTenantCodes: HEARTLOCK_ALLOWED_TENANT_CODES,
   },
   {
+    /** Jewelry thesis: tắt bộ sản phẩm / bán set trên storefront. */
     prefix: "/sets",
-    allowedTenantCodes: HEARTLOCK_ALLOWED_TENANT_CODES,
+    allowedTenantCodes: [],
   },
 ];
 

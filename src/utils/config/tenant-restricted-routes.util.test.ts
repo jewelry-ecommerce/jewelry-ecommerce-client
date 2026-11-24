@@ -45,14 +45,15 @@ describe("tenant-restricted-routes.util", () => {
     expect(isTenantAllowedForRule("SEVA-RETAIL-B2", bstCollabRule)).toBe(false);
   });
 
-  it("only allows Heartlock tenants for /sets", () => {
+  it("blocks all tenants for /sets", () => {
     expect(setsRule).toBeDefined();
     if (!setsRule) return;
 
-    expect(isTenantAllowedForRule("SEVA-RETAIL-B1", setsRule)).toBe(true);
-    expect(isTenantAllowedForRule("heartlock", setsRule)).toBe(true);
+    expect(isTenantAllowedForRule("SEVA-RETAIL-B1", setsRule)).toBe(false);
+    expect(isTenantAllowedForRule("heartlock", setsRule)).toBe(false);
     expect(isTenantAllowedForRule("SEVA-RETAIL-B2", setsRule)).toBe(false);
-    expect(isTenantAllowedForRule("memorient", setsRule)).toBe(false);
+    expect(isPathAllowedForTenant("/sets", "heartlock")).toBe(false);
+    expect(isPathAllowedForTenant("/sets/foo", null)).toBe(false);
   });
 
   it("blocks other tenants for /atsh", () => {
