@@ -41,10 +41,32 @@ export async function login() {
   assert.ok(session.user.roles.includes('ADMIN'));
 }
 
+/** Durable public URL for assets already shipped in client `public/` (Vercel). */
+export function publicMediaUrl(relativePath) {
+  const site = (
+    process.env.JEWELRY_PUBLIC_SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'https://jewelry-ecommerce-client.vercel.app'
+  ).replace(/\/$/, '');
+  return `${site}/${String(relativePath).replace(/^\//, '')}`;
+}
+
+/**
+ * Resolve thesis media.
+ * Default: durable public client URL (survives Render redeploys).
+ * Set JEWELRY_MEDIA_MODE=be-upload to force admin/catalog/upload (Cloudinary when BE provider=cloudinary).
+ */
 export async function upload(relativePath) {
   if (assetCache.has(relativePath)) return assetCache.get(relativePath);
   const absolute = resolve(publicRoot, relativePath);
   assert.ok(absolute.startsWith(resolve(publicRoot) + sep), 'Asset must stay within public.');
+
+  if (process.env.JEWELRY_MEDIA_MODE !== 'be-upload') {
+    const durable = publicMediaUrl(relativePath);
+    assetCache.set(relativePath, durable);
+    return durable;
+  }
+
   const bytes = await readFile(absolute);
   const mime = { '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp' }[extname(absolute)];
   assert.ok(mime, 'Unsupported image type: ' + absolute);
@@ -56,8 +78,10 @@ export async function upload(relativePath) {
   const url = result.url.startsWith('/api/v1/storefront/files/')
     ? origin + result.url
     : result.url;
-  assetCache.set(relativePath, url);
-  return url;
+  // Prefer durable public assets when BE still returns ephemeral Render disk URLs.
+  const finalUrl = /\/storefront\/files\//i.test(url) ? publicMediaUrl(relativePath) : url;
+  assetCache.set(relativePath, finalUrl);
+  return finalUrl;
 }
 
 export const numericId = (value) => {

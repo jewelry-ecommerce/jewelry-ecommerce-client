@@ -10,21 +10,16 @@ test("leaves Cloudinary and data URLs unchanged", () => {
   expect(normalizeCdnMediaUrl("data:image/png;base64,aa")).toBe("data:image/png;base64,aa");
 });
 
-test("prefixes local storefront file paths and wraps Cloudinary fetch", () => {
-  vi.stubEnv("NEXT_PUBLIC_CONTENT_API_URL", "https://jewelry-ecommerce-be-java.onrender.com/api/v1");
-  vi.stubEnv("NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME", "dcvr6sf2");
-  const absolute =
-    "https://jewelry-ecommerce-be-java.onrender.com/api/v1/storefront/files/images/2026/11/a.jpg";
-  expect(normalizeCdnMediaUrl("/api/v1/storefront/files/images/2026/11/a.jpg")).toBe(
-    `https://res.cloudinary.com/dcvr6sf2/image/fetch/f_auto,q_auto,w_900/${encodeURIComponent(absolute)}`,
-  );
-});
-
-test("wraps absolute BE storefront file URLs with Cloudinary fetch", () => {
+test("does not wrap absolute BE storefront URLs with Cloudinary fetch", () => {
   const absolute =
     "https://jewelry-ecommerce-be-java.onrender.com/api/v1/storefront/files/images/2026/11/b.jpg";
-  expect(normalizeCdnMediaUrl(absolute)).toBe(
-    `https://res.cloudinary.com/dcvr6sf2/image/fetch/f_auto,q_auto,w_900/${encodeURIComponent(absolute)}`,
+  expect(normalizeCdnMediaUrl(absolute)).toBe(absolute);
+});
+
+test("prefixes relative storefront paths with BE origin only", () => {
+  vi.stubEnv("NEXT_PUBLIC_CONTENT_API_URL", "https://jewelry-ecommerce-be-java.onrender.com/api/v1");
+  expect(normalizeCdnMediaUrl("/api/v1/storefront/files/images/2026/11/a.jpg")).toBe(
+    "https://jewelry-ecommerce-be-java.onrender.com/api/v1/storefront/files/images/2026/11/a.jpg",
   );
 });
 
