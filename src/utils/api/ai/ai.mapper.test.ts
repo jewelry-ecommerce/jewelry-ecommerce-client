@@ -3,7 +3,6 @@ import { AI_BUDGET_SCOPE_ITEM, AI_BUDGET_SCOPE_SET } from "./ai.constant";
 import {
   formatMatchScore,
   mapCatalogHits,
-  mapSetBuilderResponse,
   mapStylistResponse,
   mapStylistSessions,
   pickCatalogSlug,
@@ -46,21 +45,6 @@ describe("ai response mapper", () => {
     })]);
     expect(formatMatchScore(mapped.recommendations[0].matchScore)).toBe("86");
     expect(formatMatchScore(1)).toBe("100");
-  });
-
-  it("maps set items including the keyPiece alias and ignores product id as SKU", () => {
-    const mapped = mapSetBuilderResponse({
-      code: "SET1",
-      name: "Set gợi ý",
-      description: "Bộ trang sức",
-      bundleDiscountPercent: 0,
-      source: "AI",
-      totalPrice: 3_000_000,
-      items: [{ ...recommendation, productId: 12, productName: "Nhẫn vàng", keyPiece: true, sortOrder: 0 }],
-    });
-
-    expect(mapped.items[0]).toEqual(expect.objectContaining({ productId: 12, isKeyPiece: true, skuId: 44 }));
-    expect(mapped.totalPrice).toBe(3_000_000);
   });
 
   it("maps member sessions from a raw list", () => {

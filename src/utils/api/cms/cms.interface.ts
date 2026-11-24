@@ -1,5 +1,5 @@
 import { MediaType } from "@/utils/api/banner/banner.enum";
-import { ActionType, AnimationType, BlockTypeCode } from "./cms.enum";
+import { ActionType, AnimationType, BlockTypeCode, CtaAlignment, CtaLinkTarget } from "./cms.enum";
 
 export type CmsRichTextHtml = string;
 
@@ -81,7 +81,28 @@ export interface ProductListInterleavedBannerCategoryRuleConfig extends ProductL
   categoryPathSlugs?: string[];
 }
 
-export interface BlockConfig {
+export interface CtaButtonConfig {
+  label?: string;
+  url?: string;
+  textColor?: string;
+  backgroundColor?: string;
+  borderColor?: string;
+  target?: CtaLinkTarget;
+}
+
+export interface CtaBlockConfig {
+  title?: string;
+  titleColor?: string;
+  description?: string;
+  descriptionColor?: string;
+  buttons?: CtaButtonConfig[];
+  bottomText?: string;
+  bottomTextColor?: string;
+  background?: { color?: string; borderColor?: string; borderRadius?: number };
+  alignment?: CtaAlignment;
+}
+
+export interface BlockConfig extends CtaBlockConfig {
   settings?: {
     isClosable?: boolean;
     animationType?: AnimationType;

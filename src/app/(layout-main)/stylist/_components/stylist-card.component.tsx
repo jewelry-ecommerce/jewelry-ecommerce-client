@@ -11,17 +11,15 @@ import type { CartViewItem } from "@/utils/api/cart/cart.interface";
 import { formatPrice } from "@/utils/constants/common.constant";
 import { TYPOGRAPHY_STYLES } from "@/utils/constants/typography.constant";
 import { getErrorMessage } from "@/utils/helpers/axios";
-import { Box, Checkbox, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { ThumbsDown, ThumbsUp } from "@untitledui/icons";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 type StylistCardProps = {
   item: AiRecommendation;
-  selected: boolean;
   sessionId?: number;
   canFeedback: boolean;
-  onToggle: (productId: number) => void;
   onOpenDetail: (item: AiRecommendation) => void;
 };
 
@@ -60,7 +58,7 @@ const StylistFeedback = ({ sessionId, productId }: { sessionId: number; productI
   );
 };
 
-const StylistCard = ({ item, selected, sessionId, canFeedback, onToggle, onOpenDetail }: StylistCardProps) => {
+const StylistCard = ({ item, sessionId, canFeedback, onOpenDetail }: StylistCardProps) => {
   const fallback = useProductDefaultImage();
   const { handleAddToCart } = useAddToCart({ openCartDrawerOnSuccess: true });
   const canBuy = item.skuId != null && (item.stock ?? 0) > 0;
@@ -74,10 +72,7 @@ const StylistCard = ({ item, selected, sessionId, canFeedback, onToggle, onOpenD
       <Box sx={{ position: "relative", aspectRatio: "1 / 1" }}>
         <CdnImage as="next" src={item.thumbnailUrl || fallback} alt={item.name} fill sizes="(max-width: 600px) 100vw, 320px" style={{ objectFit: "cover" }} />
       </Box>
-      <Stack direction="row" sx={{ alignItems: "flex-start", gap: "8px" }}>
-        <Checkbox checked={selected} onChange={() => onToggle(item.id)} inputProps={{ "aria-label": `Chọn ${item.name}` }} />
-        <Typography sx={{ ...TYPOGRAPHY_STYLES.base.semiBold }}>{item.name}</Typography>
-      </Stack>
+      <Typography sx={{ ...TYPOGRAPHY_STYLES.base.semiBold }}>{item.name}</Typography>
       <Typography>{item.price == null ? "Chưa có giá" : formatPrice(item.price)}</Typography>
       <Typography sx={{ ...TYPOGRAPHY_STYLES.sm.regular, color: "#525252" }}>{item.reason}</Typography>
       <Typography sx={{ ...TYPOGRAPHY_STYLES.sm.medium }}>Điểm phù hợp {formatMatchScore(item.matchScore)}</Typography>

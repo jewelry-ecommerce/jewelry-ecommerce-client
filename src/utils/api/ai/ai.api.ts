@@ -1,7 +1,7 @@
 import { authAxios, commonAxios } from "@/utils/axios";
 import { AI_CATALOG_SEARCH_TAKE } from "./ai.constant";
-import type { AiAssistantReply, AiFeedbackRequest, AiStylistRequest, AiStylistResponse, AiSetBuilderResponse, AiStylistSession, AssistantHistoryItem, CatalogPick } from "./ai.interface";
-import { mapAssistantReply, mapCatalogHits, mapSetBuilderResponse, mapStylistResponse, mapStylistSessions, pickCatalogSlug } from "./ai.mapper";
+import type { AiAssistantReply, AiFeedbackRequest, AiStylistRequest, AiStylistResponse, AiStylistSession, AssistantHistoryItem } from "./ai.interface";
+import { mapAssistantReply, mapStylistResponse, mapStylistSessions, pickCatalogSlug } from "./ai.mapper";
 
 export const chatWithAssistant = async (
   message: string,
@@ -12,22 +12,12 @@ export const chatWithAssistant = async (
 export const recommendStylist = async (body: AiStylistRequest): Promise<AiStylistResponse> =>
   mapStylistResponse((await authAxios.post("ai/stylist/recommendations", body)).data);
 
-export const buildJewelrySet = async (body: AiStylistRequest): Promise<AiSetBuilderResponse> =>
-  mapSetBuilderResponse((await authAxios.post("ai/set-builder", body)).data);
-
 export const sendStylistFeedback = async (body: AiFeedbackRequest): Promise<void> => {
   await authAxios.post("ai/stylist/feedback", body);
 };
 
 export const getStylistSessions = async (): Promise<AiStylistSession[]> =>
   mapStylistSessions((await authAxios.get("ai/stylist/sessions")).data);
-
-export const searchCatalogForSet = async (keyword: string): Promise<CatalogPick[]> => {
-  const data = (await commonAxios.get("catalog/products", {
-    params: { search: keyword, page: 1, take: AI_CATALOG_SEARCH_TAKE },
-  })).data;
-  return mapCatalogHits(data);
-};
 
 const findProductSlug = async (productId: number, keyword: string): Promise<string | null> => {
   try {

@@ -21,7 +21,6 @@ describe("Java contract transport", () => {
     ["cart/cart/merge", "storefront/cart/cart/merge"],
     ["cart/cart/batch-add", "storefront/cart/cart/batch-add"],
     ["ai/stylist/recommendations", "storefront/ai/stylist/recommendations"],
-    ["ai/set-builder", "storefront/ai/set-builder"],
     ["ai/stylist/sessions", "storefront/ai/stylist/sessions"],
     ["catalog/products/ring", "storefront/product/ring"],
     ["cms/storefront/pages/home", "storefront/cms/pages/home"],
