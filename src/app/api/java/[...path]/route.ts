@@ -6,7 +6,8 @@ import { isSameOriginRequest } from "@/lib/server/same-origin.util";
 import { isJavaBackend, javaApiPath } from "@/utils/config/java-backend.config";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+/** Try-on Gemini có thể >60s; các API khác vẫn kết thúc sớm hơn. */
+export const maxDuration = 120;
 type RouteContext = { params: Promise<{ path: string[] }> };
 
 function resolvePath(segments: string[]): string | null {

@@ -1,7 +1,15 @@
 import { authAxios, commonAxios } from "@/utils/axios";
 import { AI_CATALOG_SEARCH_TAKE } from "./ai.constant";
-import type { AiAssistantReply, AiFeedbackRequest, AiStylistRequest, AiStylistResponse, AiStylistSession, AssistantHistoryItem } from "./ai.interface";
-import { mapAssistantReply, mapStylistResponse, mapStylistSessions, pickCatalogSlug } from "./ai.mapper";
+import type {
+  AiAssistantReply,
+  AiFeedbackRequest,
+  AiStylistRequest,
+  AiStylistResponse,
+  AiStylistSession,
+  AiTryOnResponse,
+  AssistantHistoryItem,
+} from "./ai.interface";
+import { mapAssistantReply, mapStylistResponse, mapStylistSessions, mapTryOnResponse, pickCatalogSlug } from "./ai.mapper";
 
 export const chatWithAssistant = async (
   message: string,
@@ -11,6 +19,15 @@ export const chatWithAssistant = async (
 
 export const recommendStylist = async (body: AiStylistRequest): Promise<AiStylistResponse> =>
   mapStylistResponse((await authAxios.post("ai/stylist/recommendations", body)).data);
+
+export const tryOnStylist = async (image: File, styleHint?: string): Promise<AiTryOnResponse> => {
+  const form = new FormData();
+  form.append("image", image);
+  if (styleHint?.trim()) form.append("styleHint", styleHint.trim());
+  return mapTryOnResponse(
+    (await authAxios.post("ai/stylist/try-on", form, { timeout: 120_000 })).data,
+  );
+};
 
 export const sendStylistFeedback = async (body: AiFeedbackRequest): Promise<void> => {
   await authAxios.post("ai/stylist/feedback", body);

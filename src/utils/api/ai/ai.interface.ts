@@ -85,3 +85,23 @@ export type CatalogPick = {
   price: number | null;
   stock: number | null;
 };
+
+export type AiTryOnVariant = {
+  style: string;
+  styleLabel: string;
+  tryOnImageUrl: string;
+  productId: number;
+  productName: string;
+  productSlug: string | null;
+  productThumbnailUrl: string | null;
+  price: number | null;
+  categoryName: string | null;
+};
+
+export type AiTryOnResponse = {
+  ok: boolean;
+  message: string | null;
+  disclaimer: string;
+  detectedRegions: string[];
+  variants: AiTryOnVariant[];
+};
