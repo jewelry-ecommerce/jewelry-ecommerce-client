@@ -8,6 +8,8 @@ import type {
   AiStylistResponse,
   AiStylistSession,
   AiStylistSessionItem,
+  AiTryOnResponse,
+  AiTryOnVariant,
   CatalogPick,
 } from "./ai.interface";
 
@@ -217,6 +219,42 @@ export const mapCatalogHits = (payload: unknown): CatalogPick[] =>
 
 export const pickCatalogSlug = (payload: unknown, productId: number): string | null =>
   mapCatalogHits(payload).find((item) => item.productId === productId)?.slug ?? null;
+
+const mapTryOnVariant = (row: Record<string, unknown>): AiTryOnVariant | null => {
+  const productId = readPositiveId(row, "productId");
+  const tryOnImageUrl = readString(row, "tryOnImageUrl");
+  const productName = readString(row, "productName");
+  if (productId == null || !tryOnImageUrl || !productName) return null;
+  return {
+    style: readString(row, "style") || "everyday",
+    styleLabel: readString(row, "styleLabel") || "Gợi ý",
+    tryOnImageUrl,
+    productId,
+    productName,
+    productSlug: readNullableString(row, "productSlug"),
+    productThumbnailUrl: readNullableString(row, "productThumbnailUrl"),
+    price: readNumber(row, "price"),
+    categoryName: readNullableString(row, "categoryName"),
+  };
+};
+
+export const mapTryOnResponse = (payload: unknown): AiTryOnResponse => {
+  if (!isRecord(payload)) {
+    return { ok: false, message: "Không đọc được kết quả try-on", disclaimer: "", detectedRegions: [], variants: [] };
+  }
+  const variantsRaw = Array.isArray(payload.variants) ? payload.variants.filter(isRecord) : [];
+  const regionsRaw = Array.isArray(payload.detectedRegions) ? payload.detectedRegions : [];
+  return {
+    ok: payload.ok === true,
+    message: readNullableString(payload, "message"),
+    disclaimer: readString(payload, "disclaimer"),
+    detectedRegions: regionsRaw.filter((item): item is string => typeof item === "string" && item.trim().length > 0),
+    variants: variantsRaw.flatMap((row) => {
+      const mapped = mapTryOnVariant(row);
+      return mapped ? [mapped] : [];
+    }),
+  };
+};
 
 export const readApiErrorCode = (error: unknown): string | null => {
   if (!isRecord(error) || !isRecord(error.response) || !isRecord(error.response.data)) return null;
