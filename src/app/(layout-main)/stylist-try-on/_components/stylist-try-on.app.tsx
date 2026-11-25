@@ -114,7 +114,7 @@ const UploadZone = ({ preview, onOpen }: { preview: string | null; onOpen: () =>
       <img
         src={preview}
         alt="Ảnh đã chọn"
-        style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }}
+        style={{ width: "100%", height: "100%", objectFit: "contain", position: "absolute", inset: 0, background: "#F5F5F5" }}
       />
     ) : (
       <>
