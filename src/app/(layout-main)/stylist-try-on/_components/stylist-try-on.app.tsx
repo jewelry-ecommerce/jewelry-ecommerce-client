@@ -204,7 +204,7 @@ const StylistTryOnApp = () => {
   return (
     <AiPageFrame currentLabel="Đeo thử" title="Đeo thử trang sức">
       <Typography sx={{ ...TYPOGRAPHY_STYLES.base.regular, color: "#525252", maxWidth: 720 }}>
-        Chụp hoặc tải ảnh vùng đeo — AI gợi ý vài mẫu gần giống từ catalog để bạn xem thử trước khi mua.
+        Chụp hoặc tải ảnh vùng đeo — AI tạo một mẫu minh họa gần giống từ catalog (thường khoảng 10–15 giây).
       </Typography>
 
       <Box
@@ -252,7 +252,7 @@ const StylistTryOnApp = () => {
 
       {status === "loading" ? (
         <Typography sx={{ ...TYPOGRAPHY_STYLES.base.regular, color: "#525252" }}>
-          Đang nhận diện vùng đeo và tạo mẫu minh họa...
+          Đang nhận diện vùng đeo và tạo mẫu minh họa (khoảng 10–15 giây)...
         </Typography>
       ) : null}
 
