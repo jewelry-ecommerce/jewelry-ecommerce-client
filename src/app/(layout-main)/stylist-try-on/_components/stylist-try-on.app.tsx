@@ -3,9 +3,11 @@
 import AiPageFrame from "@/components/ai/ai-page-frame.component";
 import { CdnImage, TextFieldComponent } from "@/components";
 import { ButtonComponent } from "@/components/button/button.component";
+import ProductZoomComponent from "@/components/product/product-zoom/product-zoom.component";
 import { useProductDefaultImage } from "@/components/providers.component";
 import { AiApi } from "@/utils/api";
 import type { AiTryOnResponse, AiTryOnVariant } from "@/utils/api/ai/ai.interface";
+import { normalizeCdnMediaUrl } from "@/utils/cdn/cdn-media.util";
 import { formatPrice } from "@/utils/constants/common.constant";
 import { TYPOGRAPHY_STYLES } from "@/utils/constants/typography.constant";
 import { getErrorMessage } from "@/utils/helpers/axios";
@@ -13,7 +15,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { Image01 } from "@untitledui/icons";
 import Link from "next/link";
 import type { ChangeEvent } from "react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 type Status = "idle" | "loading" | "ready" | "rejected" | "error";
 
@@ -33,17 +35,41 @@ const REGIONS = [
   { label: "Bông tai", hint: "Tai" },
 ];
 
-const VariantCard = ({ item }: { item: AiTryOnVariant }) => {
+const VariantCard = ({
+  item,
+  onOpenZoom,
+}: {
+  item: AiTryOnVariant;
+  onOpenZoom: () => void;
+}) => {
   const fallback = useProductDefaultImage();
   const href = item.productSlug
     ? `/san-pham/${item.productSlug}`
     : `/tim-kiem?query=${encodeURIComponent(item.productName)}`;
+  const imageSrc = item.tryOnImageUrl || item.productThumbnailUrl || fallback;
   return (
     <Stack sx={{ border: "1px solid #E5E5E5", gap: "12px", p: "12px", height: "100%", background: "#fff" }}>
-      <Box sx={{ position: "relative", aspectRatio: "1 / 1", background: "#F5F5F5" }}>
+      <Box
+        component="button"
+        type="button"
+        onClick={onOpenZoom}
+        aria-label={`Xem phóng to ${item.productName}`}
+        sx={{
+          position: "relative",
+          aspectRatio: "1 / 1",
+          background: "#F5F5F5",
+          border: 0,
+          p: 0,
+          cursor: "url('/images/icons/icon-zoom.svg'), zoom-in",
+          overflow: "hidden",
+          display: "block",
+          width: "100%",
+          "&:hover": { opacity: 0.96 },
+        }}
+      >
         <CdnImage
           as="next"
-          src={item.tryOnImageUrl || item.productThumbnailUrl || fallback}
+          src={imageSrc}
           alt={item.productName}
           fill
           sizes="(max-width: 600px) 100vw, 320px"
@@ -88,7 +114,7 @@ const UploadZone = ({ preview, onOpen }: { preview: string | null; onOpen: () =>
       <img
         src={preview}
         alt="Ảnh đã chọn"
-        style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0 }}
+        style={{ width: "100%", height: "100%", objectFit: "contain", position: "absolute", inset: 0, background: "#F5F5F5" }}
       />
     ) : (
       <>
@@ -153,12 +179,22 @@ const GuidePanel = () => (
 
 const StylistTryOnApp = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const fallback = useProductDefaultImage();
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [styleHint, setStyleHint] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [result, setResult] = useState<AiTryOnResponse | null>(null);
+  const [zoomOpen, setZoomOpen] = useState(false);
+  const [zoomIndex, setZoomIndex] = useState(0);
+
+  const zoomImages = useMemo(() => {
+    if (!result?.variants.length) return [];
+    return result.variants.map((item) =>
+      normalizeCdnMediaUrl(item.tryOnImageUrl || item.productThumbnailUrl || fallback) || fallback,
+    );
+  }, [result, fallback]);
 
   const onPick = (event: ChangeEvent<HTMLInputElement>) => {
     const next = event.target.files?.[0] ?? null;
@@ -269,12 +305,27 @@ const StylistTryOnApp = () => {
               gap: "16px",
             }}
           >
-            {result.variants.map((item) => (
-              <VariantCard key={`${item.productId}-${item.style}`} item={item} />
+            {result.variants.map((item, index) => (
+              <VariantCard
+                key={`${item.productId}-${item.style}`}
+                item={item}
+                onOpenZoom={() => {
+                  setZoomIndex(index);
+                  setZoomOpen(true);
+                }}
+              />
             ))}
           </Box>
         </Stack>
       ) : null}
+
+      <ProductZoomComponent
+        isOpen={zoomOpen && zoomImages.length > 0}
+        onClose={() => setZoomOpen(false)}
+        initialIndex={zoomIndex}
+        productName={result?.variants[zoomIndex]?.productName || "Ảnh đeo thử"}
+        images={zoomImages}
+      />
     </AiPageFrame>
   );
 };
