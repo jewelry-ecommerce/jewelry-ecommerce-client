@@ -25,7 +25,7 @@ export const tryOnStylist = async (image: File, styleHint?: string): Promise<AiT
   form.append("image", image);
   if (styleHint?.trim()) form.append("styleHint", styleHint.trim());
   return mapTryOnResponse(
-    (await authAxios.post("ai/stylist/try-on", form, { timeout: 120_000 })).data,
+    (await authAxios.post("ai/stylist/try-on", form, { timeout: 60_000 })).data,
   );
 };
 
