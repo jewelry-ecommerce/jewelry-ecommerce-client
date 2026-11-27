@@ -34,7 +34,7 @@ const actionButtonBase = {
 const radioSx = {
   color: "#DEDEDE",
   padding: "6px",
-  "&.Mui-checked": { color: "#0A0A0A" },
+  "&.Mui-checked": { color: "#356654" },
 };
 
 const labelSx = {

@@ -107,18 +107,18 @@ const useStyles = makeStyles<{ props?: StyleProps }>({ name: "Header" })((theme,
         bottom: 12,
         width: "100%",
         height: "2px",
-        backgroundColor: "#27251F",
+        backgroundColor: "#356654",
         display: "none",
       },
       "&:hover": {
-        color: "#27251F",
+        color: "#2C5848",
         "&::after": {
           display: "block",
         },
       },
     },
     menuItemActive: {
-      color: "#27251F",
+      color: "#2C5848",
       "&::after": {
         display: "block",
       },
@@ -192,7 +192,7 @@ const useStyles = makeStyles<{ props?: StyleProps }>({ name: "Header" })((theme,
       color: "#333333",
       transition: "color 0.2s ease",
       "&:hover": {
-        color: "#27251F",
+        color: "#2C5848",
       },
     },
     overlayBackdrop: {
@@ -249,8 +249,8 @@ const useStyles = makeStyles<{ props?: StyleProps }>({ name: "Header" })((theme,
       transition: "all 0.2s ease",
     },
     mobileTabItemActive: {
-      color: "#27251F",
-      borderBottom: "2px solid #27251F",
+      color: "#2C5848",
+      borderBottom: "2px solid #2C5848",
     },
     mobileSubMenu: {
       padding: "24px",

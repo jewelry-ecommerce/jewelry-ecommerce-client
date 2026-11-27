@@ -4,9 +4,9 @@ import { TYPOGRAPHY_STYLES } from "@/utils/constants/typography.constant";
 
 export const CHECKBOX_COLORS = {
   checked: {
-    filledBg: "#050505",
+    filledBg: "#356654",
     outlinedBg: "transparent",
-    border: "#050505",
+    border: "#356654",
     icon: "#FFF",
   },
   default: {

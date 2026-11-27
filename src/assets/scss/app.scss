@@ -88,21 +88,21 @@
   --product-image-background: #f5f5f5;
   /* set term */
   --set-key-product-border-radius: var(--radius-md, 8px);
-  --set-key-product-border: 1px solid var(--Brand-Hearlock-300, #cdc9f7);
-  --set-key-product-background: linear-gradient(90deg, #fff 0%, var(--Brand-Hearlock-100, #ececfe) 100%);
-  --set-key-product-box-shadow: 0 0 8px 0 var(--Brand-Hearlock-100, #ececfe);
-  --set-key-product-label-color: #b3adf6;
-  --set-key-badge-color: var(--Brand-Hearlock-600, #6762bc);
-  --set-key-badge-background: var(--Brand-Hearlock-100, #ececfe);
-  --set-badge-background: linear-gradient(271deg, var(--Brand-Hearlock-600, #6762bc) -27.11%, var(--Neutral-900, #171717) 63.47%);
-  --set-badge-text-gradient: linear-gradient(90deg, #6b6aa6, #c4e8ee, #6fb7cc, #89d3e0, #ac9dff);
+  --set-key-product-border: 1px solid #c2d6cc;
+  --set-key-product-background: linear-gradient(90deg, #fff 0%, #e5efea 100%);
+  --set-key-product-box-shadow: 0 0 8px 0 #e5efea;
+  --set-key-product-label-color: #76a693;
+  --set-key-badge-color: #356654;
+  --set-key-badge-background: #e5efea;
+  --set-badge-background: linear-gradient(271deg, #356654 -27.11%, #1e2e28 63.47%);
+  --set-badge-text-gradient: linear-gradient(90deg, #5f927e, #dce8e2, #76a693, #c8d0d5, #9bc0ae);
   --toastify-toast-padding: 12px;
   --sb-size: 6px;
   --sb-track: #0b0d14;
-  --sb-thumb: #7d7d7d;
-  --sb-thumb-from: #22d3ee;
-  --sb-thumb-mid: #6366f1;
-  --sb-thumb-to: #ec4899;
+  --sb-thumb: #76a693;
+  --sb-thumb-from: #76a693;
+  --sb-thumb-mid: #356654;
+  --sb-thumb-to: #c8d0d5;
 }
 
 body {

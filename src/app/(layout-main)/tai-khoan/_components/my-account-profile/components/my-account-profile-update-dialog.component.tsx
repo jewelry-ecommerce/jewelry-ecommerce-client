@@ -122,17 +122,17 @@ const MyAccountProfileUpdateDialog = ({ open, onClose, user }: MyAccountProfileU
                 <RadioGroup {...field} row>
                   <FormControlLabel
                     value={Gender.MALE}
-                    control={<Radio sx={{ color: "#DEDEDE", "&.Mui-checked": { color: "#000" } }} />}
+                    control={<Radio sx={{ color: "#DEDEDE", "&.Mui-checked": { color: "#356654" } }} />}
                     label={GenderLabel[Gender.MALE]}
                   />
                   <FormControlLabel
                     value={Gender.FEMALE}
-                    control={<Radio sx={{ color: "#DEDEDE", "&.Mui-checked": { color: "#000" } }} />}
+                    control={<Radio sx={{ color: "#DEDEDE", "&.Mui-checked": { color: "#356654" } }} />}
                     label={GenderLabel[Gender.FEMALE]}
                   />
                   <FormControlLabel
                     value={Gender.OTHER}
-                    control={<Radio sx={{ color: "#DEDEDE", "&.Mui-checked": { color: "#000" } }} />}
+                    control={<Radio sx={{ color: "#DEDEDE", "&.Mui-checked": { color: "#356654" } }} />}
                     label={GenderLabel[Gender.OTHER]}
                   />
                 </RadioGroup>

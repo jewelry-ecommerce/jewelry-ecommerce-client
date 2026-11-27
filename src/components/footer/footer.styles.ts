@@ -4,7 +4,7 @@ import { TYPOGRAPHY_STYLES } from "@/utils/constants/typography.constant";
 const useStyles = makeStyles({ name: "Footer" })((theme) => ({
   root: {
     width: "100%",
-    backgroundColor: "#171717",
+    backgroundColor: "#1E2E28",
     padding: "40px 16px",
     [theme.breakpoints.down("lg")]: {
       padding: "32px 16px",
@@ -49,7 +49,7 @@ const useStyles = makeStyles({ name: "Footer" })((theme) => ({
   },
   divider: {
     height: "1px",
-    backgroundColor: "#929292",
+    backgroundColor: "#385247",
     marginTop: "40px",
     marginBottom: "16px",
     width: "100%",

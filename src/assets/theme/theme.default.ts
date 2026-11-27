@@ -101,7 +101,7 @@ const defaultTheme = createTheme({
   },
   palette: {
     primary: {
-      main: "#2A2A2A",
+      main: "#2C5848",
     },
     common: {
       white: "#FFFFFF",
@@ -139,6 +139,24 @@ const defaultTheme = createTheme({
       styleOverrides: {
         root: {
           zIndex: 1350,
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          "&.Mui-checked": {
+            color: "#356654",
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#356654",
+          },
         },
       },
     },

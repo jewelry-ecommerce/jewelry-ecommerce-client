@@ -88,7 +88,7 @@ const useStyles = makeStyles({ name: "CategoryScroller" })((theme) => ({
   activeCard: {
     padding: "6px",
     border: "none",
-    backgroundColor: "#B3ADF6",
+    backgroundColor: "#76A693",
     [theme.breakpoints.down(810)]: {
       padding: "4px",
     },
@@ -100,7 +100,7 @@ const useStyles = makeStyles({ name: "CategoryScroller" })((theme) => ({
     zIndex: 2,
     width: "60%",
     height: "10px",
-    backgroundColor: "#B3ADF6",
+    backgroundColor: "#76A693",
     pointerEvents: "none",
     clipPath: "polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%)",
     [theme.breakpoints.down(810)]: {
