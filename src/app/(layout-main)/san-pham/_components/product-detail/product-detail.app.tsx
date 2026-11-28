@@ -341,7 +341,7 @@ const ProductDetailApp = ({ slug, initialData }: ProductDetailAppProps) => {
           onProductClick={(slug) => router.push(`/san-pham/${slug}`)}
         />
       ) : null}
-      {/* <ProductReview productId={productData.id} productName={productData.name} /> */}
+      <ProductReview productId={productData.id} productName={productData.name} />
       <ProductDrawerComponent
         open={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
